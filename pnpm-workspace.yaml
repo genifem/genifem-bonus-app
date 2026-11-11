@@ -1,0 +1,8 @@
+# The repository root is the mobile app; packages/* are the libraries it shares with
+# bonus-admin (tokens, i18n helpers, the generated API client), kept in step by hand.
+packages:
+  - packages/*
+
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver

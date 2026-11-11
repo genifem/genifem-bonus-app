@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    runs-on: ubuntu-latest
+    env:
+      # Set when the BACKEND_REPO_TOKEN secret exists (a fine-grained PAT with Contents:read
+      # on bonus-backend; both repositories are private). Without it the client is generated
+      # from the committed openapi.json, which still proves the committed types are current.
+      HAS_BACKEND: ${{ secrets.BACKEND_REPO_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check out the API
+        if: env.HAS_BACKEND == 'true'
+        uses: actions/checkout@v5
+        with:
+          repository: genifem/bonus-backend
+          path: .backend
+          token: ${{ secrets.BACKEND_REPO_TOKEN }}
+      - uses: astral-sh/setup-uv@v6
+        if: env.HAS_BACKEND == 'true'
+      - run: uv sync --frozen
+        if: env.HAS_BACKEND == 'true'
+        working-directory: .backend
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: The API client matches the API's schema
+        env:
+          CREWSTARS_BACKEND: ${{ env.HAS_BACKEND == 'true' && format('{0}/.backend', github.workspace) || '' }}
+        run: |
+          pnpm gen:api
+          git diff --exit-code -- packages/api-client
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm lint

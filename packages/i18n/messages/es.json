@@ -1,0 +1,101 @@
+{
+  "common": {
+    "appName": "Crew Stars",
+    "back": "Atrás",
+    "continue": "Continuar",
+    "loading": "Cargando",
+    "signOut": "Cerrar sesión",
+    "language": "Idioma",
+    "languages": {
+      "en": "English",
+      "es": "Español"
+    },
+    "close": "Cerrar"
+  },
+  "welcome": {
+    "logoPlaceholder": "[Logo del operador]",
+    "title": "Crew Stars",
+    "subtitle": "Recibe reconocimiento por el gran trabajo que haces",
+    "firstTime": "¿Es tu primera vez?",
+    "signIn": "Iniciar sesión"
+  },
+  "signIn": {
+    "title": "¡Hola de nuevo! 👋",
+    "eid": "Número de empleado (EID)",
+    "password": "Contraseña",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "forgot": "¿Olvidaste tu contraseña?",
+    "submit": "Iniciar sesión"
+  },
+  "setup": {
+    "step": "Paso {step} de {total}",
+    "titleSetup": "Vamos a configurar tu cuenta",
+    "titleReset": "Restablece tu contraseña",
+    "eid": "Número de empleado (EID)",
+    "eidHint": "Tu EID aparece en tu horario, o pregúntale a tu gerente",
+    "codeTitle": "Revisa tu teléfono 📱",
+    "codeSent": "Enviamos un código de 6 dígitos al <b>{phone}</b>",
+    "codeLabel": "Código de 6 dígitos",
+    "resend": "Reenviar código",
+    "resendIn": "Reenviar código ({time})",
+    "passwordTitleSetup": "Hazla tuya 🔒",
+    "passwordTitleReset": "Elige una contraseña nueva",
+    "passwordLead": "La usarás con tu EID para iniciar sesión.",
+    "password": "Contraseña",
+    "confirm": "Confirma la contraseña",
+    "rules": {
+      "length": "8 caracteres o más",
+      "number": "Al menos un número",
+      "match": "Las contraseñas coinciden"
+    },
+    "met": "Listo",
+    "notMet": "Todavía no",
+    "createAccount": "Crear cuenta",
+    "savePassword": "Guardar contraseña",
+    "comingSoon": "Ya casi. Muy pronto podrás guardar tu contraseña aquí."
+  },
+  "nav": {
+    "label": "Menú principal",
+    "home": "Inicio",
+    "wall": "Muro",
+    "give": "Dar",
+    "rewards": "Premios",
+    "approvals": "Aprobaciones",
+    "profile": "Perfil"
+  },
+  "home": {
+    "greeting": "¡Hola, {name}! 👋",
+    "greetingNoName": "¡Hola! 👋",
+    "lead": "Tu buen trabajo no pasa desapercibido.",
+    "managerLead": "Un poco de reconocimiento hace una gran diferencia."
+  },
+  "wall": {
+    "title": "El muro del equipo 🙌",
+    "lead": "Las cosas buenas pasan en equipo."
+  },
+  "give": {
+    "title": "¿Quién te alegró el día? 💛",
+    "lead": "Grande o pequeño, hazle saber que importó."
+  },
+  "rewards": {
+    "title": "Te lo ganaste 🎁",
+    "lead": "Convierte tu buen trabajo en un pequeño premio."
+  },
+  "approvals": {
+    "title": "Un premio bien merecido 🎁",
+    "lead": "Las solicitudes de premios de tu equipo."
+  },
+  "profile": {
+    "title": "Tu perfil"
+  },
+  "soon": {
+    "title": "Ya viene en camino ✨",
+    "lead": "Esta pantalla llega en una fase posterior de Crew Stars."
+  },
+  "errors": {
+    "generic": "Algo salió mal. Inténtalo de nuevo.",
+    "network": "Estás sin conexión. Revisa tu conexión e inténtalo de nuevo.",
+    "invalid_credentials": "Ese EID y esa contraseña no coinciden. Inténtalo de nuevo."
+  }
+}

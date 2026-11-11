@@ -1,0 +1,101 @@
+{
+  "common": {
+    "appName": "Crew Stars",
+    "back": "Back",
+    "continue": "Continue",
+    "loading": "Loading",
+    "signOut": "Sign out",
+    "language": "Language",
+    "languages": {
+      "en": "English",
+      "es": "Español"
+    },
+    "close": "Close"
+  },
+  "welcome": {
+    "logoPlaceholder": "[Operator logo]",
+    "title": "Crew Stars",
+    "subtitle": "Get recognized for the great work you do",
+    "firstTime": "First time here?",
+    "signIn": "Sign in"
+  },
+  "signIn": {
+    "title": "Welcome back 👋",
+    "eid": "Employee ID (EID)",
+    "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "forgot": "Forgot password?",
+    "submit": "Sign in"
+  },
+  "setup": {
+    "step": "Step {step} of {total}",
+    "titleSetup": "Let’s get you set up",
+    "titleReset": "Reset your password",
+    "eid": "Employee ID (EID)",
+    "eidHint": "Your EID is on your schedule, or ask your manager",
+    "codeTitle": "Check your phone 📱",
+    "codeSent": "We sent a 6-digit code to <b>{phone}</b>",
+    "codeLabel": "6-digit code",
+    "resend": "Resend code",
+    "resendIn": "Resend code ({time})",
+    "passwordTitleSetup": "Make it yours 🔒",
+    "passwordTitleReset": "Choose a new password",
+    "passwordLead": "You'll use it with your EID to sign in.",
+    "password": "Password",
+    "confirm": "Confirm password",
+    "rules": {
+      "length": "8 or more characters",
+      "number": "At least one number",
+      "match": "Passwords match"
+    },
+    "met": "Done",
+    "notMet": "Not yet",
+    "createAccount": "Create account",
+    "savePassword": "Save password",
+    "comingSoon": "Almost there. Saving your password goes live soon."
+  },
+  "nav": {
+    "label": "Main menu",
+    "home": "Home",
+    "wall": "Wall",
+    "give": "Give",
+    "rewards": "Rewards",
+    "approvals": "Approvals",
+    "profile": "Profile"
+  },
+  "home": {
+    "greeting": "Hey, {name}! 👋",
+    "greetingNoName": "Hey there! 👋",
+    "lead": "Your good work doesn't go unnoticed.",
+    "managerLead": "A little recognition. A big difference."
+  },
+  "wall": {
+    "title": "The crew wall 🙌",
+    "lead": "Good things happen together."
+  },
+  "give": {
+    "title": "Who made your day? 💛",
+    "lead": "Big or small, let them know it mattered."
+  },
+  "rewards": {
+    "title": "You earned this 🎁",
+    "lead": "Turn your good work into a little treat."
+  },
+  "approvals": {
+    "title": "A little well-earned 🎁",
+    "lead": "Your crew's reward requests."
+  },
+  "profile": {
+    "title": "Your profile"
+  },
+  "soon": {
+    "title": "On its way ✨",
+    "lead": "This screen arrives in a later phase of Crew Stars."
+  },
+  "errors": {
+    "generic": "Something went wrong. Try again.",
+    "network": "You're offline. Check your connection and try again.",
+    "invalid_credentials": "That EID and password don't match. Try again."
+  }
+}
