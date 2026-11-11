@@ -555,8 +555,9 @@ export function Field({
 }
 
 /** English / Español, both visible, one tap (`.langseg`). Remembered on this device, and it
- *  beats the profile's language, which beats the phone's. */
-export function LanguageSwitch() {
+ *  beats the profile's language, which beats the phone's. `onChange` replaces the plain
+ *  switch, for a screen that also saves the choice somewhere (the profile). */
+export function LanguageSwitch({ onChange }: { onChange?: (locale: Locale) => void } = {}) {
   const { t, locale, setLocale } = useAuth();
   return (
     <View accessibilityRole="radiogroup" accessibilityLabel={t("common.language")} style={styles.switch}>
@@ -572,7 +573,11 @@ export function LanguageSwitch() {
             accessibilityLanguage={code}
             // 36 drawn, 44 touched.
             hitSlop={{ top: 4, bottom: 4 }}
-            onPress={() => void setLocale(code)}
+            onPress={() => {
+              if (code === locale) return;
+              if (onChange) onChange(code);
+              else void setLocale(code);
+            }}
             style={[styles.switchButton, active && { backgroundColor: colors.brandInk }]}
           >
             <T size={12} weight={800} color={active ? colors.brandFg : colors.muted} maxFontSizeMultiplier={1.3}>

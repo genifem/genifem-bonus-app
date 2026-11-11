@@ -4,6 +4,230 @@
  */
 
 export interface paths {
+    "/api/v1/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Login
+         * @description Sign in with Employee ID and password (CR-02). A wrong EID and a wrong password both
+         *     answer 401 ``credentials_invalid``; the fifth wrong password in a row answers 403
+         *     ``account_locked`` with ``details.until`` (CR-07).
+         */
+        post: operations["login_api_v1_auth_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Logout */
+        post: operations["logout_api_v1_auth_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/owner/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Owner Login */
+        post: operations["owner_login_api_v1_auth_owner_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/owner/mfa/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Owner Mfa Confirm */
+        post: operations["owner_mfa_confirm_api_v1_auth_owner_mfa_confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/owner/mfa/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Owner Mfa Setup */
+        post: operations["owner_mfa_setup_api_v1_auth_owner_mfa_setup_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/owner/mfa/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Owner Mfa Verify */
+        post: operations["owner_mfa_verify_api_v1_auth_owner_mfa_verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh */
+        post: operations["refresh_api_v1_auth_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/setup/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Setup Complete
+         * @description Step 3: choose a password and sign in. 422 ``password_weak`` (CR-05).
+         */
+        post: operations["setup_complete_api_v1_auth_setup_complete_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/setup/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Setup Start
+         * @description Step 1 of setup or reset: text a code to the number on file (CR-03, CR-06).
+         *     404 ``eid_unknown``, 409 ``no_phone_on_file``, 429 ``resend_too_soon``, 403
+         *     ``code_locked``.
+         */
+        post: operations["setup_start_api_v1_auth_setup_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/setup/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Setup Verify
+         * @description Step 2: the code. 401 ``code_invalid`` (with ``details.attempts_left``) or
+         *     ``code_expired``; the fifth wrong code answers 403 ``code_locked`` (CR-04).
+         */
+        post: operations["setup_verify_api_v1_auth_setup_verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Me */
+        get: operations["get_me_api_v1_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Set Preferences
+         * @description Language (NF-02) and whether to get push notifications.
+         */
+        patch: operations["set_preferences_api_v1_me_preferences_patch"];
+        trace?: never;
+    };
     "/api/v1/meta": {
         parameters: {
             query?: never;
@@ -21,10 +245,496 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/portal/areas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Areas */
+        get: operations["list_areas_api_v1_portal_areas_get"];
+        put?: never;
+        /** Create Area */
+        post: operations["create_area_api_v1_portal_areas_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/areas/{area_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Area */
+        patch: operations["update_area_api_v1_portal_areas__area_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/portal/people": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List People
+         * @description Filter by role, store (``store_id`` or a supervisor's stores) and name or EID.
+         */
+        get: operations["list_people_api_v1_portal_people_get"];
+        put?: never;
+        /**
+         * Create Person
+         * @description 409 ``eid_taken``, ``store_has_gm``, ``store_has_supervisor``, ``area_has_director``;
+         *     422 ``store_required``, ``stores_required``, ``area_required``, ``phone_invalid``.
+         */
+        post: operations["create_person_api_v1_portal_people_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/people/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Commit Import
+         * @description Apply the good rows; report the rest. 422 ``csv_rejected`` for a file that can't be
+         *     read at all.
+         */
+        post: operations["commit_import_api_v1_portal_people_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/people/import/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Import
+         * @description What the file would do, line by line. Nothing is written.
+         */
+        post: operations["preview_import_api_v1_portal_people_import_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/people/import/template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Import Template */
+        get: operations["import_template_api_v1_portal_people_import_template_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/people/{person_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Person */
+        get: operations["get_person_api_v1_portal_people__person_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Person
+         * @description A role change or a transfer applies from their next action.
+         */
+        patch: operations["update_person_api_v1_portal_people__person_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/portal/people/{person_id}/reactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reactivate Person */
+        post: operations["reactivate_person_api_v1_portal_people__person_id__reactivate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/people/{person_id}/terminate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Terminate Person
+         * @description CR-09: they can't sign in from now on, and their sessions end at once.
+         */
+        post: operations["terminate_person_api_v1_portal_people__person_id__terminate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Settings
+         * @description Every owner rule, with the version an edit is based on.
+         */
+        get: operations["get_settings_api_v1_portal_settings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Patch Settings
+         * @description Change one or more settings by path (``allowance.crew``, ``tiers.silver.min``,
+         *     ``badges.guest.bonus``, ``spin.prizes``...). Validated as a whole on the server: 422
+         *     ``settings_invalid`` with ``details.fields`` mapping each path to what's wrong. Every
+         *     save is written to the audit log with the before and after values (NF-09).
+         */
+        patch: operations["patch_settings_api_v1_portal_settings_patch"];
+        trace?: never;
+    };
+    "/api/v1/portal/stores": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Stores */
+        get: operations["list_stores_api_v1_portal_stores_get"];
+        put?: never;
+        /** Create Store */
+        post: operations["create_store_api_v1_portal_stores_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/stores/{store_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Store
+         * @description 409 ``store_has_people`` when closing a store someone still works at.
+         */
+        patch: operations["update_store_api_v1_portal_stores__store_id__patch"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * Allowance
+         * @description Monthly kudos (giving) allowance per role. "0 or more, whole coins".
+         */
+        Allowance: {
+            /**
+             * Crew
+             * @default 30
+             */
+            crew: number;
+            /**
+             * Director
+             * @default 800
+             */
+            director: number;
+            /**
+             * Gm
+             * @default 300
+             */
+            gm: number;
+            /**
+             * Owner
+             * @default 2000
+             */
+            owner: number;
+            /**
+             * Shift
+             * @default 75
+             */
+            shift: number;
+            /**
+             * Supervisor
+             * @default 500
+             */
+            supervisor: number;
+        };
+        /**
+         * Amounts
+         * @description The three preset shout-out amounts per role. Owners can also type a custom amount
+         *     from OWNER_CUSTOM_MIN to OWNER_CUSTOM_MAX.
+         */
+        Amounts: {
+            /** Crew */
+            crew: number[];
+            /** Director */
+            director: number[];
+            /** Gm */
+            gm: number[];
+            /** Owner */
+            owner: number[];
+            /** Shift */
+            shift: number[];
+            /** Supervisor */
+            supervisor: number[];
+        };
+        /** AreaIn */
+        AreaIn: {
+            /** Name */
+            name: string;
+            /** Tz */
+            tz?: string | null;
+        };
+        /** AreaOut */
+        AreaOut: {
+            director: components["schemas"]["PersonRef"] | null;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Name */
+            name: string;
+            /** Stores */
+            stores: number;
+            /** Tz */
+            tz: string | null;
+        };
+        /** AreaPatch */
+        AreaPatch: {
+            /** Name */
+            name?: string | null;
+            /** Tz */
+            tz?: string | null;
+        };
+        /** AreaRef */
+        AreaRef: {
+            id: components["schemas"]["PydanticObjectId"];
+            /** Name */
+            name: string;
+        };
+        /** Award */
+        Award: {
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+            /** Coins */
+            coins: number;
+            /** Id */
+            id: string;
+            /**
+             * Metric
+             * @enum {string}
+             */
+            metric: "earned" | "improved" | "guest" | "peer";
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+        };
+        /** Badge */
+        Badge: {
+            /**
+             * Bonus
+             * @default 0
+             */
+            bonus: number;
+            /**
+             * Count
+             * @default 1
+             */
+            count: number;
+            /**
+             * Gives Spin
+             * @default false
+             */
+            gives_spin: boolean;
+            /**
+             * Icon
+             * @default star
+             */
+            icon: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+            /**
+             * Rule
+             * @enum {string}
+             */
+            rule: "tag" | "given" | "days" | "spin";
+            /** Tag */
+            tag: ("guest" | "rush" | "team" | "clean" | "above" | "lead") | null;
+        };
+        /** CsvIn */
+        CsvIn: {
+            /** Csv */
+            csv: string;
+        };
+        /**
+         * CsvPreview
+         * @description What a commit would do. Nothing is written.
+         */
+        CsvPreview: {
+            /** Errors */
+            errors: number;
+            /** Rejected */
+            rejected: string | null;
+            /** Rows */
+            rows: components["schemas"]["CsvRow"][];
+            /** To Create */
+            to_create: number;
+            /** To Update */
+            to_update: number;
+        };
+        /** CsvResult */
+        CsvResult: {
+            /** Created */
+            created: number;
+            /** Failed */
+            failed: number;
+            /** Rows */
+            rows: components["schemas"]["CsvRow"][];
+            /** Updated */
+            updated: number;
+        };
+        /** CsvRow */
+        CsvRow: {
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "create" | "update" | "error";
+            /** Eid */
+            eid: string | null;
+            /** Errors */
+            errors: string[];
+            /** Line */
+            line: number;
+            /** Name */
+            name: string | null;
+            /** Role */
+            role: string | null;
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
+        /** LoginIn */
+        LoginIn: {
+            /** Eid */
+            eid: string;
+            /** Password */
+            password: string;
+        };
+        /**
+         * MeOut
+         * @description Whoever is signed in. For a person: their role and where they work, which decides
+         *     the app's tab group (CR-08: GMs get the manager tabs). For an owner: their name for the
+         *     portal's sidebar (OP-21).
+         */
+        MeOut: {
+            area: components["schemas"]["AreaRef"] | null;
+            /** Capabilities */
+            capabilities: string[];
+            /** Eid */
+            eid: string | null;
+            /** Email */
+            email: string | null;
+            /** First Name */
+            first_name: string;
+            /**
+             * Holder
+             * @enum {string}
+             */
+            holder: "person" | "owner";
+            id: components["schemas"]["PydanticObjectId"];
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "en" | "es";
+            /** Name */
+            name: string;
+            /**
+             * Notifications On
+             * @default true
+             */
+            notifications_on: boolean;
+            /** Role */
+            role: ("crew" | "shift" | "gm" | "supervisor" | "director") | "owner";
+            store: components["schemas"]["StoreRef"] | null;
+            /** Stores */
+            stores: components["schemas"]["StoreRef"][];
+        };
         /**
          * MetaOut
          * @description What a client needs before anyone signs in: whose app this is and what is switched on.
@@ -41,6 +751,482 @@ export interface components {
             /** Tenant */
             tenant: string;
         };
+        /** MfaCodeIn */
+        MfaCodeIn: {
+            /** Code */
+            code: string;
+            /** Mfa Token */
+            mfa_token: string;
+        };
+        /** MfaEnabledOut */
+        MfaEnabledOut: {
+            auth: components["schemas"]["OwnerAuthOut"];
+            /** Recovery Codes */
+            recovery_codes: string[];
+        };
+        /** MfaSetupOut */
+        MfaSetupOut: {
+            /** Otpauth Uri */
+            otpauth_uri: string;
+            /** Secret */
+            secret: string;
+        };
+        /** MfaTokenIn */
+        MfaTokenIn: {
+            /** Mfa Token */
+            mfa_token: string;
+        };
+        /**
+         * OwnerAuthOut
+         * @description An owner sign-in step. ``done`` carries the tokens (the portal's proxy keeps them in
+         *     cookies). With the second factor on (plan D8), ``mfa`` asks for an authenticator code
+         *     and ``mfa_setup`` for one to be set up first, each with a short-lived ``mfa_token``.
+         */
+        OwnerAuthOut: {
+            /** Mfa Token */
+            mfa_token: string | null;
+            /**
+             * Step
+             * @enum {string}
+             */
+            step: "done" | "mfa" | "mfa_setup";
+            tokens: components["schemas"]["TokenOut"] | null;
+        };
+        /** OwnerLoginIn */
+        OwnerLoginIn: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+        };
+        /** PeoplePage */
+        PeoplePage: {
+            /** Items */
+            items: components["schemas"]["PersonOut"][];
+            /** Total */
+            total: number;
+        };
+        /** PersonIn */
+        PersonIn: {
+            area_id?: components["schemas"]["PydanticObjectId"] | null;
+            /** Eid */
+            eid: string;
+            /** Hire Date */
+            hire_date?: string | null;
+            /**
+             * Language
+             * @default en
+             * @enum {string}
+             */
+            language: "en" | "es";
+            /** Name */
+            name: string;
+            /** Phone */
+            phone?: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "crew" | "shift" | "gm" | "supervisor" | "director";
+            store_id?: components["schemas"]["PydanticObjectId"] | null;
+            /** Store Ids */
+            store_ids?: components["schemas"]["PydanticObjectId"][];
+        };
+        /**
+         * PersonOut
+         * @description One row of the Roster page. Owners only (nothing sends this to the app), but the
+         *     personal fields are still marked, so pii.respond can strip them anywhere else.
+         */
+        PersonOut: {
+            area: components["schemas"]["AreaRef"] | null;
+            /** Eid */
+            eid: string | null;
+            /** Hire Date */
+            hire_date: string | null;
+            id: components["schemas"]["PydanticObjectId"];
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "en" | "es";
+            /**
+             * Locked
+             * @default false
+             */
+            locked: boolean;
+            /** Name */
+            name: string;
+            /** Phone Masked */
+            phone_masked: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "crew" | "shift" | "gm" | "supervisor" | "director";
+            /** Setup Done */
+            setup_done: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "terminated";
+            store: components["schemas"]["StoreRef"] | null;
+            /** Stores */
+            stores: components["schemas"]["StoreRef"][];
+            /** Terminated At */
+            terminated_at: string | null;
+        };
+        /**
+         * PersonPatch
+         * @description Only the fields sent are changed. ``phone: null`` removes the number on file.
+         */
+        PersonPatch: {
+            area_id?: components["schemas"]["PydanticObjectId"] | null;
+            /** Eid */
+            eid?: string | null;
+            /** Hire Date */
+            hire_date?: string | null;
+            /** Language */
+            language?: ("en" | "es") | null;
+            /** Name */
+            name?: string | null;
+            /** Phone */
+            phone?: string | null;
+            /** Role */
+            role?: ("crew" | "shift" | "gm" | "supervisor" | "director") | null;
+            store_id?: components["schemas"]["PydanticObjectId"] | null;
+            /** Store Ids */
+            store_ids?: components["schemas"]["PydanticObjectId"][] | null;
+        };
+        /** PersonRef */
+        PersonRef: {
+            id: components["schemas"]["PydanticObjectId"];
+            /** Name */
+            name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "crew" | "shift" | "gm" | "supervisor" | "director";
+        };
+        /** PreferencesIn */
+        PreferencesIn: {
+            /** Language */
+            language?: ("en" | "es") | null;
+            /** Notifications On */
+            notifications_on?: boolean | null;
+        };
+        /** Prize */
+        Prize: {
+            /**
+             * Amount
+             * @default 0
+             */
+            amount: number;
+            /** Badge Id */
+            badge_id: string | null;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "coins" | "kudos" | "item" | "badge";
+            /** Label */
+            label: string;
+            /** Label Es */
+            label_es: string | null;
+            /** Weight */
+            weight: number;
+        };
+        /** @example 5eb7cf5a86d9755df3a6c593 */
+        PydanticObjectId: string;
+        /**
+         * Redeem
+         * @description Redemption limits (OP-15).
+         */
+        Redeem: {
+            /**
+             * Approval
+             * @default true
+             */
+            approval: boolean;
+            /**
+             * Max Coins
+             * @default 500
+             */
+            max_coins: number;
+            /**
+             * Max Rewards
+             * @default 3
+             */
+            max_rewards: number;
+            /**
+             * Store Budget
+             * @default 4000
+             */
+            store_budget: number;
+        };
+        /** RefreshIn */
+        RefreshIn: {
+            /** Refresh Token */
+            refresh_token: string;
+        };
+        /**
+         * Rules
+         * @description Everything an owner can set. ``version`` and who changed it live on the document.
+         */
+        Rules: {
+            allowance: components["schemas"]["Allowance"];
+            amounts: components["schemas"]["Amounts"];
+            /** Awards */
+            awards: components["schemas"]["Award"][];
+            /** Badges */
+            badges: components["schemas"]["Badge"][];
+            /**
+             * Coin Value
+             * @default 0.1
+             */
+            coin_value: number;
+            redeem: components["schemas"]["Redeem"];
+            scope: components["schemas"]["Scope"];
+            spin: components["schemas"]["Spin"];
+            /** Tiers */
+            tiers: components["schemas"]["Tier"][];
+            /**
+             * Upward
+             * @default true
+             */
+            upward: boolean;
+        };
+        /**
+         * Scope
+         * @description Who each role can recognize (OP-14). Owners always reach everyone, so they have no
+         *     row; "at the same rank or below" and the upward exception are applied on top.
+         */
+        Scope: {
+            /**
+             * Crew
+             * @default store
+             * @enum {string}
+             */
+            crew: "store" | "stores" | "area" | "all";
+            /**
+             * Director
+             * @default area
+             * @enum {string}
+             */
+            director: "store" | "stores" | "area" | "all";
+            /**
+             * Gm
+             * @default store
+             * @enum {string}
+             */
+            gm: "store" | "stores" | "area" | "all";
+            /**
+             * Shift
+             * @default store
+             * @enum {string}
+             */
+            shift: "store" | "stores" | "area" | "all";
+            /**
+             * Supervisor
+             * @default stores
+             * @enum {string}
+             */
+            supervisor: "store" | "stores" | "area" | "all";
+        };
+        /** SettingsOut */
+        SettingsOut: {
+            rules: components["schemas"]["Rules"];
+            /** Updated At */
+            updated_at: string | null;
+            /** Updated By */
+            updated_by: string | null;
+            /** Version */
+            version: number;
+        };
+        /** SettingsPatchIn */
+        SettingsPatchIn: {
+            /** Changes */
+            changes: {
+                [key: string]: unknown;
+            };
+        };
+        /** SetupCompleteIn */
+        SetupCompleteIn: {
+            /** Password */
+            password: string;
+            /** Setup Token */
+            setup_token: string;
+        };
+        /**
+         * SetupStartIn
+         * @description Step 1 of first-time setup (CR-03) or "Forgot password?" (CR-06).
+         */
+        SetupStartIn: {
+            /** Eid */
+            eid: string;
+            /**
+             * Purpose
+             * @default setup
+             * @enum {string}
+             */
+            purpose: "setup" | "reset";
+        };
+        /** SetupStartOut */
+        SetupStartOut: {
+            /** Expires In S */
+            expires_in_s: number;
+            /** Masked Phone */
+            masked_phone: string;
+            /** Resend After S */
+            resend_after_s: number;
+        };
+        /** SetupVerifyIn */
+        SetupVerifyIn: {
+            /** Code */
+            code: string;
+            /** Eid */
+            eid: string;
+        };
+        /** SetupVerifyOut */
+        SetupVerifyOut: {
+            /** Expires In S */
+            expires_in_s: number;
+            /** Setup Token */
+            setup_token: string;
+        };
+        /** Spin */
+        Spin: {
+            /**
+             * Enabled
+             * @default true
+             */
+            enabled: boolean;
+            /**
+             * Every Coins
+             * @default 200
+             */
+            every_coins: number;
+            /**
+             * Max Per Month
+             * @default 2
+             */
+            max_per_month: number;
+            /**
+             * On Badge
+             * @default true
+             */
+            on_badge: boolean;
+            /**
+             * On Milestone
+             * @default true
+             */
+            on_milestone: boolean;
+            /** Prizes */
+            prizes: components["schemas"]["Prize"][];
+            /**
+             * Prizes Version
+             * @default 1
+             */
+            prizes_version: number;
+        };
+        /** StoreIn */
+        StoreIn: {
+            area_id?: components["schemas"]["PydanticObjectId"] | null;
+            /** Name */
+            name: string;
+            /** Number */
+            number: string;
+            /** Tz */
+            tz?: string | null;
+        };
+        /** StoreOut */
+        StoreOut: {
+            /** Active */
+            active: boolean;
+            area: components["schemas"]["AreaRef"] | null;
+            gm: components["schemas"]["PersonRef"] | null;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Name */
+            name: string;
+            /** Number */
+            number: string;
+            /** People */
+            people: number;
+            supervisor: components["schemas"]["PersonRef"] | null;
+            /** Tz */
+            tz: string | null;
+        };
+        /** StorePatch */
+        StorePatch: {
+            /** Active */
+            active?: boolean | null;
+            area_id?: components["schemas"]["PydanticObjectId"] | null;
+            /** Name */
+            name?: string | null;
+            /** Number */
+            number?: string | null;
+            /** Tz */
+            tz?: string | null;
+        };
+        /** StoreRef */
+        StoreRef: {
+            id: components["schemas"]["PydanticObjectId"];
+            /** Name */
+            name: string;
+            /** Number */
+            number: string;
+        };
+        /** Tier */
+        Tier: {
+            /**
+             * Color
+             * @default #C77D3A
+             */
+            color: string;
+            /**
+             * Id
+             * @enum {string}
+             */
+            id: "bronze" | "silver" | "gold" | "platinum";
+            /** Min */
+            min: number;
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+        };
+        /** TokenOut */
+        TokenOut: {
+            /** Access Token */
+            access_token: string;
+            /** Expires In */
+            expires_in: number;
+            /** Refresh Token */
+            refresh_token: string | null;
+            /**
+             * Token Type
+             * @default bearer
+             * @constant
+             */
+            token_type: "bearer";
+            user: components["schemas"]["MeOut"];
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Context */
+            ctx?: Record<string, never>;
+            /** Input */
+            input?: unknown;
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -50,6 +1236,387 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    login_api_v1_auth_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    logout_api_v1_auth_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_login_api_v1_auth_owner_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OwnerLoginIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerAuthOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_mfa_confirm_api_v1_auth_owner_mfa_confirm_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaCodeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaEnabledOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_mfa_setup_api_v1_auth_owner_mfa_setup_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaTokenIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaSetupOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_mfa_verify_api_v1_auth_owner_mfa_verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaCodeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerAuthOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refresh_api_v1_auth_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    setup_complete_api_v1_auth_setup_complete_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetupCompleteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TokenOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    setup_start_api_v1_auth_setup_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetupStartIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SetupStartOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    setup_verify_api_v1_auth_setup_verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetupVerifyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SetupVerifyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_me_api_v1_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeOut"];
+                };
+            };
+        };
+    };
+    set_preferences_api_v1_me_preferences_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PreferencesIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_meta_api_v1_meta_get: {
         parameters: {
             query?: never;
@@ -66,6 +1633,516 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MetaOut"];
+                };
+            };
+        };
+    };
+    list_areas_api_v1_portal_areas_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AreaOut"][];
+                };
+            };
+        };
+    };
+    create_area_api_v1_portal_areas_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AreaIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AreaOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_area_api_v1_portal_areas__area_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                area_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AreaPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AreaOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_people_api_v1_portal_people_get: {
+        parameters: {
+            query?: {
+                role?: ("crew" | "shift" | "gm" | "supervisor" | "director") | null;
+                store?: components["schemas"]["PydanticObjectId"] | null;
+                q?: string | null;
+                status?: "active" | "terminated" | "all";
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PeoplePage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_person_api_v1_portal_people_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    commit_import_api_v1_portal_people_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CsvIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CsvResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_import_api_v1_portal_people_import_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CsvIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CsvPreview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    import_template_api_v1_portal_people_import_template_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_person_api_v1_portal_people__person_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_person_api_v1_portal_people__person_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PersonPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reactivate_person_api_v1_portal_people__person_id__reactivate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    terminate_person_api_v1_portal_people__person_id__terminate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_settings_api_v1_portal_settings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsOut"];
+                };
+            };
+        };
+    };
+    patch_settings_api_v1_portal_settings_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettingsPatchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_stores_api_v1_portal_stores_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StoreOut"][];
+                };
+            };
+        };
+    };
+    create_store_api_v1_portal_stores_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StoreIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StoreOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_store_api_v1_portal_stores__store_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                store_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StorePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StoreOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

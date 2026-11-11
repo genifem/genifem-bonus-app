@@ -1,6 +1,710 @@
 {
   "components": {
     "schemas": {
+      "Allowance": {
+        "description": "Monthly kudos (giving) allowance per role. \"0 or more, whole coins\".",
+        "properties": {
+          "crew": {
+            "default": 30,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Crew",
+            "type": "integer"
+          },
+          "director": {
+            "default": 800,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Director",
+            "type": "integer"
+          },
+          "gm": {
+            "default": 300,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Gm",
+            "type": "integer"
+          },
+          "owner": {
+            "default": 2000,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Owner",
+            "type": "integer"
+          },
+          "shift": {
+            "default": 75,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Shift",
+            "type": "integer"
+          },
+          "supervisor": {
+            "default": 500,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Supervisor",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "crew",
+          "shift",
+          "gm",
+          "supervisor",
+          "director",
+          "owner"
+        ],
+        "title": "Allowance",
+        "type": "object"
+      },
+      "Amounts": {
+        "description": "The three preset shout-out amounts per role. Owners can also type a custom amount\nfrom OWNER_CUSTOM_MIN to OWNER_CUSTOM_MAX.",
+        "properties": {
+          "crew": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Crew",
+            "type": "array"
+          },
+          "director": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Director",
+            "type": "array"
+          },
+          "gm": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Gm",
+            "type": "array"
+          },
+          "owner": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Owner",
+            "type": "array"
+          },
+          "shift": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Shift",
+            "type": "array"
+          },
+          "supervisor": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Supervisor",
+            "type": "array"
+          }
+        },
+        "required": [
+          "crew",
+          "shift",
+          "gm",
+          "supervisor",
+          "director",
+          "owner"
+        ],
+        "title": "Amounts",
+        "type": "object"
+      },
+      "AreaIn": {
+        "properties": {
+          "name": {
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "tz": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tz"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "AreaIn",
+        "type": "object"
+      },
+      "AreaOut": {
+        "properties": {
+          "director": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "stores": {
+            "title": "Stores",
+            "type": "integer"
+          },
+          "tz": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tz"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "tz",
+          "director",
+          "stores"
+        ],
+        "title": "AreaOut",
+        "type": "object"
+      },
+      "AreaPatch": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "tz": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tz"
+          }
+        },
+        "title": "AreaPatch",
+        "type": "object"
+      },
+      "AreaRef": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "AreaRef",
+        "type": "object"
+      },
+      "Award": {
+        "properties": {
+          "active": {
+            "default": true,
+            "title": "Active",
+            "type": "boolean"
+          },
+          "coins": {
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Coins",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "metric": {
+            "enum": [
+              "earned",
+              "improved",
+              "guest",
+              "peer"
+            ],
+            "title": "Metric",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "name_es",
+          "metric",
+          "coins",
+          "active"
+        ],
+        "title": "Award",
+        "type": "object"
+      },
+      "Badge": {
+        "properties": {
+          "bonus": {
+            "default": 0,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Bonus",
+            "type": "integer"
+          },
+          "count": {
+            "default": 1,
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Count",
+            "type": "integer"
+          },
+          "gives_spin": {
+            "default": false,
+            "title": "Gives Spin",
+            "type": "boolean"
+          },
+          "icon": {
+            "default": "star",
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Icon",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          },
+          "rule": {
+            "enum": [
+              "tag",
+              "given",
+              "days",
+              "spin"
+            ],
+            "title": "Rule",
+            "type": "string"
+          },
+          "tag": {
+            "anyOf": [
+              {
+                "enum": [
+                  "guest",
+                  "rush",
+                  "team",
+                  "clean",
+                  "above",
+                  "lead"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tag"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "name_es",
+          "icon",
+          "rule",
+          "tag",
+          "count",
+          "bonus",
+          "gives_spin"
+        ],
+        "title": "Badge",
+        "type": "object"
+      },
+      "CsvIn": {
+        "properties": {
+          "csv": {
+            "maxLength": 2000000,
+            "minLength": 1,
+            "title": "Csv",
+            "type": "string"
+          }
+        },
+        "required": [
+          "csv"
+        ],
+        "title": "CsvIn",
+        "type": "object"
+      },
+      "CsvPreview": {
+        "description": "What a commit would do. Nothing is written.",
+        "properties": {
+          "errors": {
+            "title": "Errors",
+            "type": "integer"
+          },
+          "rejected": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejected"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/CsvRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "to_create": {
+            "title": "To Create",
+            "type": "integer"
+          },
+          "to_update": {
+            "title": "To Update",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rows",
+          "to_create",
+          "to_update",
+          "errors",
+          "rejected"
+        ],
+        "title": "CsvPreview",
+        "type": "object"
+      },
+      "CsvResult": {
+        "properties": {
+          "created": {
+            "title": "Created",
+            "type": "integer"
+          },
+          "failed": {
+            "title": "Failed",
+            "type": "integer"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/CsvRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "updated": {
+            "title": "Updated",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "created",
+          "updated",
+          "failed",
+          "rows"
+        ],
+        "title": "CsvResult",
+        "type": "object"
+      },
+      "CsvRow": {
+        "properties": {
+          "action": {
+            "enum": [
+              "create",
+              "update",
+              "error"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "eid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eid"
+          },
+          "errors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "line": {
+            "title": "Line",
+            "type": "integer"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role"
+          }
+        },
+        "required": [
+          "line",
+          "action",
+          "eid",
+          "name",
+          "role",
+          "errors"
+        ],
+        "title": "CsvRow",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "LoginIn": {
+        "properties": {
+          "eid": {
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Eid",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "eid",
+          "password"
+        ],
+        "title": "LoginIn",
+        "type": "object"
+      },
+      "MeOut": {
+        "description": "Whoever is signed in. For a person: their role and where they work, which decides\nthe app's tab group (CR-08: GMs get the manager tabs). For an owner: their name for the\nportal's sidebar (OP-21).",
+        "properties": {
+          "area": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AreaRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "capabilities": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Capabilities",
+            "type": "array"
+          },
+          "eid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eid"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "first_name": {
+            "title": "First Name",
+            "type": "string"
+          },
+          "holder": {
+            "enum": [
+              "person",
+              "owner"
+            ],
+            "title": "Holder",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "language": {
+            "enum": [
+              "en",
+              "es"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "notifications_on": {
+            "default": true,
+            "title": "Notifications On",
+            "type": "boolean"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "crew",
+                  "shift",
+                  "gm",
+                  "supervisor",
+                  "director"
+                ],
+                "type": "string"
+              },
+              {
+                "const": "owner",
+                "type": "string"
+              }
+            ],
+            "title": "Role"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stores": {
+            "items": {
+              "$ref": "#/components/schemas/StoreRef"
+            },
+            "title": "Stores",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "holder",
+          "name",
+          "first_name",
+          "role",
+          "language",
+          "notifications_on",
+          "eid",
+          "email",
+          "store",
+          "stores",
+          "area",
+          "capabilities"
+        ],
+        "title": "MeOut",
+        "type": "object"
+      },
       "MetaOut": {
         "description": "What a client needs before anyone signs in: whose app this is and what is switched on.",
         "properties": {
@@ -41,6 +745,1419 @@
         ],
         "title": "MetaOut",
         "type": "object"
+      },
+      "MfaCodeIn": {
+        "properties": {
+          "code": {
+            "maxLength": 20,
+            "minLength": 6,
+            "title": "Code",
+            "type": "string"
+          },
+          "mfa_token": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Mfa Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "mfa_token",
+          "code"
+        ],
+        "title": "MfaCodeIn",
+        "type": "object"
+      },
+      "MfaEnabledOut": {
+        "properties": {
+          "auth": {
+            "$ref": "#/components/schemas/OwnerAuthOut"
+          },
+          "recovery_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Recovery Codes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "recovery_codes",
+          "auth"
+        ],
+        "title": "MfaEnabledOut",
+        "type": "object"
+      },
+      "MfaSetupOut": {
+        "properties": {
+          "otpauth_uri": {
+            "title": "Otpauth Uri",
+            "type": "string"
+          },
+          "secret": {
+            "title": "Secret",
+            "type": "string"
+          }
+        },
+        "required": [
+          "secret",
+          "otpauth_uri"
+        ],
+        "title": "MfaSetupOut",
+        "type": "object"
+      },
+      "MfaTokenIn": {
+        "properties": {
+          "mfa_token": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Mfa Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "mfa_token"
+        ],
+        "title": "MfaTokenIn",
+        "type": "object"
+      },
+      "OwnerAuthOut": {
+        "description": "An owner sign-in step. ``done`` carries the tokens (the portal's proxy keeps them in\ncookies). With the second factor on (plan D8), ``mfa`` asks for an authenticator code\nand ``mfa_setup`` for one to be set up first, each with a short-lived ``mfa_token``.",
+        "properties": {
+          "mfa_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mfa Token"
+          },
+          "step": {
+            "enum": [
+              "done",
+              "mfa",
+              "mfa_setup"
+            ],
+            "title": "Step",
+            "type": "string"
+          },
+          "tokens": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TokenOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "step",
+          "tokens",
+          "mfa_token"
+        ],
+        "title": "OwnerAuthOut",
+        "type": "object"
+      },
+      "OwnerLoginIn": {
+        "properties": {
+          "email": {
+            "maxLength": 254,
+            "minLength": 3,
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "OwnerLoginIn",
+        "type": "object"
+      },
+      "PeoplePage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PersonOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "PeoplePage",
+        "type": "object"
+      },
+      "PersonIn": {
+        "properties": {
+          "area_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eid": {
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Eid",
+            "type": "string"
+          },
+          "hire_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hire Date"
+          },
+          "language": {
+            "default": "en",
+            "enum": [
+              "en",
+              "es"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "maxLength": 32,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "role": {
+            "enum": [
+              "crew",
+              "shift",
+              "gm",
+              "supervisor",
+              "director"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "store_ids": {
+            "items": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            },
+            "maxItems": 100,
+            "title": "Store Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "eid",
+          "name",
+          "role"
+        ],
+        "title": "PersonIn",
+        "type": "object"
+      },
+      "PersonOut": {
+        "description": "One row of the Roster page. Owners only (nothing sends this to the app), but the\npersonal fields are still marked, so pii.respond can strip them anywhere else.",
+        "properties": {
+          "area": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AreaRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eid",
+            "x-pii": true
+          },
+          "hire_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hire Date"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "language": {
+            "enum": [
+              "en",
+              "es"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "locked": {
+            "default": false,
+            "title": "Locked",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "phone_masked": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone Masked",
+            "x-pii": true
+          },
+          "role": {
+            "enum": [
+              "crew",
+              "shift",
+              "gm",
+              "supervisor",
+              "director"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "setup_done": {
+            "title": "Setup Done",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "terminated"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stores": {
+            "items": {
+              "$ref": "#/components/schemas/StoreRef"
+            },
+            "title": "Stores",
+            "type": "array"
+          },
+          "terminated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Terminated At"
+          }
+        },
+        "required": [
+          "id",
+          "eid",
+          "name",
+          "role",
+          "store",
+          "stores",
+          "area",
+          "hire_date",
+          "status",
+          "terminated_at",
+          "language",
+          "setup_done",
+          "phone_masked",
+          "locked"
+        ],
+        "title": "PersonOut",
+        "type": "object"
+      },
+      "PersonPatch": {
+        "description": "Only the fields sent are changed. ``phone: null`` removes the number on file.",
+        "properties": {
+          "area_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eid": {
+            "anyOf": [
+              {
+                "maxLength": 32,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eid"
+          },
+          "hire_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hire Date"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "enum": [
+                  "en",
+                  "es"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "maxLength": 32,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "crew",
+                  "shift",
+                  "gm",
+                  "supervisor",
+                  "director"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "store_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                "maxItems": 100,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Ids"
+          }
+        },
+        "title": "PersonPatch",
+        "type": "object"
+      },
+      "PersonRef": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "crew",
+              "shift",
+              "gm",
+              "supervisor",
+              "director"
+            ],
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "role"
+        ],
+        "title": "PersonRef",
+        "type": "object"
+      },
+      "PreferencesIn": {
+        "properties": {
+          "language": {
+            "anyOf": [
+              {
+                "enum": [
+                  "en",
+                  "es"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "notifications_on": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notifications On"
+          }
+        },
+        "title": "PreferencesIn",
+        "type": "object"
+      },
+      "Prize": {
+        "properties": {
+          "amount": {
+            "default": 0,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Amount",
+            "type": "integer"
+          },
+          "badge_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Badge Id"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "coins",
+              "kudos",
+              "item",
+              "badge"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "label_es": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label Es"
+          },
+          "weight": {
+            "maximum": 100000.0,
+            "minimum": 0.0,
+            "title": "Weight",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "label_es",
+          "kind",
+          "amount",
+          "weight",
+          "badge_id"
+        ],
+        "title": "Prize",
+        "type": "object"
+      },
+      "PydanticObjectId": {
+        "example": "5eb7cf5a86d9755df3a6c593",
+        "maxLength": 24,
+        "minLength": 24,
+        "pattern": "^[0-9a-f]{24}$",
+        "type": "string"
+      },
+      "Redeem": {
+        "description": "Redemption limits (OP-15).",
+        "properties": {
+          "approval": {
+            "default": true,
+            "title": "Approval",
+            "type": "boolean"
+          },
+          "max_coins": {
+            "default": 500,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Max Coins",
+            "type": "integer"
+          },
+          "max_rewards": {
+            "default": 3,
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Max Rewards",
+            "type": "integer"
+          },
+          "store_budget": {
+            "default": 4000,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Store Budget",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "max_coins",
+          "max_rewards",
+          "store_budget",
+          "approval"
+        ],
+        "title": "Redeem",
+        "type": "object"
+      },
+      "RefreshIn": {
+        "properties": {
+          "refresh_token": {
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Refresh Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "refresh_token"
+        ],
+        "title": "RefreshIn",
+        "type": "object"
+      },
+      "Rules": {
+        "description": "Everything an owner can set. ``version`` and who changed it live on the document.",
+        "properties": {
+          "allowance": {
+            "$ref": "#/components/schemas/Allowance"
+          },
+          "amounts": {
+            "$ref": "#/components/schemas/Amounts"
+          },
+          "awards": {
+            "items": {
+              "$ref": "#/components/schemas/Award"
+            },
+            "title": "Awards",
+            "type": "array"
+          },
+          "badges": {
+            "items": {
+              "$ref": "#/components/schemas/Badge"
+            },
+            "title": "Badges",
+            "type": "array"
+          },
+          "coin_value": {
+            "default": 0.1,
+            "maximum": 10.0,
+            "minimum": 0.01,
+            "title": "Coin Value",
+            "type": "number"
+          },
+          "redeem": {
+            "$ref": "#/components/schemas/Redeem"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/Scope"
+          },
+          "spin": {
+            "$ref": "#/components/schemas/Spin"
+          },
+          "tiers": {
+            "items": {
+              "$ref": "#/components/schemas/Tier"
+            },
+            "title": "Tiers",
+            "type": "array"
+          },
+          "upward": {
+            "default": true,
+            "title": "Upward",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "allowance",
+          "amounts",
+          "scope",
+          "upward",
+          "redeem",
+          "coin_value",
+          "tiers",
+          "badges",
+          "spin",
+          "awards"
+        ],
+        "title": "Rules",
+        "type": "object"
+      },
+      "Scope": {
+        "description": "Who each role can recognize (OP-14). Owners always reach everyone, so they have no\nrow; \"at the same rank or below\" and the upward exception are applied on top.",
+        "properties": {
+          "crew": {
+            "default": "store",
+            "enum": [
+              "store",
+              "stores",
+              "area",
+              "all"
+            ],
+            "title": "Crew",
+            "type": "string"
+          },
+          "director": {
+            "default": "area",
+            "enum": [
+              "store",
+              "stores",
+              "area",
+              "all"
+            ],
+            "title": "Director",
+            "type": "string"
+          },
+          "gm": {
+            "default": "store",
+            "enum": [
+              "store",
+              "stores",
+              "area",
+              "all"
+            ],
+            "title": "Gm",
+            "type": "string"
+          },
+          "shift": {
+            "default": "store",
+            "enum": [
+              "store",
+              "stores",
+              "area",
+              "all"
+            ],
+            "title": "Shift",
+            "type": "string"
+          },
+          "supervisor": {
+            "default": "stores",
+            "enum": [
+              "store",
+              "stores",
+              "area",
+              "all"
+            ],
+            "title": "Supervisor",
+            "type": "string"
+          }
+        },
+        "required": [
+          "crew",
+          "shift",
+          "gm",
+          "supervisor",
+          "director"
+        ],
+        "title": "Scope",
+        "type": "object"
+      },
+      "SettingsOut": {
+        "properties": {
+          "rules": {
+            "$ref": "#/components/schemas/Rules"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version",
+          "rules",
+          "updated_at",
+          "updated_by"
+        ],
+        "title": "SettingsOut",
+        "type": "object"
+      },
+      "SettingsPatchIn": {
+        "properties": {
+          "changes": {
+            "additionalProperties": true,
+            "maxProperties": 100,
+            "minProperties": 1,
+            "title": "Changes",
+            "type": "object"
+          }
+        },
+        "required": [
+          "changes"
+        ],
+        "title": "SettingsPatchIn",
+        "type": "object"
+      },
+      "SetupCompleteIn": {
+        "properties": {
+          "password": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          },
+          "setup_token": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Setup Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "setup_token",
+          "password"
+        ],
+        "title": "SetupCompleteIn",
+        "type": "object"
+      },
+      "SetupStartIn": {
+        "description": "Step 1 of first-time setup (CR-03) or \"Forgot password?\" (CR-06).",
+        "properties": {
+          "eid": {
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Eid",
+            "type": "string"
+          },
+          "purpose": {
+            "default": "setup",
+            "enum": [
+              "setup",
+              "reset"
+            ],
+            "title": "Purpose",
+            "type": "string"
+          }
+        },
+        "required": [
+          "eid"
+        ],
+        "title": "SetupStartIn",
+        "type": "object"
+      },
+      "SetupStartOut": {
+        "properties": {
+          "expires_in_s": {
+            "title": "Expires In S",
+            "type": "integer"
+          },
+          "masked_phone": {
+            "title": "Masked Phone",
+            "type": "string"
+          },
+          "resend_after_s": {
+            "title": "Resend After S",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "masked_phone",
+          "expires_in_s",
+          "resend_after_s"
+        ],
+        "title": "SetupStartOut",
+        "type": "object"
+      },
+      "SetupVerifyIn": {
+        "properties": {
+          "code": {
+            "maxLength": 12,
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          },
+          "eid": {
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Eid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "eid",
+          "code"
+        ],
+        "title": "SetupVerifyIn",
+        "type": "object"
+      },
+      "SetupVerifyOut": {
+        "properties": {
+          "expires_in_s": {
+            "title": "Expires In S",
+            "type": "integer"
+          },
+          "setup_token": {
+            "title": "Setup Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "setup_token",
+          "expires_in_s"
+        ],
+        "title": "SetupVerifyOut",
+        "type": "object"
+      },
+      "Spin": {
+        "properties": {
+          "enabled": {
+            "default": true,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "every_coins": {
+            "default": 200,
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Every Coins",
+            "type": "integer"
+          },
+          "max_per_month": {
+            "default": 2,
+            "maximum": 30.0,
+            "minimum": 0.0,
+            "title": "Max Per Month",
+            "type": "integer"
+          },
+          "on_badge": {
+            "default": true,
+            "title": "On Badge",
+            "type": "boolean"
+          },
+          "on_milestone": {
+            "default": true,
+            "title": "On Milestone",
+            "type": "boolean"
+          },
+          "prizes": {
+            "items": {
+              "$ref": "#/components/schemas/Prize"
+            },
+            "title": "Prizes",
+            "type": "array"
+          },
+          "prizes_version": {
+            "default": 1,
+            "title": "Prizes Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "enabled",
+          "every_coins",
+          "on_badge",
+          "on_milestone",
+          "max_per_month",
+          "prizes",
+          "prizes_version"
+        ],
+        "title": "Spin",
+        "type": "object"
+      },
+      "StoreIn": {
+        "properties": {
+          "area_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "number": {
+            "maxLength": 12,
+            "minLength": 1,
+            "title": "Number",
+            "type": "string"
+          },
+          "tz": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tz"
+          }
+        },
+        "required": [
+          "number",
+          "name"
+        ],
+        "title": "StoreIn",
+        "type": "object"
+      },
+      "StoreOut": {
+        "properties": {
+          "active": {
+            "title": "Active",
+            "type": "boolean"
+          },
+          "area": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AreaRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gm": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "people": {
+            "title": "People",
+            "type": "integer"
+          },
+          "supervisor": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tz": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tz"
+          }
+        },
+        "required": [
+          "id",
+          "number",
+          "name",
+          "area",
+          "tz",
+          "active",
+          "gm",
+          "supervisor",
+          "people"
+        ],
+        "title": "StoreOut",
+        "type": "object"
+      },
+      "StorePatch": {
+        "properties": {
+          "active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active"
+          },
+          "area_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "maxLength": 12,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          },
+          "tz": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tz"
+          }
+        },
+        "title": "StorePatch",
+        "type": "object"
+      },
+      "StoreRef": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "number",
+          "name"
+        ],
+        "title": "StoreRef",
+        "type": "object"
+      },
+      "Tier": {
+        "properties": {
+          "color": {
+            "default": "#C77D3A",
+            "title": "Color",
+            "type": "string"
+          },
+          "id": {
+            "enum": [
+              "bronze",
+              "silver",
+              "gold",
+              "platinum"
+            ],
+            "title": "Id",
+            "type": "string"
+          },
+          "min": {
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Min",
+            "type": "integer"
+          },
+          "name": {
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "name_es",
+          "min",
+          "color"
+        ],
+        "title": "Tier",
+        "type": "object"
+      },
+      "TokenOut": {
+        "properties": {
+          "access_token": {
+            "title": "Access Token",
+            "type": "string"
+          },
+          "expires_in": {
+            "title": "Expires In",
+            "type": "integer"
+          },
+          "refresh_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refresh Token"
+          },
+          "token_type": {
+            "const": "bearer",
+            "default": "bearer",
+            "title": "Token Type",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/MeOut"
+          }
+        },
+        "required": [
+          "access_token",
+          "token_type",
+          "expires_in",
+          "refresh_token",
+          "user"
+        ],
+        "title": "TokenOut",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
       }
     }
   },
@@ -50,6 +2167,476 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "description": "Sign in with Employee ID and password (CR-02). A wrong EID and a wrong password both\nanswer 401 ``credentials_invalid``; the fifth wrong password in a row answers 403\n``account_locked`` with ``details.until`` (CR-07).",
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Login",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "logout_api_v1_auth_logout_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Logout",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/owner/login": {
+      "post": {
+        "operationId": "owner_login_api_v1_auth_owner_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerLoginIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerAuthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Login",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/owner/mfa/confirm": {
+      "post": {
+        "operationId": "owner_mfa_confirm_api_v1_auth_owner_mfa_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaCodeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaEnabledOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Mfa Confirm",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/owner/mfa/setup": {
+      "post": {
+        "operationId": "owner_mfa_setup_api_v1_auth_owner_mfa_setup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaTokenIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaSetupOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Mfa Setup",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/owner/mfa/verify": {
+      "post": {
+        "operationId": "owner_mfa_verify_api_v1_auth_owner_mfa_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaCodeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerAuthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Mfa Verify",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "operationId": "refresh_api_v1_auth_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Refresh",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/setup/complete": {
+      "post": {
+        "description": "Step 3: choose a password and sign in. 422 ``password_weak`` (CR-05).",
+        "operationId": "setup_complete_api_v1_auth_setup_complete_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetupCompleteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Setup Complete",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/setup/start": {
+      "post": {
+        "description": "Step 1 of setup or reset: text a code to the number on file (CR-03, CR-06).\n404 ``eid_unknown``, 409 ``no_phone_on_file``, 429 ``resend_too_soon``, 403\n``code_locked``.",
+        "operationId": "setup_start_api_v1_auth_setup_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetupStartIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetupStartOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Setup Start",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/setup/verify": {
+      "post": {
+        "description": "Step 2: the code. 401 ``code_invalid`` (with ``details.attempts_left``) or\n``code_expired``; the fifth wrong code answers 403 ``code_locked`` (CR-04).",
+        "operationId": "setup_verify_api_v1_auth_setup_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetupVerifyIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetupVerifyOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Setup Verify",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/me": {
+      "get": {
+        "operationId": "get_me_api_v1_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Me",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/me/preferences": {
+      "patch": {
+        "description": "Language (NF-02) and whether to get push notifications.",
+        "operationId": "set_preferences_api_v1_me_preferences_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferencesIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Preferences",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/v1/meta": {
       "get": {
         "operationId": "get_meta_api_v1_meta_get",
@@ -68,6 +2655,739 @@
         "summary": "Get Meta",
         "tags": [
           "meta"
+        ]
+      }
+    },
+    "/api/v1/portal/areas": {
+      "get": {
+        "operationId": "list_areas_api_v1_portal_areas_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AreaOut"
+                  },
+                  "title": "Response List Areas Api V1 Portal Areas Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Areas",
+        "tags": [
+          "roster"
+        ]
+      },
+      "post": {
+        "operationId": "create_area_api_v1_portal_areas_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AreaIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Area",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/areas/{area_id}": {
+      "patch": {
+        "operationId": "update_area_api_v1_portal_areas__area_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "area_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AreaPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Area",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/people": {
+      "get": {
+        "description": "Filter by role, store (``store_id`` or a supervisor's stores) and name or EID.",
+        "operationId": "list_people_api_v1_portal_people_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "role",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "crew",
+                    "shift",
+                    "gm",
+                    "supervisor",
+                    "director"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Role"
+            }
+          },
+          {
+            "in": "query",
+            "name": "store",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Store"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 80,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "default": "active",
+              "enum": [
+                "active",
+                "terminated",
+                "all"
+              ],
+              "title": "Status",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeoplePage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List People",
+        "tags": [
+          "roster"
+        ]
+      },
+      "post": {
+        "description": "409 ``eid_taken``, ``store_has_gm``, ``store_has_supervisor``, ``area_has_director``;\n422 ``store_required``, ``stores_required``, ``area_required``, ``phone_invalid``.",
+        "operationId": "create_person_api_v1_portal_people_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Person",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/people/import": {
+      "post": {
+        "description": "Apply the good rows; report the rest. 422 ``csv_rejected`` for a file that can't be\nread at all.",
+        "operationId": "commit_import_api_v1_portal_people_import_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CsvIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CsvResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Commit Import",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/people/import/preview": {
+      "post": {
+        "description": "What the file would do, line by line. Nothing is written.",
+        "operationId": "preview_import_api_v1_portal_people_import_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CsvIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CsvPreview"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Preview Import",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/people/import/template": {
+      "get": {
+        "operationId": "import_template_api_v1_portal_people_import_template_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Import Template",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/people/{person_id}": {
+      "get": {
+        "operationId": "get_person_api_v1_portal_people__person_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "person_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Person",
+        "tags": [
+          "roster"
+        ]
+      },
+      "patch": {
+        "description": "A role change or a transfer applies from their next action.",
+        "operationId": "update_person_api_v1_portal_people__person_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "person_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Person",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/people/{person_id}/reactivate": {
+      "post": {
+        "operationId": "reactivate_person_api_v1_portal_people__person_id__reactivate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "person_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reactivate Person",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/people/{person_id}/terminate": {
+      "post": {
+        "description": "CR-09: they can't sign in from now on, and their sessions end at once.",
+        "operationId": "terminate_person_api_v1_portal_people__person_id__terminate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "person_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Terminate Person",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/settings": {
+      "get": {
+        "description": "Every owner rule, with the version an edit is based on.",
+        "operationId": "get_settings_api_v1_portal_settings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Settings",
+        "tags": [
+          "settings"
+        ]
+      },
+      "patch": {
+        "description": "Change one or more settings by path (``allowance.crew``, ``tiers.silver.min``,\n``badges.guest.bonus``, ``spin.prizes``...). Validated as a whole on the server: 422\n``settings_invalid`` with ``details.fields`` mapping each path to what's wrong. Every\nsave is written to the audit log with the before and after values (NF-09).",
+        "operationId": "patch_settings_api_v1_portal_settings_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingsPatchIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Patch Settings",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/api/v1/portal/stores": {
+      "get": {
+        "operationId": "list_stores_api_v1_portal_stores_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/StoreOut"
+                  },
+                  "title": "Response List Stores Api V1 Portal Stores Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Stores",
+        "tags": [
+          "roster"
+        ]
+      },
+      "post": {
+        "operationId": "create_store_api_v1_portal_stores_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoreIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Store",
+        "tags": [
+          "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/stores/{store_id}": {
+      "patch": {
+        "description": "409 ``store_has_people`` when closing a store someone still works at.",
+        "operationId": "update_store_api_v1_portal_stores__store_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StorePatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Store",
+        "tags": [
+          "roster"
         ]
       }
     }

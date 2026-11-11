@@ -1,7 +1,10 @@
 import Constants from "expo-constants";
 
+import { ApiError } from "@/lib/apiError";
 import { clearTokens, loadSession, saveTokens } from "@/lib/session";
 import { tenantSlug } from "@/lib/tenant";
+
+export { ApiError };
 
 /**
  * Talking to the API from the app.
@@ -12,19 +15,6 @@ import { tenantSlug } from "@/lib/tenant";
  * There is deliberately no offline queue (plan D11): giving, redeeming, spinning and approving
  * need a connection and show the server's answer, so a failed call is reported, not replayed.
  */
-
-export class ApiError extends Error {
-  constructor(
-    readonly status: number,
-    readonly code: string,
-    message: string,
-    /** The API's structured context, when it sends one. */
-    readonly details?: unknown,
-  ) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
 
 /** In development, reach the API on the machine running Metro. */
 function devHost(): string {

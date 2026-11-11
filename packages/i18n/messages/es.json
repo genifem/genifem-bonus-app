@@ -13,11 +13,11 @@
     "close": "Cerrar"
   },
   "welcome": {
-    "logoPlaceholder": "[Logo del operador]",
     "title": "Crew Stars",
     "subtitle": "Recibe reconocimiento por el gran trabajo que haces",
     "firstTime": "¿Es tu primera vez?",
-    "signIn": "Iniciar sesión"
+    "signIn": "Iniciar sesión",
+    "operatorLogo": "Logotipo de {name}"
   },
   "signIn": {
     "title": "¡Hola de nuevo! 👋",
@@ -36,14 +36,18 @@
     "eidHint": "Tu EID aparece en tu horario, o pregúntale a tu gerente",
     "codeTitle": "Revisa tu teléfono 📱",
     "codeSent": "Enviamos un código de 6 dígitos al <b>{phone}</b>",
+    "codeSentA11y": "Enviamos un código de 6 dígitos a tu número que termina en {digits}.",
     "codeLabel": "Código de 6 dígitos",
     "resend": "Reenviar código",
     "resendIn": "Reenviar código ({time})",
+    "codeResent": "Te enviamos un código nuevo",
     "passwordTitleSetup": "Hazla tuya 🔒",
     "passwordTitleReset": "Elige una contraseña nueva",
     "passwordLead": "La usarás con tu EID para iniciar sesión.",
     "password": "Contraseña",
     "confirm": "Confirma la contraseña",
+    "showConfirm": "Mostrar confirmación de contraseña",
+    "hideConfirm": "Ocultar confirmación de contraseña",
     "rules": {
       "length": "8 caracteres o más",
       "number": "Al menos un número",
@@ -53,7 +57,7 @@
     "notMet": "Todavía no",
     "createAccount": "Crear cuenta",
     "savePassword": "Guardar contraseña",
-    "comingSoon": "Ya casi. Muy pronto podrás guardar tu contraseña aquí."
+    "startAgain": "Empezar de nuevo"
   },
   "nav": {
     "label": "Menú principal",
@@ -87,7 +91,8 @@
     "lead": "Las solicitudes de premios de tu equipo."
   },
   "profile": {
-    "title": "Tu perfil"
+    "title": "Tu perfil",
+    "languageNotSaved": "Idioma cambiado solo en este teléfono. No pudimos guardarlo en tu perfil."
   },
   "soon": {
     "title": "Ya viene en camino ✨",
@@ -96,6 +101,23 @@
   "errors": {
     "generic": "Algo salió mal. Inténtalo de nuevo.",
     "network": "Estás sin conexión. Revisa tu conexión e inténtalo de nuevo.",
-    "invalid_credentials": "Ese EID y esa contraseña no coinciden. Inténtalo de nuevo."
+    "credentials_invalid": "Ese EID y esa contraseña no coinciden. Inténtalo de nuevo.",
+    "account_locked": "Demasiados intentos. Inténtalo de nuevo en {minutes, plural, one {# minuto} other {# minutos}}.",
+    "account_inactive": "Esta cuenta ya no está activa. Habla con tu gerente.",
+    "owner_use_portal": "Los dueños inician sesión en el portal web, no en la app.",
+    "rate_limited": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+    "eid_unknown": "No encontramos ese EID. Revísalo o pregúntale a tu gerente.",
+    "no_phone_on_file": "No tenemos un número de teléfono tuyo. Pídele a tu gerente que lo agregue.",
+    "already_set_up": "Tu cuenta ya está lista. Inicia sesión o toca “¿Olvidaste tu contraseña?”.",
+    "sms_failed": "No pudimos enviar el mensaje. Inténtalo de nuevo en un momento.",
+    "resend_too_soon": "Espera {seconds, plural, one {# segundo} other {# segundos}} antes de pedir otro código.",
+    "code_invalid": "Ese código no es correcto. Revisa el mensaje e inténtalo de nuevo.",
+    "code_invalid_left": "Ese código no es correcto. {count, plural, one {Te queda # intento.} other {Te quedan # intentos.}}",
+    "code_expired": "Ese código ya venció. Toca “Reenviar código” para recibir uno nuevo.",
+    "code_locked": "Demasiados códigos incorrectos. Inténtalo de nuevo en {minutes, plural, one {# minuto} other {# minutos}} ({time}).",
+    "password_weak": "Usa 8 caracteres o más, con al menos un número.",
+    "token_expired": "Pasó demasiado tiempo. Empieza de nuevo.",
+    "token_used": "Ese paso ya se completó. Empieza de nuevo.",
+    "token_invalid": "Eso no funcionó. Empieza de nuevo."
   }
 }

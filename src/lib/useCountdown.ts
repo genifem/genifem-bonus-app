@@ -8,6 +8,13 @@ import { formatTime } from "@/lib/format";
  */
 export function useSecondsUntil(targetMs: number | null): number | null {
   const [now, setNow] = useState<number | null>(null);
+  const [counting, setCounting] = useState(targetMs);
+  // A new deadline starts from "not ticked yet", not from a tick taken for the last one,
+  // which may be minutes old and would show the wait too long until the next tick.
+  if (counting !== targetMs) {
+    setCounting(targetMs);
+    setNow(null);
+  }
   useEffect(() => {
     if (targetMs === null) return;
     const tick = () => setNow(Date.now());

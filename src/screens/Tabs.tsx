@@ -1,7 +1,9 @@
+import type { Locale } from "@crewstars/i18n";
 import { View } from "react-native";
 
-import { Button, Card, Icon, LanguageSwitch, T } from "@/components/ui";
+import { Button, Card, Icon, LanguageSwitch, T, useToast } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
+import { translatorFor } from "@/lib/i18n";
 
 import { PlaceholderTab } from "./Placeholder";
 
@@ -30,11 +32,25 @@ export function Approvals() {
 }
 
 /**
- * The profile (both tab groups). Already carries the two settings that work without new API:
- * the language switch and signing out, so the gates can be tried end to end.
+ * The profile (both tab groups). For now it carries the language switch and signing out, so
+ * the gates can be tried end to end; the rest of the profile comes later.
+ *
+ * The language changes on screen at once (NF-02) and is then saved to the profile, so the
+ * texts and the next phone this person signs in on use it too. A save that fails says so,
+ * but leaves the switch where it is: it still holds on this phone.
  */
 export function Profile() {
-  const { t, me, signOut } = useAuth();
+  const { t, me, signOut, setLocale, savePreferences } = useAuth();
+  const toast = useToast();
+
+  const chooseLanguage = (language: Locale) => {
+    void setLocale(language);
+    savePreferences({ language }).catch(() => {
+      // In the language just chosen: `t` still speaks the one being left.
+      toast.show(translatorFor(language)("profile.languageNotSaved"), { icon: "info" });
+    });
+  };
+
   return (
     <PlaceholderTab title={t("profile.title")} lead={me?.name} pose="happy">
       <Card style={{ paddingVertical: 4 }}>
@@ -43,7 +59,7 @@ export function Profile() {
           <T weight={700} style={{ flex: 1 }}>
             {t("common.language")}
           </T>
-          <LanguageSwitch />
+          <LanguageSwitch onChange={chooseLanguage} />
         </View>
       </Card>
       <Button title={t("common.signOut")} icon="logout" variant="soft" full onPress={() => void signOut()} />

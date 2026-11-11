@@ -46,6 +46,24 @@ export function dateTime(value: string, locale: string): string {
   return format(locale, value, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
+/** "3:05 PM" / "15:05", in the phone's own clock: when a lockout ends. */
+export function clockTime(ms: number, locale: string): string {
+  const at = new Date(ms);
+  try {
+    return new Intl.DateTimeFormat(locale, { hour: "numeric", minute: "2-digit" }).format(at);
+  } catch {
+    return `${at.getHours()}:${String(at.getMinutes()).padStart(2, "0")}`;
+  }
+}
+
+/**
+ * Whole minutes left in a wait of `seconds`, rounded up and never below one: "Try again in 1
+ * minute" is truer than "in 0 minutes" while the lock still holds.
+ */
+export function minutesLeft(seconds: number): number {
+  return Math.max(1, Math.ceil(seconds / 60));
+}
+
 /** "September": the month the awards are for. */
 export function monthName(locale: string, now = new Date()): string {
   try {

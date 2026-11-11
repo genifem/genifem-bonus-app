@@ -1,46 +1,43 @@
+import type { Schemas } from "@crewstars/api-client";
 import { isLocale, type Locale, type Translator } from "@crewstars/i18n";
-import { createContext, type ReactNode, use, useCallback, useEffect, useMemo, useState } from "react";
+import { createContext, type ReactNode, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { api, onSessionEnded } from "@/lib/api";
+import { ApiError } from "@/lib/apiError";
 import { deviceLocale, translatorFor } from "@/lib/i18n";
 import { clearTokens, loadLocale, loadSession, saveLocale, saveTokens } from "@/lib/session";
 
-/** Who can be signed in to the app. Owners use the web portal (CR-08). */
-export type Role = "crew" | "shift" | "gm" | "supervisor" | "director";
+/** `GET /me`: who is signed in, their role (which picks the tab group) and capabilities. */
+export type MeOut = Schemas["MeOut"];
 
-/** Something the server lets this person do. The API sends the list with `/me`. */
+/** What every sign-in step ends with (`/auth/login`, `/auth/setup/complete`): the tokens,
+ *  and `user`, so the app knows who this is without asking `/me` again. */
+export type TokenOut = Schemas["TokenOut"];
+
+/** `PATCH /me/preferences`: only the fields sent change. */
+export type Preferences = Schemas["PreferencesIn"];
+
+export type Role = MeOut["role"];
+
+/** Something the server lets this person do (`approve_rewards`, `hide_posts`...). The API
+ *  sends the list with `/me`, so screens never work it out from the role. */
 export type Capability = string;
-
-/**
- * `GET /me`, the parts the app reads today. It moves to the generated api-client type
- * (`Schemas["MeOut"]`) once bonus-backend exports the endpoint in phase P1.
- */
-export interface Me {
-  id: string;
-  name: string;
-  role: Role;
-  /** The language saved on the person's profile ("en" / "es"). */
-  language?: string | null;
-  capabilities?: Capability[];
-}
-
-/** The tokens every sign-in step ends with (`/auth/login`, `/auth/setup/complete`). */
-export interface Tokens {
-  access_token: string;
-  refresh_token?: string | null;
-}
 
 interface AuthValue {
   ready: boolean;
-  me: Me | null;
+  me: MeOut | null;
   t: Translator;
   locale: Locale;
-  /** The English / Español switch. Remembered on this device; the profile's language is the
-   *  default, and the phone's language before anyone signs in. */
+  /** The English / Español switch, on this device only. Remembered here; the profile's
+   *  language is the default, and the phone's language before anyone signs in. */
   setLocale: (locale: Locale) => Promise<void>;
+  /** Save to the profile (`PATCH /me/preferences`) and take the answer as the new `me`.
+   *  Throws when it could not be saved. */
+  savePreferences: (changes: Preferences) => Promise<void>;
   reload: () => Promise<void>;
-  /** Store the tokens from any sign-in step and load who this is. */
-  signedIn: (tokens: Tokens) => Promise<void>;
+  /** Store the tokens from any sign-in step; the route gates then take the person to their
+   *  tabs. Throws `owner_use_portal` for an owner's tokens, which are not stored (CR-08). */
+  signedIn: (tokens: TokenOut) => Promise<void>;
   /** End the session here and on the server. */
   signOut: () => Promise<void>;
   can: (capability: Capability) => boolean;
@@ -48,12 +45,21 @@ interface AuthValue {
 
 const AuthContext = createContext<AuthValue | null>(null);
 
+/** Owners use the web portal (CR-08). The API never signs one in here, but `/me` would
+ *  describe one if an owner's token ever reached the app, so the app checks too. */
+function appUser(me: MeOut): boolean {
+  return me.holder === "person" && me.role !== "owner";
+}
+
 /** Who is signed in, if anyone. */
-async function whoIsThis(): Promise<Me | null> {
+async function whoIsThis(): Promise<MeOut | null> {
   const session = await loadSession();
   if (!session.accessToken) return null;
   try {
-    return await api<Me>("/me");
+    const me = await api<MeOut>("/me");
+    if (appUser(me)) return me;
+    await clearTokens();
+    return null;
   } catch {
     return null;
   }
@@ -61,8 +67,11 @@ async function whoIsThis(): Promise<Me | null> {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
-  const [me, setMe] = useState<Me | null>(null);
+  const [me, setMe] = useState<MeOut | null>(null);
   const [override, setOverride] = useState<Locale | null>(null);
+  // Two quick taps on the language switch send two saves; only the last one's answer counts.
+  // Signing out counts as a newer answer, so a save still on its way cannot bring `me` back.
+  const savesSent = useRef(0);
 
   const reload = useCallback(async () => {
     setMe(await whoIsThis());
@@ -86,7 +95,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // The server refused to renew the session (revoked, expired, or the person was terminated).
   // Forget who this was, and the route gates take the person back to the welcome screen.
-  useEffect(() => onSessionEnded(() => setMe(null)), []);
+  useEffect(
+    () =>
+      onSessionEnded(() => {
+        savesSent.current += 1;
+        setMe(null);
+      }),
+    [],
+  );
 
   // Precedence: the switch on this device, then the profile's language, then the phone's.
   const profile = me?.language;
@@ -102,13 +118,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setOverride(next);
         await saveLocale(next);
       },
+      savePreferences: async (changes) => {
+        const sent = ++savesSent.current;
+        const updated = await api<MeOut>("/me/preferences", { method: "PATCH", body: changes });
+        if (sent === savesSent.current) setMe(updated);
+      },
       reload,
       signedIn: async (tokens) => {
+        if (!appUser(tokens.user)) throw new ApiError(403, "owner_use_portal", "owners use the web portal");
         await saveTokens(tokens.access_token, tokens.refresh_token ?? null);
         // Signing in hands the language back to the profile.
         setOverride(null);
         await saveLocale(null);
-        await reload();
+        // The sign-in answer already says who this is; asking /me again would only add a
+        // round trip that could fail after the tokens were saved.
+        setMe(tokens.user);
+        setReady(true);
       },
       signOut: async () => {
         const { refreshToken } = await loadSession();
@@ -127,6 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
         await clearTokens();
+        savesSent.current += 1;
         setMe(null);
       },
       can: (capability) => (me?.capabilities ?? []).includes(capability),
@@ -144,7 +170,7 @@ export function useAuth(): AuthValue {
 }
 
 /** The tab group a signed-in person belongs to: GMs get the manager tabs, everyone else the
- *  crew tabs (plan §8). */
-export function homeGroupFor(me: Pick<Me, "role">): "manager" | "crew" {
+ *  crew tabs (CR-08, plan §8). */
+export function homeGroupFor(me: Pick<MeOut, "role">): "manager" | "crew" {
   return me.role === "gm" ? "manager" : "crew";
 }

@@ -13,11 +13,11 @@
     "close": "Close"
   },
   "welcome": {
-    "logoPlaceholder": "[Operator logo]",
     "title": "Crew Stars",
     "subtitle": "Get recognized for the great work you do",
     "firstTime": "First time here?",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "operatorLogo": "{name} logo"
   },
   "signIn": {
     "title": "Welcome back 👋",
@@ -36,14 +36,18 @@
     "eidHint": "Your EID is on your schedule, or ask your manager",
     "codeTitle": "Check your phone 📱",
     "codeSent": "We sent a 6-digit code to <b>{phone}</b>",
+    "codeSentA11y": "We sent a 6-digit code to your phone number ending in {digits}.",
     "codeLabel": "6-digit code",
     "resend": "Resend code",
     "resendIn": "Resend code ({time})",
+    "codeResent": "New code sent",
     "passwordTitleSetup": "Make it yours 🔒",
     "passwordTitleReset": "Choose a new password",
     "passwordLead": "You'll use it with your EID to sign in.",
     "password": "Password",
     "confirm": "Confirm password",
+    "showConfirm": "Show password confirmation",
+    "hideConfirm": "Hide password confirmation",
     "rules": {
       "length": "8 or more characters",
       "number": "At least one number",
@@ -53,7 +57,7 @@
     "notMet": "Not yet",
     "createAccount": "Create account",
     "savePassword": "Save password",
-    "comingSoon": "Almost there. Saving your password goes live soon."
+    "startAgain": "Start again"
   },
   "nav": {
     "label": "Main menu",
@@ -87,7 +91,8 @@
     "lead": "Your crew's reward requests."
   },
   "profile": {
-    "title": "Your profile"
+    "title": "Your profile",
+    "languageNotSaved": "Language changed on this phone only. We couldn't save it to your profile."
   },
   "soon": {
     "title": "On its way ✨",
@@ -96,6 +101,23 @@
   "errors": {
     "generic": "Something went wrong. Try again.",
     "network": "You're offline. Check your connection and try again.",
-    "invalid_credentials": "That EID and password don't match. Try again."
+    "credentials_invalid": "That EID and password don't match. Try again.",
+    "account_locked": "Too many tries. Try again in {minutes, plural, one {# minute} other {# minutes}}.",
+    "account_inactive": "This account is no longer active. Talk to your manager.",
+    "owner_use_portal": "Owners sign in on the web portal, not in the app.",
+    "rate_limited": "Too many tries. Wait a few minutes and try again.",
+    "eid_unknown": "We can't find that EID. Check it, or ask your manager.",
+    "no_phone_on_file": "We don't have a phone number for you. Ask your manager to add one.",
+    "already_set_up": "You're already set up. Sign in, or tap “Forgot password?”.",
+    "sms_failed": "We couldn't send the text. Try again in a moment.",
+    "resend_too_soon": "Wait {seconds, plural, one {# second} other {# seconds}} before asking for another code.",
+    "code_invalid": "That code isn't right. Check the text and try again.",
+    "code_invalid_left": "That code isn't right. {count, plural, one {You have # try left.} other {You have # tries left.}}",
+    "code_expired": "That code has expired. Tap “Resend code” to get a new one.",
+    "code_locked": "Too many wrong codes. Try again in {minutes, plural, one {# minute} other {# minutes}} ({time}).",
+    "password_weak": "Use 8 or more characters, with at least one number.",
+    "token_expired": "That took too long. Please start again.",
+    "token_used": "That step is already done. Please start again.",
+    "token_invalid": "That didn't work. Please start again."
   }
 }
