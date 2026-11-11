@@ -23,7 +23,7 @@ jobs:
         if: env.HAS_BACKEND == 'true'
         uses: actions/checkout@v5
         with:
-          repository: genifem/bonus-backend
+          repository: genifem/genifem-bonus-backend
           path: .backend
           token: ${{ secrets.BACKEND_REPO_TOKEN }}
       - uses: astral-sh/setup-uv@v6
