@@ -7,6 +7,7 @@ import { TierChip } from "@/components/Chips";
 import { Coin, CoinPill } from "@/components/Coin";
 import { Floaty, Mascot } from "@/components/Mascot";
 import { PostCard, type PostOut } from "@/components/PostCard";
+import { SpinTile } from "@/components/SpinTile";
 import {
   Body,
   Card,
@@ -28,6 +29,7 @@ import { explain } from "@/lib/errors";
 import { dayMonth, firstName, formatCount } from "@/lib/format";
 import { type Summary, useMe, useMeRefreshOnFocus } from "@/lib/me";
 import { useRoutes } from "@/lib/routes";
+import type { WheelOut } from "@/lib/spin";
 import { tierName, tierProgress } from "@/lib/tiers";
 import { useApi, useRefreshOnFocus } from "@/lib/useApi";
 import { useLikes } from "@/lib/useLikes";
@@ -99,16 +101,38 @@ function BalanceCard({ summary }: { summary: Summary }) {
   );
 }
 
-/** CR-13 and CR-14: kudos left (opens Give) and this month at the store. A rank shows only
- *  in the top 5; otherwise it is the month's coins and a nudge, never a low rank (C1). */
-function Tiles({ summary, onGive }: { summary: Summary; onGive: () => void }) {
+/** The wheel as Home sees it: hidden while spins are off (plan D19), a placeholder until the
+ *  first answer, and quietly left out if it can't be loaded. */
+interface WheelState {
+  data: WheelOut | null;
+  loading: boolean;
+}
+
+/** CR-12 and CR-13: the Spin tile (opens Spin) and kudos left (opens Give). */
+function Tiles({
+  summary,
+  wheel,
+  onGive,
+  onSpin,
+}: {
+  summary: Summary;
+  wheel: WheelState;
+  onGive: () => void;
+  onSpin: () => void;
+}) {
   const { t, locale } = useAuth();
-  const { kudos, store_rank: rank, earned_this_month: month } = summary;
+  const { kudos } = summary;
   const kudosTitle = t("home.kudosTitle", { left: kudos.left, allowance: kudos.allowance });
   const kudosLead = t("home.kudosLead", { date: dayMonth(kudos.resets_on, locale) });
-  const monthCount = formatCount(month, locale);
   return (
     <View style={styles.tiles}>
+      {wheel.data?.enabled ? (
+        <SpinTile wheel={wheel.data} ready={summary.spins_available} onPress={onSpin} style={{ flex: 1 }} />
+      ) : wheel.loading && !wheel.data ? (
+        <View style={{ flex: 1 }}>
+          <Skeleton height={112} corner={radius.card} />
+        </View>
+      ) : null}
       <Touchable
         haptic="light"
         accessibilityRole="button"
@@ -124,22 +148,44 @@ function Tiles({ summary, onGive }: { summary: Summary; onGive: () => void }) {
           {kudosLead}
         </T>
       </Touchable>
-      <View
-        accessible
-        accessibilityLabel={
-          rank ? t("home.rankA11y", { rank, count: month }) : t("home.monthA11y", { count: month })
-        }
-        style={[styles.tile, { backgroundColor: colors.rewardSubtle }]}
-      >
-        <Icon name="trophy" size={24} color={colors.rewardInk} />
-        <T size={15} weight={900} line={18}>
+    </View>
+  );
+}
+
+/**
+ * CR-14: this month at the store, which opens the leaderboard and the month's awards (CR-35,
+ * CR-36). A rank shows only in the top 5; otherwise it is the month's coins and a nudge,
+ * never a low rank (C1).
+ */
+function MonthTile({ summary, onPress }: { summary: Summary; onPress: () => void }) {
+  const { t, locale } = useAuth();
+  const { store_rank: rank, earned_this_month: month } = summary;
+  const monthCount = formatCount(month, locale);
+  const label = rank ? t("home.rankA11y", { rank, count: month }) : t("home.monthA11y", { count: month });
+  return (
+    <Touchable
+      haptic="light"
+      accessibilityRole="button"
+      accessibilityLabel={`${label} ${t("home.boardLink")}`}
+      onPress={onPress}
+      style={styles.cta}
+    >
+      <View style={[styles.ctaIcon, { backgroundColor: colors.coinSubtle }]}>
+        <Icon name="trophy" size={20} color={colors.coinInk} />
+      </View>
+      <View style={{ flex: 1, minWidth: 0, gap: 1 }}>
+        <T size={14} weight={900}>
           {rank ? t("home.rankTitle", { rank }) : t("home.monthTitle", { count: month, amount: monthCount })}
         </T>
-        <T size={12} color={colors.rewardInk} line={16}>
+        <T size={12} color={colors.muted}>
           {rank ? t("home.rankLead", { count: month, amount: monthCount }) : t("home.monthLead")}
         </T>
+        <T size={12} weight={800} color={colors.brandInk}>
+          {t("home.boardLink")}
+        </T>
       </View>
-    </View>
+      <Icon name="chev" size={18} color={colors.brand} />
+    </Touchable>
   );
 }
 
@@ -162,8 +208,9 @@ function HomeSkeleton() {
 type Direction = "received" | "sent";
 
 /**
- * The crew's Home (CR-10 to CR-15): the header with the bell, the balance card, kudos and
- * this month, the way to Give, and the latest shout-outs received and sent (4 each).
+ * The crew's Home (CR-10 to CR-15): the header with the bell, the balance card, the Spin
+ * tile and kudos, the way to Give, this month at the store (which opens the leaderboard), and
+ * the latest shout-outs received and sent (4 each).
  */
 export function CrewHome() {
   const { t, me } = useAuth();
@@ -175,10 +222,12 @@ export function CrewHome() {
   const [refreshing, setRefreshing] = useState(false);
   const received = useApi<PostOut[]>("/me/shoutouts?direction=received&limit=4");
   const sent = useApi<PostOut[]>("/me/shoutouts?direction=sent&limit=4");
+  const wheel = useApi<WheelOut>("/spin");
   const likes = useLikes({ onSettled: () => void refreshMe() });
   const { forgetSettled } = likes;
 
   useMeRefreshOnFocus();
+  useRefreshOnFocus(wheel.revalidate);
   const { revalidate: revalidateReceived } = received;
   const { revalidate: revalidateSent } = sent;
   const revalidateLists = useCallback(async () => {
@@ -189,7 +238,7 @@ export function CrewHome() {
 
   const pull = async () => {
     setRefreshing(true);
-    await Promise.all([refreshMe(), revalidateLists()]);
+    await Promise.all([refreshMe(), revalidateLists(), wheel.revalidate()]);
     setRefreshing(false);
   };
 
@@ -197,6 +246,8 @@ export function CrewHome() {
   const posts = list.data ?? [];
   const name = me ? firstName(me.name) : "";
   const give = () => router.navigate(routes.give);
+  const spin = () => router.push(routes.spin);
+  const board = () => router.push(routes.leaderboard);
 
   return (
     <Page refreshing={refreshing} onRefresh={() => void pull()}>
@@ -207,7 +258,12 @@ export function CrewHome() {
         {summary ? (
           <>
             <BalanceCard summary={summary} />
-            <Tiles summary={summary} onGive={give} />
+            <Tiles
+              summary={summary}
+              wheel={{ data: wheel.data, loading: wheel.loading }}
+              onGive={give}
+              onSpin={spin}
+            />
           </>
         ) : error ? (
           <ErrorState message={`${t("home.loadError")} ${explain(t, error)}`} retryLabel={t("common.retry")} onRetry={() => void refreshMe()} />
@@ -235,6 +291,7 @@ export function CrewHome() {
           </View>
           <Icon name="chev" size={18} color={colors.brand} />
         </Touchable>
+        {summary ? <MonthTile summary={summary} onPress={board} /> : null}
 
         <View style={styles.section}>
           <T size={17} weight={900} heading style={{ flex: 1 }}>

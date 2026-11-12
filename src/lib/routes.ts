@@ -16,6 +16,8 @@ const CREW = {
   rewards: "/(crew)/(tabs)/rewards",
   myRewards: "/(crew)/my-rewards",
   notifications: "/(crew)/notifications",
+  spin: "/(crew)/spin",
+  leaderboard: "/(crew)/leaderboard",
 } as const;
 
 const MANAGER = {
@@ -26,6 +28,8 @@ const MANAGER = {
   rewards: "/(manager)/rewards",
   myRewards: "/(manager)/my-rewards",
   notifications: "/(manager)/notifications",
+  spin: "/(manager)/spin",
+  leaderboard: "/(manager)/leaderboard",
 } as const;
 
 /** The GM's own places, for the screens only the manager tabs have. */

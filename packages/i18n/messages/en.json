@@ -105,7 +105,9 @@
     "emptyReceived": "Your first shout-out is coming. Keep shining!",
     "emptySent": "No shout-outs sent yet. Make someone's day!",
     "loadError": "We couldn't load your coins.",
-    "listError": "We couldn't load your shout-outs."
+    "listError": "We couldn't load your shout-outs.",
+    "boardLink": "Leaderboard & awards",
+    "spinTileA11y": "{title}. {lead}"
   },
   "wall": {
     "title": "The crew wall 🙌",
@@ -267,7 +269,6 @@
   "profile": {
     "title": "Your profile",
     "languageNotSaved": "Language changed on this phone only. We couldn't save it to your profile.",
-    "balance": "coin balance",
     "lifetime": "earned all time",
     "thisMonth": "this month",
     "shoutouts": "Your shout-outs",
@@ -276,7 +277,9 @@
     "settings": "Settings",
     "loadError": "We couldn't load your profile.",
     "myRewards": "My rewards",
-    "myRewardsCoins": "{count, plural, one {{amount} coin} other {{amount} coins}}"
+    "myRewardsCoins": "{count, plural, one {{amount} coin} other {{amount} coins}}",
+    "given": "shout-outs given",
+    "leaderboard": "Leaderboard & this month's awards"
   },
   "soon": {
     "title": "On its way ✨",
@@ -321,7 +324,10 @@
     "request_not_pending": "Someone already decided this request.",
     "request_not_approved": "This reward isn't waiting to be collected anymore.",
     "request_not_found": "That request isn't there anymore.",
-    "managers_only": "This screen is for general managers."
+    "managers_only": "This screen is for general managers.",
+    "no_spins": "You don't have a spin right now. Earn one and come back!",
+    "spin_disabled": "Spin the wheel is turned off right now.",
+    "no_prize_available": "There's nothing on the wheel you can win right now. Try again later."
   },
   "header": {
     "notifications": "Notifications",
@@ -397,7 +403,8 @@
     "hide": "Hide post",
     "hideTitle": "Hide this post?",
     "hideLead": "It comes off the wall for everyone. {name} keeps the coins.",
-    "hidden": "Post hidden"
+    "hidden": "Post hidden",
+    "awardOfMonth": "{month}'s {award}"
   },
   "notifications": {
     "title": "Notifications",
@@ -426,5 +433,94 @@
       "badge": "a new badge",
       "milestone": "reaching a milestone"
     }
+  },
+  "spin": {
+    "title": "Spin & win 🎡",
+    "lead": "Every spin wins something.",
+    "ready": "{count, plural, one {# spin ready} other {# spins ready}}",
+    "spin": "Spin the wheel",
+    "spinning": "Spinning…",
+    "noSpins": "No spins right now",
+    "wheelA11y": "Prize wheel with {count, plural, one {# prize} other {# prizes}}: {prizes}",
+    "howTitle": "How you earn spins",
+    "rules": {
+      "coins": "{count, plural, one {Every coin you earn} other {Every {amount} coins you earn}}",
+      "badge": "New badges that give a spin",
+      "milestone": "Milestones, like days on the team",
+      "cap": "{count, plural, =0 {No spins to earn this month} one {Up to # spin a month} other {Up to # spins a month}}"
+    },
+    "toGo": "{count, plural, one {{amount} coin to your next spin} other {{amount} coins to your next spin}}",
+    "earnedOf": "{earned} of {max} earned this month",
+    "capped": "{count, plural, one {You've earned your # spin this month. More next month!} other {All # spins earned this month. More next month!}}",
+    "offTitle": "The wheel is taking a break",
+    "offLead": "Spin the wheel is turned off right now. Check back soon!",
+    "loadError": "We couldn't load the wheel.",
+    "wonTitle": "You won {prize}!",
+    "won": {
+      "coins": "{count, plural, one {{amount} coin is now in your balance.} other {{amount} coins are now in your balance.}}",
+      "kudos": "You have {amount} extra kudos to give this month.",
+      "item": "It's waiting in My rewards, ready to collect at your store.",
+      "badge": "Your new badge is on your profile.",
+      "other": "It's all yours!"
+    },
+    "awesome": "Awesome",
+    "seeBadges": "See my badges",
+    "tile": {
+      "tap": "Tap to spin and win",
+      "allEarned": "{count, plural, one {Your # spin this month is earned} other {All # spins earned this month}}",
+      "none": "No spins to earn this month",
+      "byBadges": "Earn spins with new badges",
+      "byMilestones": "Earn spins at team milestones",
+      "noRules": "No way to earn spins right now"
+    }
+  },
+  "badges": {
+    "title": "Your badges",
+    "earnedCount": "{count} earned",
+    "how": {
+      "tag": "{count, plural, one {Get # {tag} shout-out} other {Get # {tag} shout-outs}}",
+      "given": "{count, plural, one {Give # shout-out} other {Give # shout-outs}}",
+      "days": "{count, plural, one {Reach # day on the team} other {Reach # days on the team}}",
+      "spin": "Win it on the wheel",
+      "other": "Keep shining to earn it"
+    },
+    "progress": "{value} of {count}",
+    "earnedOn": "Earned {date}",
+    "earnedA11y": "{badge}, earned {date}",
+    "lockedA11y": "{badge}, not earned yet. {how}.",
+    "progressA11y": "{value} of {count} so far",
+    "loadError": "We couldn't load your badges.",
+    "empty": "Badges show up here once your company sets them up."
+  },
+  "leaderboard": {
+    "title": "{month} stars 🏆",
+    "top": "Top 5 at your store",
+    "announced": "Winners announced!",
+    "announcedOn": "Winners announced {date}",
+    "rowA11y": "Number {rank}: {name}, {count, plural, one {# coin} other {# coins}} this month",
+    "ownTotal": "You: {count, plural, one {{amount} coin} other {{amount} coins}} this month",
+    "ownTotalA11y": "You have {count, plural, one {# coin} other {# coins}} this month. Keep going!",
+    "emptyTitle": "No coins earned yet this month",
+    "emptyLead": "The first shout-out puts someone on the board.",
+    "noStoreTitle": "Leaderboards are per store",
+    "noStoreLead": "You're not at one store, so there's no board to show.",
+    "loadError": "We couldn't load the leaderboard."
+  },
+  "awards": {
+    "title": "{month} awards",
+    "leading": "Leading: {name}",
+    "leadingYou": "Leading: you!",
+    "winner": "Winner: {name}",
+    "youWon": "You won this one!",
+    "upForGrabs": "Up for grabs",
+    "value": {
+      "earned": "{count, plural, one {{amount} coin this month} other {{amount} coins this month}}",
+      "improved": "{count, plural, one {{amount} coin more than last month} other {{amount} coins more than last month}}",
+      "guest": "{count, plural, one {# {tag} shout-out} other {# {tag} shout-outs}}",
+      "peer": "{count, plural, one {# shout-out from the crew} other {# shout-outs from the crew}}"
+    },
+    "prizeA11y": "{award}, a prize of {count, plural, one {# coin} other {# coins}}",
+    "empty": "No awards this month.",
+    "loadError": "We couldn't load this month's awards."
   }
 }

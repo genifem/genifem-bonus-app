@@ -20,6 +20,8 @@ const ICONS = {
   heart: "M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z",
   star: "M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z",
   trophy: "M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4",
+  // The leaderboard's first place.
+  crown: "M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z",
   check: "M5 12.5l4.5 4.5L19 7",
   x: "M6 6l12 12M18 6L6 18",
   lock: "M6 11h12v10H6zM8 11V8a4 4 0 0 1 8 0v3",

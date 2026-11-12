@@ -6,6 +6,7 @@ import { StyleSheet, View } from "react-native";
 import { AppHeader } from "@/components/AppHeader";
 import { RoleChip } from "@/components/Chips";
 import { CoinPill } from "@/components/Coin";
+import { SpinTile } from "@/components/SpinTile";
 import {
   Avatar,
   Body,
@@ -31,6 +32,7 @@ import { type Kudos, useMe, useMeRefreshOnFocus } from "@/lib/me";
 import { monthLabel } from "@/lib/notifications";
 import { rewardName } from "@/lib/rewards";
 import { MANAGER_ROUTES } from "@/lib/routes";
+import type { WheelOut } from "@/lib/spin";
 import { timeAgo } from "@/lib/time";
 import { useApi, useRefreshOnFocus } from "@/lib/useApi";
 import { useNow } from "@/lib/useNow";
@@ -200,17 +202,21 @@ function RequestsPreview({
 
 /** MG-04: the store's top earner this month, on butter. Hidden until someone has earned.
  *  The month is the store's (`month` from the API), not the phone's, so it is right around
- *  midnight on the 1st whatever time zone the phone is in. */
-function SpotlightCard({ spotlight, month }: { spotlight: Spotlight; month: string }) {
+ *  midnight on the 1st whatever time zone the phone is in. "See all" opens the leaderboard
+ *  and the month's awards (CR-35, CR-36). */
+function SpotlightCard({ spotlight, month, onBoard }: { spotlight: Spotlight; month: string; onBoard: () => void }) {
   const { t, locale } = useAuth();
   const { person, earned_this_month: earned } = spotlight;
   const rising = t("managerHome.risingStar", { month: monthLabel(month, locale) });
   const amount = t("managerHome.earned", { count: earned, amount: formatCount(earned, locale) });
   return (
     <>
-      <T size={17} weight={900} heading style={{ marginBottom: -8 }}>
-        {t("managerHome.spotlight")}
-      </T>
+      <View style={styles.section}>
+        <T size={17} weight={900} heading style={{ flex: 1 }}>
+          {t("managerHome.spotlight")}
+        </T>
+        <TextLink title={t("common.seeAll")} align="flex-end" onPress={onBoard} />
+      </View>
       <Card style={styles.spotlight}>
         <View accessible accessibilityLabel={`${rising}: ${person.name}. ${amount}`} style={styles.requestRow}>
           <Avatar name={person.name} seed={person.id} size={42} />
@@ -244,10 +250,10 @@ function ManagerHomeSkeleton() {
 }
 
 /**
- * The GM's Home (MG-01 to MG-04): this month at a glance, the crew who haven't been
- * recognized yet (Recognize opens Give with them chosen), the reward requests waiting, and
- * the store's rising star. `/manager/home` works all of it out; coming back to the tab or
- * pulling down fetches it again.
+ * The GM's Home (MG-01 to MG-04): this month at a glance, the GM's own spins (CR-12; hidden
+ * while spins are off), the crew who haven't been recognized yet (Recognize opens Give with
+ * them chosen), the reward requests waiting, and the store's rising star. `/manager/home`
+ * works most of it out; coming back to the tab or pulling down fetches it again.
  */
 export function ManagerHome() {
   const { t, me } = useAuth();
@@ -255,17 +261,21 @@ export function ManagerHome() {
   const router = useRouter();
   const now = useNow();
   const home = useApi<ManagerHomeOut>("/manager/home");
+  const wheel = useApi<WheelOut>("/spin");
   const [refreshing, setRefreshing] = useState(false);
   useRefreshOnFocus(home.revalidate);
+  useRefreshOnFocus(wheel.revalidate);
   useMeRefreshOnFocus();
 
   const pull = async () => {
     setRefreshing(true);
-    await Promise.all([refreshMe(), home.revalidate()]);
+    await Promise.all([refreshMe(), home.revalidate(), wheel.revalidate()]);
     setRefreshing(false);
   };
 
   const give = () => router.navigate(MANAGER_ROUTES.give);
+  const spin = () => router.push(MANAGER_ROUTES.spin);
+  const board = () => router.push(MANAGER_ROUTES.leaderboard);
   // `at` makes each tap a fresh request, so the same person can be chosen again after the
   // form moved on to someone else.
   const recognize = (person: PartyOut) =>
@@ -294,6 +304,9 @@ export function ManagerHome() {
         ) : (
           <>
             <MonthCard month={data.this_month} kudos={kudos} />
+            {wheel.data?.enabled ? (
+              <SpinTile wheel={wheel.data} ready={summary?.spins_available} onPress={spin} />
+            ) : null}
             <Touchable
               haptic="light"
               accessibilityRole="button"
@@ -321,7 +334,7 @@ export function ManagerHome() {
               now={now}
               onReview={review}
             />
-            {data.spotlight ? <SpotlightCard spotlight={data.spotlight} month={data.month} /> : null}
+            {data.spotlight ? <SpotlightCard spotlight={data.spotlight} month={data.month} onBoard={board} /> : null}
           </>
         )}
       </Body>

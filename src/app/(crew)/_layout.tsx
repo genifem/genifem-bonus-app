@@ -18,6 +18,8 @@ export default function CrewLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="notifications" />
         <Stack.Screen name="my-rewards" />
+        <Stack.Screen name="spin" />
+        <Stack.Screen name="leaderboard" />
       </Stack>
     </RoleGate>
   );

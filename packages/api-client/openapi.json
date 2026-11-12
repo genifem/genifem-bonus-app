@@ -290,6 +290,174 @@
         "title": "Award",
         "type": "object"
       },
+      "AwardCategoryOut": {
+        "properties": {
+          "coins": {
+            "title": "Coins",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "leader": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AwardPersonOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "metric": {
+            "enum": [
+              "earned",
+              "improved",
+              "guest",
+              "peer"
+            ],
+            "title": "Metric",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          },
+          "winner": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AwardPersonOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "name_es",
+          "metric",
+          "coins",
+          "leader",
+          "winner"
+        ],
+        "title": "AwardCategoryOut",
+        "type": "object"
+      },
+      "AwardPersonOut": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "initials": {
+            "title": "Initials",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "crew",
+              "shift",
+              "gm",
+              "supervisor",
+              "director"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "initials",
+          "role",
+          "value"
+        ],
+        "title": "AwardPersonOut",
+        "type": "object"
+      },
+      "AwardsCurrentOut": {
+        "description": "This month's awards at their store (CR-36): each active category, its prize and who\nis leading now.",
+        "properties": {
+          "announced": {
+            "title": "Announced",
+            "type": "boolean"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/AwardCategoryOut"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "month": {
+            "title": "Month",
+            "type": "string"
+          },
+          "resets_on": {
+            "format": "date",
+            "title": "Resets On",
+            "type": "string"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "month",
+          "store",
+          "announced",
+          "resets_on",
+          "categories"
+        ],
+        "title": "AwardsCurrentOut",
+        "type": "object"
+      },
+      "AwardsLeadersOut": {
+        "description": "Monthly awards (OP-19): \"Leading right now\" per store and active category.",
+        "properties": {
+          "stores": {
+            "items": {
+              "$ref": "#/components/schemas/StoreAwardsOut"
+            },
+            "title": "Stores",
+            "type": "array"
+          }
+        },
+        "required": [
+          "stores"
+        ],
+        "title": "AwardsLeadersOut",
+        "type": "object"
+      },
       "Badge": {
         "properties": {
           "bonus": {
@@ -382,6 +550,54 @@
           "gives_spin"
         ],
         "title": "Badge",
+        "type": "object"
+      },
+      "BadgeCountOut": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "people": {
+            "title": "People",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "people"
+        ],
+        "title": "BadgeCountOut",
+        "type": "object"
+      },
+      "BadgesTiersOut": {
+        "description": "Badges & tiers (OP-18): how many people are at each tier (from lifetime coins and\nthe live thresholds, so an edit moves them at once: acceptance test 17) and hold each\nbadge. Active people only. The definitions themselves are in ``/portal/settings``.",
+        "properties": {
+          "badges": {
+            "items": {
+              "$ref": "#/components/schemas/BadgeCountOut"
+            },
+            "title": "Badges",
+            "type": "array"
+          },
+          "people": {
+            "title": "People",
+            "type": "integer"
+          },
+          "tiers": {
+            "items": {
+              "$ref": "#/components/schemas/TierCountOut"
+            },
+            "title": "Tiers",
+            "type": "array"
+          }
+        },
+        "required": [
+          "people",
+          "tiers",
+          "badges"
+        ],
+        "title": "BadgesTiersOut",
         "type": "object"
       },
       "CandidateOut": {
@@ -798,6 +1014,92 @@
           "resets_on"
         ],
         "title": "KudosOut",
+        "type": "object"
+      },
+      "LeaderRow": {
+        "properties": {
+          "earned": {
+            "title": "Earned",
+            "type": "integer"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "initials": {
+            "title": "Initials",
+            "type": "string"
+          },
+          "me": {
+            "title": "Me",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "rank": {
+            "title": "Rank",
+            "type": "integer"
+          },
+          "role": {
+            "enum": [
+              "crew",
+              "shift",
+              "gm",
+              "supervisor",
+              "director"
+            ],
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "rank",
+          "id",
+          "name",
+          "initials",
+          "role",
+          "earned",
+          "me"
+        ],
+        "title": "LeaderRow",
+        "type": "object"
+      },
+      "LeaderboardOut": {
+        "description": "The store's top 5 crew and shift managers by coins earned this month (CR-35). Ties\ngo to whoever got there first. Someone outside the top 5 sees only their own total.",
+        "properties": {
+          "me": {
+            "$ref": "#/components/schemas/MyStandingOut"
+          },
+          "month": {
+            "title": "Month",
+            "type": "string"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "top": {
+            "items": {
+              "$ref": "#/components/schemas/LeaderRow"
+            },
+            "title": "Top",
+            "type": "array"
+          }
+        },
+        "required": [
+          "month",
+          "store",
+          "top",
+          "me"
+        ],
+        "title": "LeaderboardOut",
         "type": "object"
       },
       "LikeOut": {
@@ -1221,6 +1523,118 @@
         "title": "MfaTokenIn",
         "type": "object"
       },
+      "MyBadgeOut": {
+        "description": "One square of the badge grid (CR-33): earned in colour, or locked with how to earn\nit, which the app words from ``rule``, ``tag`` and ``count`` (\"Get 3 Guest Hero\nshout-outs\", \"Give 8 shout-outs\", \"Reach 90 days on the team\").",
+        "properties": {
+          "bonus": {
+            "title": "Bonus",
+            "type": "integer"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "earned": {
+            "title": "Earned",
+            "type": "boolean"
+          },
+          "earned_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Earned At"
+          },
+          "gives_spin": {
+            "title": "Gives Spin",
+            "type": "boolean"
+          },
+          "icon": {
+            "title": "Icon",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Progress"
+          },
+          "rule": {
+            "enum": [
+              "tag",
+              "given",
+              "days",
+              "spin"
+            ],
+            "title": "Rule",
+            "type": "string"
+          },
+          "tag": {
+            "anyOf": [
+              {
+                "enum": [
+                  "guest",
+                  "rush",
+                  "team",
+                  "clean",
+                  "above",
+                  "lead"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tag"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "name_es",
+          "icon",
+          "rule",
+          "tag",
+          "count",
+          "bonus",
+          "gives_spin",
+          "earned",
+          "earned_at",
+          "progress"
+        ],
+        "title": "MyBadgeOut",
+        "type": "object"
+      },
       "MyRequestOut": {
         "description": "One of the person's own requests, on My rewards (CR-27).",
         "properties": {
@@ -1332,6 +1746,31 @@
           "collected_at"
         ],
         "title": "MyRequestOut",
+        "type": "object"
+      },
+      "MyStandingOut": {
+        "properties": {
+          "earned": {
+            "title": "Earned",
+            "type": "integer"
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rank"
+          }
+        },
+        "required": [
+          "earned",
+          "rank"
+        ],
+        "title": "MyStandingOut",
         "type": "object"
       },
       "NextTierOut": {
@@ -2174,6 +2613,17 @@
       },
       "PostOut": {
         "properties": {
+          "award_month": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Award Month"
+          },
           "award_name": {
             "anyOf": [
               {
@@ -2184,6 +2634,17 @@
               }
             ],
             "title": "Award Name"
+          },
+          "award_name_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Award Name Es"
           },
           "can_hide": {
             "title": "Can Hide",
@@ -2272,6 +2733,8 @@
           "liked",
           "is_award",
           "award_name",
+          "award_name_es",
+          "award_month",
           "store",
           "can_hide"
         ],
@@ -2379,6 +2842,52 @@
           "badge_id"
         ],
         "title": "Prize",
+        "type": "object"
+      },
+      "PrizeOut": {
+        "properties": {
+          "amount": {
+            "title": "Amount",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "coins",
+              "kudos",
+              "item",
+              "badge"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "label_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label Es"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "label_es",
+          "kind",
+          "amount"
+        ],
+        "title": "PrizeOut",
         "type": "object"
       },
       "PydanticObjectId": {
@@ -3558,6 +4067,72 @@
         "title": "Spin",
         "type": "object"
       },
+      "SpinResult": {
+        "description": "What the wheel landed on, chosen and stored by the server before the app animates\n(CR-29). If ``prizes_version`` isn't the wheel the app shows, it reloads the wheel\nfirst and then turns to ``segment_index``.",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "prize": {
+            "$ref": "#/components/schemas/PrizeOut"
+          },
+          "prizes_version": {
+            "title": "Prizes Version",
+            "type": "integer"
+          },
+          "replayed": {
+            "title": "Replayed",
+            "type": "boolean"
+          },
+          "segment_index": {
+            "title": "Segment Index",
+            "type": "integer"
+          },
+          "spins_available": {
+            "title": "Spins Available",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "prize",
+          "segment_index",
+          "prizes_version",
+          "spins_available",
+          "replayed"
+        ],
+        "title": "SpinResult",
+        "type": "object"
+      },
+      "SpinRulesOut": {
+        "description": "How spins are earned (CR-31): only what the owners have turned on.",
+        "properties": {
+          "every_coins": {
+            "title": "Every Coins",
+            "type": "integer"
+          },
+          "max_per_month": {
+            "title": "Max Per Month",
+            "type": "integer"
+          },
+          "on_badge": {
+            "title": "On Badge",
+            "type": "boolean"
+          },
+          "on_milestone": {
+            "title": "On Milestone",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "every_coins",
+          "on_badge",
+          "on_milestone",
+          "max_per_month"
+        ],
+        "title": "SpinRulesOut",
+        "type": "object"
+      },
       "SpotlightOut": {
         "description": "MG-04: the store's top earner this month among crew and shift managers.",
         "properties": {
@@ -3574,6 +4149,61 @@
           "earned_this_month"
         ],
         "title": "SpotlightOut",
+        "type": "object"
+      },
+      "StoreAwardsOut": {
+        "properties": {
+          "announced": {
+            "title": "Announced",
+            "type": "boolean"
+          },
+          "announced_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Announced At"
+          },
+          "announced_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Announced By"
+          },
+          "categories": {
+            "items": {
+              "$ref": "#/components/schemas/AwardCategoryOut"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "month": {
+            "title": "Month",
+            "type": "string"
+          },
+          "store": {
+            "$ref": "#/components/schemas/StoreRef"
+          }
+        },
+        "required": [
+          "store",
+          "month",
+          "announced",
+          "announced_at",
+          "announced_by",
+          "categories"
+        ],
+        "title": "StoreAwardsOut",
         "type": "object"
       },
       "StoreBudgetOut": {
@@ -4117,6 +4747,30 @@
         "title": "Tier",
         "type": "object"
       },
+      "TierCountOut": {
+        "properties": {
+          "id": {
+            "enum": [
+              "bronze",
+              "silver",
+              "gold",
+              "platinum"
+            ],
+            "title": "Id",
+            "type": "string"
+          },
+          "people": {
+            "title": "People",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "people"
+        ],
+        "title": "TierCountOut",
+        "type": "object"
+      },
       "TierOut": {
         "properties": {
           "color": {
@@ -4378,6 +5032,52 @@
           "next_before"
         ],
         "title": "WallPage",
+        "type": "object"
+      },
+      "WheelOut": {
+        "description": "The Spin screen (CR-28 to CR-31). With ``enabled`` false (plan D19) the app hides\nthe wheel and its Home tile, and spinning is refused.",
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "prizes": {
+            "items": {
+              "$ref": "#/components/schemas/PrizeOut"
+            },
+            "title": "Prizes",
+            "type": "array"
+          },
+          "prizes_version": {
+            "title": "Prizes Version",
+            "type": "integer"
+          },
+          "progress": {
+            "title": "Progress",
+            "type": "integer"
+          },
+          "rules": {
+            "$ref": "#/components/schemas/SpinRulesOut"
+          },
+          "spins_available": {
+            "title": "Spins Available",
+            "type": "integer"
+          },
+          "spins_earned": {
+            "title": "Spins Earned",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "enabled",
+          "prizes",
+          "prizes_version",
+          "spins_available",
+          "rules",
+          "spins_earned",
+          "progress"
+        ],
+        "title": "WheelOut",
         "type": "object"
       }
     }
@@ -4795,6 +5495,28 @@
         ]
       }
     },
+    "/api/v1/awards/current": {
+      "get": {
+        "description": "This month's award categories, prize coins and their store's leaders (CR-36).",
+        "operationId": "current_awards_api_v1_awards_current_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AwardsCurrentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Current Awards",
+        "tags": [
+          "progress"
+        ]
+      }
+    },
     "/api/v1/give/context": {
       "get": {
         "operationId": "give_context_api_v1_give_context_get",
@@ -4813,6 +5535,28 @@
         "summary": "Give Context",
         "tags": [
           "recognition"
+        ]
+      }
+    },
+    "/api/v1/leaderboard": {
+      "get": {
+        "description": "Their store's top 5 crew and shift managers this month, and their own total; their\nrank only inside the top 5 (CR-35).",
+        "operationId": "store_leaderboard_api_v1_leaderboard_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Store Leaderboard",
+        "tags": [
+          "progress"
         ]
       }
     },
@@ -4878,6 +5622,32 @@
         "summary": "Get Me",
         "tags": [
           "auth"
+        ]
+      }
+    },
+    "/api/v1/me/badges": {
+      "get": {
+        "description": "The badge grid (CR-33): every badge, earned (with when) or with how to earn it and\nhow far along they are. Lucky Star appears only once won.",
+        "operationId": "my_badges_api_v1_me_badges_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MyBadgeOut"
+                  },
+                  "title": "Response My Badges Api V1 Me Badges Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "My Badges",
+        "tags": [
+          "progress"
         ]
       }
     },
@@ -5274,6 +6044,100 @@
         "summary": "Update Area",
         "tags": [
           "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/awards/announce": {
+      "post": {
+        "description": "Announce this month's winners now (OP-20): every store's winners are paid, posted\nand notified, and the month close won't pay them again. Once a month: 409\n``awards_already_announced``. Audited per store (NF-09).",
+        "operationId": "announce_api_v1_portal_awards_announce_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AwardsLeadersOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Announce",
+        "tags": [
+          "progress"
+        ]
+      }
+    },
+    "/api/v1/portal/awards/leaders": {
+      "get": {
+        "description": "Monthly awards (OP-19): each store's current leader per active category, whether\nthis month was announced, and its winners once it was.",
+        "operationId": "award_leaders_api_v1_portal_awards_leaders_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "store",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Store"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AwardsLeadersOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Award Leaders",
+        "tags": [
+          "progress"
+        ]
+      }
+    },
+    "/api/v1/portal/badges-tiers": {
+      "get": {
+        "description": "Badges & tiers (OP-18): active people per tier and per badge.",
+        "operationId": "badges_tiers_api_v1_portal_badges_tiers_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadgesTiersOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Badges Tiers",
+        "tags": [
+          "progress"
         ]
       }
     },
@@ -7101,6 +7965,80 @@
         "summary": "Like",
         "tags": [
           "recognition"
+        ]
+      }
+    },
+    "/api/v1/spin": {
+      "get": {
+        "description": "The Spin screen (CR-28, CR-31): the prizes in wheel order with ``prizes_version``,\nspins ready, the earning rules that are on, spins earned this month and the progress\ntoward the next. ``enabled`` false: the owners turned spins off (plan D19).",
+        "operationId": "wheel_api_v1_spin_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WheelOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Wheel",
+        "tags": [
+          "progress"
+        ]
+      }
+    },
+    "/api/v1/spins": {
+      "post": {
+        "description": "Spin the wheel (CR-29): the server picks and stores the prize and pays it out, then\nthe app animates to ``segment_index``. 409 ``no_spins`` with none ready (acceptance\ntest 14); 403 ``spin_disabled`` while spins are off; 409 ``no_prize_available`` when\nonly prizes they can't win have a chance; 422 ``idempotency_key_required``.",
+        "operationId": "spin_api_v1_spins_post",
+        "parameters": [
+          {
+            "description": "One per tap on Spin (a UUID). A repeat returns the first result.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "One per tap on Spin (a UUID). A repeat returns the first result.",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpinResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Spin",
+        "tags": [
+          "progress"
         ]
       }
     },

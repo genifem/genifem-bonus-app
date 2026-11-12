@@ -105,7 +105,9 @@
     "emptyReceived": "Tu primer reconocimiento ya viene. ¡Sigue brillando!",
     "emptySent": "Aún no has enviado reconocimientos. ¡Alégrale el día a alguien!",
     "loadError": "No pudimos cargar tus monedas.",
-    "listError": "No pudimos cargar tus reconocimientos."
+    "listError": "No pudimos cargar tus reconocimientos.",
+    "boardLink": "Clasificación y premios",
+    "spinTileA11y": "{title}. {lead}"
   },
   "wall": {
     "title": "El muro del equipo 🙌",
@@ -267,7 +269,6 @@
   "profile": {
     "title": "Tu perfil",
     "languageNotSaved": "Idioma cambiado solo en este teléfono. No pudimos guardarlo en tu perfil.",
-    "balance": "saldo de monedas",
     "lifetime": "ganadas en total",
     "thisMonth": "este mes",
     "shoutouts": "Tus reconocimientos",
@@ -276,7 +277,9 @@
     "settings": "Configuración",
     "loadError": "No pudimos cargar tu perfil.",
     "myRewards": "Mis premios",
-    "myRewardsCoins": "{count, plural, one {{amount} moneda} other {{amount} monedas}}"
+    "myRewardsCoins": "{count, plural, one {{amount} moneda} other {{amount} monedas}}",
+    "given": "reconocimientos dados",
+    "leaderboard": "Clasificación y premios del mes"
   },
   "soon": {
     "title": "Ya viene en camino ✨",
@@ -321,7 +324,10 @@
     "request_not_pending": "Alguien ya decidió esta solicitud.",
     "request_not_approved": "Este premio ya no está esperando a que lo recojan.",
     "request_not_found": "Esa solicitud ya no está.",
-    "managers_only": "Esta pantalla es para gerentes generales."
+    "managers_only": "Esta pantalla es para gerentes generales.",
+    "no_spins": "Ahora no tienes giros. ¡Gana uno y vuelve!",
+    "spin_disabled": "La ruleta está apagada por ahora.",
+    "no_prize_available": "Por ahora no hay nada en la ruleta que puedas ganar. Inténtalo más tarde."
   },
   "header": {
     "notifications": "Notificaciones",
@@ -397,7 +403,8 @@
     "hide": "Ocultar publicación",
     "hideTitle": "¿Ocultar esta publicación?",
     "hideLead": "Se quita del muro para todos. {name} conserva las monedas.",
-    "hidden": "Publicación oculta"
+    "hidden": "Publicación oculta",
+    "awardOfMonth": "{award} de {month}"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -426,5 +433,94 @@
       "badge": "una insignia nueva",
       "milestone": "alcanzar un hito"
     }
+  },
+  "spin": {
+    "title": "Gira y gana 🎡",
+    "lead": "Cada giro gana algo.",
+    "ready": "{count, plural, one {# giro listo} other {# giros listos}}",
+    "spin": "Girar la ruleta",
+    "spinning": "Girando…",
+    "noSpins": "Ahora no tienes giros",
+    "wheelA11y": "Ruleta con {count, plural, one {# premio} other {# premios}}: {prizes}",
+    "howTitle": "Cómo ganas giros",
+    "rules": {
+      "coins": "{count, plural, one {Cada moneda que ganes} other {Cada {amount} monedas que ganes}}",
+      "badge": "Insignias nuevas que dan un giro",
+      "milestone": "Hitos, como tus días en el equipo",
+      "cap": "{count, plural, =0 {Este mes no hay giros por ganar} one {Hasta # giro al mes} other {Hasta # giros al mes}}"
+    },
+    "toGo": "{count, plural, one {Te falta {amount} moneda para tu próximo giro} other {Te faltan {amount} monedas para tu próximo giro}}",
+    "earnedOf": "{earned} de {max} ganados este mes",
+    "capped": "{count, plural, one {Ya ganaste tu # giro de este mes. ¡Más el próximo mes!} other {Ya ganaste los # giros de este mes. ¡Más el próximo mes!}}",
+    "offTitle": "La ruleta está descansando",
+    "offLead": "La ruleta está apagada por ahora. ¡Vuelve pronto!",
+    "loadError": "No pudimos cargar la ruleta.",
+    "wonTitle": "¡Ganaste {prize}!",
+    "won": {
+      "coins": "{count, plural, one {Ya tienes {amount} moneda más en tu saldo.} other {Ya tienes {amount} monedas más en tu saldo.}}",
+      "kudos": "Tienes {amount} kudos extra para dar este mes.",
+      "item": "Te espera en Mis premios, listo para recoger en tu tienda.",
+      "badge": "Tu nueva insignia ya está en tu perfil.",
+      "other": "¡Es todo tuyo!"
+    },
+    "awesome": "¡Genial!",
+    "seeBadges": "Ver mis insignias",
+    "tile": {
+      "tap": "Toca para girar y ganar",
+      "allEarned": "{count, plural, one {Ya ganaste tu # giro del mes} other {Ya ganaste los # giros del mes}}",
+      "none": "Este mes no hay giros por ganar",
+      "byBadges": "Gana giros con insignias nuevas",
+      "byMilestones": "Gana giros al cumplir hitos en el equipo",
+      "noRules": "Por ahora no hay forma de ganar giros"
+    }
+  },
+  "badges": {
+    "title": "Tus insignias",
+    "earnedCount": "{count, plural, one {# ganada} other {# ganadas}}",
+    "how": {
+      "tag": "{count, plural, one {Recibe # reconocimiento de {tag}} other {Recibe # reconocimientos de {tag}}}",
+      "given": "{count, plural, one {Da # reconocimiento} other {Da # reconocimientos}}",
+      "days": "{count, plural, one {Cumple # día en el equipo} other {Cumple # días en el equipo}}",
+      "spin": "Gánala en la ruleta",
+      "other": "Sigue brillando para ganarla"
+    },
+    "progress": "{value} de {count}",
+    "earnedOn": "Ganada el {date}",
+    "earnedA11y": "{badge}, ganada el {date}",
+    "lockedA11y": "{badge}, aún no la tienes. {how}.",
+    "progressA11y": "{value} de {count} por ahora",
+    "loadError": "No pudimos cargar tus insignias.",
+    "empty": "Las insignias aparecen aquí cuando tu empresa las configure."
+  },
+  "leaderboard": {
+    "title": "Estrellas de {month} 🏆",
+    "top": "Los 5 mejores de tu tienda",
+    "announced": "¡Ganadores anunciados!",
+    "announcedOn": "Ganadores anunciados el {date}",
+    "rowA11y": "Puesto {rank}: {name}, {count, plural, one {# moneda} other {# monedas}} este mes",
+    "ownTotal": "Tú: {count, plural, one {{amount} moneda} other {{amount} monedas}} este mes",
+    "ownTotalA11y": "Llevas {count, plural, one {# moneda} other {# monedas}} este mes. ¡Sigue así!",
+    "emptyTitle": "Nadie ha ganado monedas este mes",
+    "emptyLead": "El primer reconocimiento pone a alguien en la tabla.",
+    "noStoreTitle": "Las clasificaciones son por tienda",
+    "noStoreLead": "No estás en una sola tienda, así que no hay tabla que mostrar.",
+    "loadError": "No pudimos cargar la clasificación."
+  },
+  "awards": {
+    "title": "Premios de {month}",
+    "leading": "Va ganando: {name}",
+    "leadingYou": "Vas ganando: ¡tú!",
+    "winner": "Lo ganó: {name}",
+    "youWon": "¡Este lo ganaste tú!",
+    "upForGrabs": "Todavía sin líder",
+    "value": {
+      "earned": "{count, plural, one {{amount} moneda este mes} other {{amount} monedas este mes}}",
+      "improved": "{count, plural, one {{amount} moneda más que el mes pasado} other {{amount} monedas más que el mes pasado}}",
+      "guest": "{count, plural, one {# reconocimiento de {tag}} other {# reconocimientos de {tag}}}",
+      "peer": "{count, plural, one {# reconocimiento del equipo} other {# reconocimientos del equipo}}"
+    },
+    "prizeA11y": "{award}, un premio de {count, plural, one {# moneda} other {# monedas}}",
+    "empty": "Este mes no hay premios.",
+    "loadError": "No pudimos cargar los premios del mes."
   }
 }

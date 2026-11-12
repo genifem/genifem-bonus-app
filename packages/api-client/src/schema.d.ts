@@ -191,6 +191,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/awards/current": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Current Awards
+         * @description This month's award categories, prize coins and their store's leaders (CR-36).
+         */
+        get: operations["current_awards_api_v1_awards_current_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/give/context": {
         parameters: {
             query?: never;
@@ -200,6 +220,27 @@ export interface paths {
         };
         /** Give Context */
         get: operations["give_context_api_v1_give_context_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/leaderboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Store Leaderboard
+         * @description Their store's top 5 crew and shift managers this month, and their own total; their
+         *     rank only inside the top 5 (CR-35).
+         */
+        get: operations["store_leaderboard_api_v1_leaderboard_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -258,6 +299,27 @@ export interface paths {
         };
         /** Get Me */
         get: operations["get_me_api_v1_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/badges": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My Badges
+         * @description The badge grid (CR-33): every badge, earned (with when) or with how to earn it and
+         *     how far along they are. Lucky Star appears only once won.
+         */
+        get: operations["my_badges_api_v1_me_badges_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -430,6 +492,69 @@ export interface paths {
         head?: never;
         /** Update Area */
         patch: operations["update_area_api_v1_portal_areas__area_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/portal/awards/announce": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Announce
+         * @description Announce this month's winners now (OP-20): every store's winners are paid, posted
+         *     and notified, and the month close won't pay them again. Once a month: 409
+         *     ``awards_already_announced``. Audited per store (NF-09).
+         */
+        post: operations["announce_api_v1_portal_awards_announce_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/awards/leaders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Award Leaders
+         * @description Monthly awards (OP-19): each store's current leader per active category, whether
+         *     this month was announced, and its winners once it was.
+         */
+        get: operations["award_leaders_api_v1_portal_awards_leaders_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/badges-tiers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Badges Tiers
+         * @description Badges & tiers (OP-18): active people per tier and per badge.
+         */
+        get: operations["badges_tiers_api_v1_portal_badges_tiers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/portal/overview": {
@@ -1104,6 +1229,51 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/spin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Wheel
+         * @description The Spin screen (CR-28, CR-31): the prizes in wheel order with ``prizes_version``,
+         *     spins ready, the earning rules that are on, spins earned this month and the progress
+         *     toward the next. ``enabled`` false: the owners turned spins off (plan D19).
+         */
+        get: operations["wheel_api_v1_spin_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/spins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Spin
+         * @description Spin the wheel (CR-29): the server picks and stores the prize and pays it out, then
+         *     the app animates to ``segment_index``. 409 ``no_spins`` with none ready (acceptance
+         *     test 14); 403 ``spin_disabled`` while spins are off; 409 ``no_prize_available`` when
+         *     only prizes they can't win have a chance; 422 ``idempotency_key_required``.
+         */
+        post: operations["spin_api_v1_spins_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/wall": {
         parameters: {
             query?: never;
@@ -1232,6 +1402,66 @@ export interface components {
             /** Name Es */
             name_es: string | null;
         };
+        /** AwardCategoryOut */
+        AwardCategoryOut: {
+            /** Coins */
+            coins: number;
+            /** Id */
+            id: string;
+            leader: components["schemas"]["AwardPersonOut"] | null;
+            /**
+             * Metric
+             * @enum {string}
+             */
+            metric: "earned" | "improved" | "guest" | "peer";
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+            winner: components["schemas"]["AwardPersonOut"] | null;
+        };
+        /** AwardPersonOut */
+        AwardPersonOut: {
+            id: components["schemas"]["PydanticObjectId"];
+            /** Initials */
+            initials: string;
+            /** Name */
+            name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "crew" | "shift" | "gm" | "supervisor" | "director";
+            /** Value */
+            value: number;
+        };
+        /**
+         * AwardsCurrentOut
+         * @description This month's awards at their store (CR-36): each active category, its prize and who
+         *     is leading now.
+         */
+        AwardsCurrentOut: {
+            /** Announced */
+            announced: boolean;
+            /** Categories */
+            categories: components["schemas"]["AwardCategoryOut"][];
+            /** Month */
+            month: string;
+            /**
+             * Resets On
+             * Format: date
+             */
+            resets_on: string;
+            store: components["schemas"]["StoreRef"] | null;
+        };
+        /**
+         * AwardsLeadersOut
+         * @description Monthly awards (OP-19): "Leading right now" per store and active category.
+         */
+        AwardsLeadersOut: {
+            /** Stores */
+            stores: components["schemas"]["StoreAwardsOut"][];
+        };
         /** Badge */
         Badge: {
             /**
@@ -1267,6 +1497,27 @@ export interface components {
             rule: "tag" | "given" | "days" | "spin";
             /** Tag */
             tag: ("guest" | "rush" | "team" | "clean" | "above" | "lead") | null;
+        };
+        /** BadgeCountOut */
+        BadgeCountOut: {
+            /** Id */
+            id: string;
+            /** People */
+            people: number;
+        };
+        /**
+         * BadgesTiersOut
+         * @description Badges & tiers (OP-18): how many people are at each tier (from lifetime coins and
+         *     the live thresholds, so an edit moves them at once: acceptance test 17) and hold each
+         *     badge. Active people only. The definitions themselves are in ``/portal/settings``.
+         */
+        BadgesTiersOut: {
+            /** Badges */
+            badges: components["schemas"]["BadgeCountOut"][];
+            /** People */
+            people: number;
+            /** Tiers */
+            tiers: components["schemas"]["TierCountOut"][];
         };
         /**
          * CandidateOut
@@ -1403,6 +1654,38 @@ export interface components {
             resets_on: string;
             /** Used */
             used: number;
+        };
+        /** LeaderRow */
+        LeaderRow: {
+            /** Earned */
+            earned: number;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Initials */
+            initials: string;
+            /** Me */
+            me: boolean;
+            /** Name */
+            name: string;
+            /** Rank */
+            rank: number;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "crew" | "shift" | "gm" | "supervisor" | "director";
+        };
+        /**
+         * LeaderboardOut
+         * @description The store's top 5 crew and shift managers by coins earned this month (CR-35). Ties
+         *     go to whoever got there first. Someone outside the top 5 sees only their own total.
+         */
+        LeaderboardOut: {
+            me: components["schemas"]["MyStandingOut"];
+            /** Month */
+            month: string;
+            store: components["schemas"]["StoreRef"] | null;
+            /** Top */
+            top: components["schemas"]["LeaderRow"][];
         };
         /** LikeOut */
         LikeOut: {
@@ -1555,6 +1838,41 @@ export interface components {
             mfa_token: string;
         };
         /**
+         * MyBadgeOut
+         * @description One square of the badge grid (CR-33): earned in colour, or locked with how to earn
+         *     it, which the app words from ``rule``, ``tag`` and ``count`` ("Get 3 Guest Hero
+         *     shout-outs", "Give 8 shout-outs", "Reach 90 days on the team").
+         */
+        MyBadgeOut: {
+            /** Bonus */
+            bonus: number;
+            /** Count */
+            count: number;
+            /** Earned */
+            earned: boolean;
+            /** Earned At */
+            earned_at: string | null;
+            /** Gives Spin */
+            gives_spin: boolean;
+            /** Icon */
+            icon: string;
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+            /** Progress */
+            progress: number | null;
+            /**
+             * Rule
+             * @enum {string}
+             */
+            rule: "tag" | "given" | "days" | "spin";
+            /** Tag */
+            tag: ("guest" | "rush" | "team" | "clean" | "above" | "lead") | null;
+        };
+        /**
          * MyRequestOut
          * @description One of the person's own requests, on My rewards (CR-27).
          */
@@ -1593,6 +1911,13 @@ export interface components {
              * @enum {string}
              */
             status: "pending" | "approved" | "declined" | "cancelled" | "collected";
+        };
+        /** MyStandingOut */
+        MyStandingOut: {
+            /** Earned */
+            earned: number;
+            /** Rank */
+            rank: number | null;
         };
         /** NextTierOut */
         NextTierOut: {
@@ -1840,8 +2165,12 @@ export interface components {
         };
         /** PostOut */
         PostOut: {
+            /** Award Month */
+            award_month: string | null;
             /** Award Name */
             award_name: string | null;
+            /** Award Name Es */
+            award_name_es: string | null;
             /** Can Hide */
             can_hide: boolean;
             /** Coins */
@@ -1898,6 +2227,22 @@ export interface components {
             label_es: string | null;
             /** Weight */
             weight: number;
+        };
+        /** PrizeOut */
+        PrizeOut: {
+            /** Amount */
+            amount: number;
+            /** Id */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "coins" | "kudos" | "item" | "badge";
+            /** Label */
+            label: string;
+            /** Label Es */
+            label_es: string | null;
         };
         /** @example 5eb7cf5a86d9755df3a6c593 */
         PydanticObjectId: string;
@@ -2339,6 +2684,38 @@ export interface components {
             prizes_version: number;
         };
         /**
+         * SpinResult
+         * @description What the wheel landed on, chosen and stored by the server before the app animates
+         *     (CR-29). If ``prizes_version`` isn't the wheel the app shows, it reloads the wheel
+         *     first and then turns to ``segment_index``.
+         */
+        SpinResult: {
+            id: components["schemas"]["PydanticObjectId"];
+            prize: components["schemas"]["PrizeOut"];
+            /** Prizes Version */
+            prizes_version: number;
+            /** Replayed */
+            replayed: boolean;
+            /** Segment Index */
+            segment_index: number;
+            /** Spins Available */
+            spins_available: number;
+        };
+        /**
+         * SpinRulesOut
+         * @description How spins are earned (CR-31): only what the owners have turned on.
+         */
+        SpinRulesOut: {
+            /** Every Coins */
+            every_coins: number;
+            /** Max Per Month */
+            max_per_month: number;
+            /** On Badge */
+            on_badge: boolean;
+            /** On Milestone */
+            on_milestone: boolean;
+        };
+        /**
          * SpotlightOut
          * @description MG-04: the store's top earner this month among crew and shift managers.
          */
@@ -2346,6 +2723,20 @@ export interface components {
             /** Earned This Month */
             earned_this_month: number;
             person: components["schemas"]["PartyOut"];
+        };
+        /** StoreAwardsOut */
+        StoreAwardsOut: {
+            /** Announced */
+            announced: boolean;
+            /** Announced At */
+            announced_at: string | null;
+            /** Announced By */
+            announced_by: string | null;
+            /** Categories */
+            categories: components["schemas"]["AwardCategoryOut"][];
+            /** Month */
+            month: string;
+            store: components["schemas"]["StoreRef"];
         };
         /** StoreBudgetOut */
         StoreBudgetOut: {
@@ -2502,6 +2893,16 @@ export interface components {
             /** Name Es */
             name_es: string | null;
         };
+        /** TierCountOut */
+        TierCountOut: {
+            /**
+             * Id
+             * @enum {string}
+             */
+            id: "bronze" | "silver" | "gold" | "platinum";
+            /** People */
+            people: number;
+        };
         /** TierOut */
         TierOut: {
             /** Color */
@@ -2589,6 +2990,26 @@ export interface components {
             /** Items */
             items: components["schemas"]["PostOut"][];
             next_before: components["schemas"]["PydanticObjectId"] | null;
+        };
+        /**
+         * WheelOut
+         * @description The Spin screen (CR-28 to CR-31). With ``enabled`` false (plan D19) the app hides
+         *     the wheel and its Home tile, and spinning is refused.
+         */
+        WheelOut: {
+            /** Enabled */
+            enabled: boolean;
+            /** Prizes */
+            prizes: components["schemas"]["PrizeOut"][];
+            /** Prizes Version */
+            prizes_version: number;
+            /** Progress */
+            progress: number;
+            rules: components["schemas"]["SpinRulesOut"];
+            /** Spins Available */
+            spins_available: number;
+            /** Spins Earned */
+            spins_earned: number;
         };
     };
     responses: never;
@@ -2927,6 +3348,26 @@ export interface operations {
             };
         };
     };
+    current_awards_api_v1_awards_current_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AwardsCurrentOut"];
+                };
+            };
+        };
+    };
     give_context_api_v1_give_context_get: {
         parameters: {
             query?: never;
@@ -2943,6 +3384,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["GiveContextOut"];
+                };
+            };
+        };
+    };
+    store_leaderboard_api_v1_leaderboard_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeaderboardOut"];
                 };
             };
         };
@@ -3003,6 +3464,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MeOut"];
+                };
+            };
+        };
+    };
+    my_badges_api_v1_me_badges_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyBadgeOut"][];
                 };
             };
         };
@@ -3279,6 +3760,77 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    announce_api_v1_portal_awards_announce_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AwardsLeadersOut"];
+                };
+            };
+        };
+    };
+    award_leaders_api_v1_portal_awards_leaders_get: {
+        parameters: {
+            query?: {
+                store?: components["schemas"]["PydanticObjectId"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AwardsLeadersOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    badges_tiers_api_v1_portal_badges_tiers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BadgesTiersOut"];
                 };
             };
         };
@@ -4456,6 +5008,58 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LikeOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    wheel_api_v1_spin_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WheelOut"];
+                };
+            };
+        };
+    };
+    spin_api_v1_spins_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description One per tap on Spin (a UUID). A repeat returns the first result. */
+                "Idempotency-Key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpinResult"];
                 };
             };
             /** @description Validation Error */

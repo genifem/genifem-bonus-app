@@ -6,6 +6,7 @@ import { AwardChip, TagChip } from "@/components/Chips";
 import { CoinPill } from "@/components/Coin";
 import { Avatar, Card, CHROME_SCALE, colors, Icon, IconButton, minTouchTarget, T, Touchable } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
+import { awardTitle } from "@/lib/leaderboard";
 import { isTagId } from "@/lib/recognition";
 import { timeAgo } from "@/lib/time";
 
@@ -14,7 +15,8 @@ export type PostOut = Schemas["PostOut"];
 /**
  * One shout-out (CR-17, `.card.post`): who got it, who it is from (with their role when they
  * are not crew), the coins, the tag, the message, how long ago, and the heart. A monthly award
- * (CR-18) is drawn on butter with a trophy in place of the tag.
+ * (CR-18) is drawn on butter with a trophy in place of the tag, named with its month in the
+ * language on screen ("November's Top Earner").
  *
  * The words are one element to a screen reader ("Maria recognized Ana for Guest Hero..."),
  * and the heart and the ⋯ menu are buttons of their own beside them.
@@ -43,7 +45,8 @@ export const PostCard = memo(function PostCard({
   const { t } = useAuth();
   const { sender, recipient } = post;
   const award = post.is_award;
-  const awardName = post.award_name ?? "";
+  // "November's Top Earner", in the language on screen.
+  const awardName = awardTitle(t, post);
   const recipientName = recipient.id === meId ? t("post.you") : recipient.name;
   const tagName = isTagId(post.tag) ? t(`tags.${post.tag}`) : post.tag;
 

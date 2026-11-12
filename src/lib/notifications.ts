@@ -9,9 +9,10 @@ import { isTagId, TAG_ICONS } from "@/lib/recognition";
  * on screen now (plan D14), so switching language rewrites the whole list at once (NF-02).
  * The texts are the spec's "Notifications" table.
  *
- * Only `shoutout_received` and `tier_reached` are sent so far; the rest arrive with rewards,
- * badges, spins and awards, and are written here already so an older app reads them. A type
- * this app has never heard of still says something rather than nothing.
+ * The params are the ones the API sends with each type: `badge_name`/`_es` (badge_earned,
+ * with the bonus as `coins`), `reason` coins | badge | milestone (spin_earned),
+ * `prize_label`/`_es` (spin_result), `award_name`/`_es` and `month` (award_won). A type this
+ * app has never heard of still says something rather than nothing.
  */
 
 export type NotificationOut = Schemas["NotificationOut"];

@@ -4,6 +4,7 @@ import { type ReactNode, useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { AppHeader } from "@/components/AppHeader";
+import { BadgeGrid } from "@/components/BadgeGrid";
 import { RoleChip, TierChip } from "@/components/Chips";
 import { Coin } from "@/components/Coin";
 import { PostCard, type PostOut } from "@/components/PostCard";
@@ -24,6 +25,7 @@ import {
   useToast,
 } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
+import { earnedCount, type MyBadge, shoutoutsGiven } from "@/lib/badges";
 import { explain } from "@/lib/errors";
 import { formatCount } from "@/lib/format";
 import { translatorFor } from "@/lib/i18n";
@@ -57,10 +59,14 @@ function Row({ children, last = false }: { children: ReactNode; last?: boolean }
 }
 
 /**
- * The profile (CR-32, CR-34 so far), in both tab groups: who this is (role, store, tier),
- * their coins, their latest shout-outs received and sent, the way to My rewards (CR-27; for a
- * GM the only way, MG-09) and to notifications, and settings: the language and signing out.
- * Badges and the leaderboard join it with P4.
+ * The profile (CR-32 to CR-34), in both tab groups: who this is (role, store, tier), coins
+ * earned all time and this month and shout-outs given, the badge grid (CR-33), their latest
+ * shout-outs received and sent, the way to the leaderboard and the month's awards (CR-35,
+ * CR-36), to My rewards (CR-27; for a GM the only way, MG-09) and to notifications, and
+ * settings: the language and signing out.
+ *
+ * "Shout-outs given" has no field of its own in the API: it is the "give N shout-outs"
+ * badge's progress, and it is left out when the owners have no such badge.
  *
  * The language changes on screen at once (NF-02) and is then saved to the profile, so the
  * texts and the next phone this person signs in on use it too. A save that fails says so,
@@ -77,10 +83,12 @@ export function Profile() {
   const [refreshing, setRefreshing] = useState(false);
   const received = useApi<PostOut[]>("/me/shoutouts?direction=received&limit=4");
   const sent = useApi<PostOut[]>("/me/shoutouts?direction=sent&limit=4");
+  const badges = useApi<MyBadge[]>("/me/badges");
   const likes = useLikes({ onSettled: () => void refreshMe() });
   const { forgetSettled } = likes;
 
   useMeRefreshOnFocus();
+  useRefreshOnFocus(badges.revalidate);
   const { revalidate: revalidateReceived } = received;
   const { revalidate: revalidateSent } = sent;
   const revalidateLists = useCallback(async () => {
@@ -91,7 +99,7 @@ export function Profile() {
 
   const pull = async () => {
     setRefreshing(true);
-    await Promise.all([refreshMe(), revalidateLists()]);
+    await Promise.all([refreshMe(), revalidateLists(), badges.revalidate()]);
     setRefreshing(false);
   };
 
@@ -105,6 +113,7 @@ export function Profile() {
 
   const list = direction === "received" ? received : sent;
   const posts = list.data ?? [];
+  const given = badges.data ? shoutoutsGiven(badges.data) : null;
   const unread = summary?.unread_notifications ?? 0;
   const coinsLabel = (count: number) => t("profile.myRewardsCoins", { count, amount: formatCount(count, locale) });
   const place = me?.store
@@ -133,11 +142,15 @@ export function Profile() {
 
         {summary ? (
           <Card padding={0} style={styles.stats}>
-            <Stat coin value={formatCount(summary.balance, locale)} label={t("profile.balance")} />
-            <View style={styles.statLine} />
-            <Stat value={formatCount(summary.lifetime, locale)} label={t("profile.lifetime")} />
+            <Stat coin value={formatCount(summary.lifetime, locale)} label={t("profile.lifetime")} />
             <View style={styles.statLine} />
             <Stat value={formatCount(summary.earned_this_month, locale)} label={t("profile.thisMonth")} />
+            {given !== null ? (
+              <>
+                <View style={styles.statLine} />
+                <Stat value={formatCount(given, locale)} label={t("profile.given")} />
+              </>
+            ) : null}
           </Card>
         ) : error ? (
           <ErrorState
@@ -147,6 +160,36 @@ export function Profile() {
           />
         ) : (
           <Skeleton height={76} />
+        )}
+
+        <View style={styles.section}>
+          <T size={17} weight={900} heading style={{ flex: 1 }}>
+            {t("badges.title")}
+          </T>
+          {badges.data ? (
+            <T size={12} weight={700} color={colors.muted} tabular>
+              {t("badges.earnedCount", { count: earnedCount(badges.data) })}
+            </T>
+          ) : null}
+        </View>
+        {badges.data ? (
+          <Card style={styles.badges}>
+            {badges.data.length ? (
+              <BadgeGrid badges={badges.data} now={now} />
+            ) : (
+              <T size={13} color={colors.muted} align="center">
+                {t("badges.empty")}
+              </T>
+            )}
+          </Card>
+        ) : badges.error ? (
+          <ErrorState
+            message={`${t("badges.loadError")} ${explain(t, badges.error)}`}
+            retryLabel={t("common.retry")}
+            onRetry={() => void badges.reload()}
+          />
+        ) : (
+          <Skeleton height={220} />
         )}
 
         <T size={17} weight={900} heading style={{ marginBottom: -6 }}>
@@ -189,6 +232,19 @@ export function Profile() {
         )}
 
         <Card style={styles.rows}>
+          <Touchable
+            accessibilityRole="button"
+            accessibilityLabel={t("profile.leaderboard")}
+            onPress={() => router.push(routes.leaderboard)}
+          >
+            <Row>
+              <Icon name="trophy" size={20} color={colors.brand} />
+              <T weight={700} style={{ flex: 1 }}>
+                {t("profile.leaderboard")}
+              </T>
+              <Icon name="chev" size={16} color={colors.muted} />
+            </Row>
+          </Touchable>
           <Touchable
             accessibilityRole="button"
             accessibilityLabel={
@@ -263,6 +319,8 @@ const styles = StyleSheet.create({
   stat: { flex: 1, alignItems: "center", gap: 2, paddingVertical: 14, paddingHorizontal: 6 },
   statValue: { flexDirection: "row", alignItems: "center", gap: 5 },
   statLine: { width: 1, alignSelf: "stretch", backgroundColor: colors.border },
+  section: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: -6 },
+  badges: { paddingVertical: 16 },
   rows: { paddingVertical: 4 },
   setRow: { minHeight: minTouchTarget + 12, flexDirection: "row", alignItems: "center", gap: 10 },
   setRowLine: { borderBottomWidth: 1, borderBottomColor: colors.border },
