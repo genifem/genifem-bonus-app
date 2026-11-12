@@ -184,6 +184,10 @@ const exit = Easing.bezier(...motion.easing.exit);
  * is removed. The body scrolls when it is taller than the screen allows, a field inside is
  * kept above the keyboard, and `footer` stays pinned under the body. With `title`, the sheet
  * draws its own header row with a close button.
+ *
+ * `fill` makes the sheet as tall as the screen allows and hands its body the height without
+ * a scroll view, for a body that scrolls itself: a long, searchable list (D18) that must stay
+ * virtualized rather than sit inside another scroll view.
  */
 export function Sheet({
   visible,
@@ -192,6 +196,7 @@ export function Sheet({
   closeLabel,
   title,
   footer,
+  fill = false,
   children,
 }: {
   visible: boolean;
@@ -200,6 +205,7 @@ export function Sheet({
   closeLabel: string;
   title?: string;
   footer?: ReactNode;
+  fill?: boolean;
   children: ReactNode;
 }) {
   const insets = useSafeAreaInsets();
@@ -244,7 +250,11 @@ export function Sheet({
             style={StyleSheet.absoluteFill}
           />
         </Animated.View>
-        <Animated.View accessibilityViewIsModal accessibilityLabel={label} style={[styles.sheet, panel]}>
+        <Animated.View
+          accessibilityViewIsModal
+          accessibilityLabel={label}
+          style={[styles.sheet, fill && { flex: 1, maxHeight: "100%", marginTop: insets.top + 24 }, panel]}
+        >
           <View style={styles.handle} />
           {title ? (
             <View style={styles.sheetHeader}>
@@ -254,14 +264,18 @@ export function Sheet({
               <IconButton icon="x" label={closeLabel} onPress={onClose} />
             </View>
           ) : null}
-          <ScrollView
-            style={styles.sheetBody}
-            contentContainerStyle={{ gap: 14, paddingBottom: footer ? 4 : bottom }}
-            keyboardShouldPersistTaps="handled"
-            bounces={false}
-          >
-            {children}
-          </ScrollView>
+          {fill ? (
+            <View style={{ flex: 1, paddingBottom: footer ? 4 : bottom }}>{children}</View>
+          ) : (
+            <ScrollView
+              style={styles.sheetBody}
+              contentContainerStyle={{ gap: 14, paddingBottom: footer ? 4 : bottom }}
+              keyboardShouldPersistTaps="handled"
+              bounces={false}
+            >
+              {children}
+            </ScrollView>
+          )}
           {footer ? <View style={[styles.sheetFooter, { paddingBottom: bottom }]}>{footer}</View> : null}
         </Animated.View>
       </KeyboardAvoidingView>

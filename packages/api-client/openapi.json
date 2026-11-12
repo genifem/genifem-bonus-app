@@ -384,6 +384,73 @@
         "title": "Badge",
         "type": "object"
       },
+      "CandidateOut": {
+        "description": "A row of \"Recognize anyone\" (OP-06): who they are, where, and their balance.",
+        "properties": {
+          "area": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AreaRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "balance": {
+            "title": "Balance",
+            "type": "integer"
+          },
+          "first_name": {
+            "title": "First Name",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "initials": {
+            "title": "Initials",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "crew",
+              "shift",
+              "gm",
+              "supervisor",
+              "director"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "first_name",
+          "initials",
+          "role",
+          "store",
+          "area",
+          "balance"
+        ],
+        "title": "CandidateOut",
+        "type": "object"
+      },
       "CsvIn": {
         "properties": {
           "csv": {
@@ -541,6 +608,80 @@
         "title": "CsvRow",
         "type": "object"
       },
+      "GiveContextOut": {
+        "description": "Everything the Give screen needs, decided on the server (plan D6).",
+        "properties": {
+          "amounts": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Amounts",
+            "type": "array"
+          },
+          "custom_max": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Max"
+          },
+          "custom_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Min"
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/RecipientGroup"
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "kudos": {
+            "$ref": "#/components/schemas/KudosOut"
+          },
+          "message_max": {
+            "title": "Message Max",
+            "type": "integer"
+          },
+          "tags": {
+            "items": {
+              "enum": [
+                "guest",
+                "rush",
+                "team",
+                "clean",
+                "above",
+                "lead"
+              ],
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          }
+        },
+        "required": [
+          "kudos",
+          "amounts",
+          "custom_min",
+          "custom_max",
+          "tags",
+          "message_max",
+          "groups"
+        ],
+        "title": "GiveContextOut",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -552,6 +693,59 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "KudosOut": {
+        "description": "The giving wallet (spec \"Two wallets\").",
+        "properties": {
+          "allowance": {
+            "title": "Allowance",
+            "type": "integer"
+          },
+          "bonus": {
+            "title": "Bonus",
+            "type": "integer"
+          },
+          "left": {
+            "title": "Left",
+            "type": "integer"
+          },
+          "resets_on": {
+            "format": "date",
+            "title": "Resets On",
+            "type": "string"
+          },
+          "used": {
+            "title": "Used",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "left",
+          "allowance",
+          "bonus",
+          "used",
+          "resets_on"
+        ],
+        "title": "KudosOut",
+        "type": "object"
+      },
+      "LikeOut": {
+        "properties": {
+          "like_count": {
+            "title": "Like Count",
+            "type": "integer"
+          },
+          "liked": {
+            "title": "Liked",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "liked",
+          "like_count"
+        ],
+        "title": "LikeOut",
         "type": "object"
       },
       "LoginIn": {
@@ -821,6 +1015,229 @@
         "title": "MfaTokenIn",
         "type": "object"
       },
+      "NextTierOut": {
+        "properties": {
+          "coins_to_go": {
+            "title": "Coins To Go",
+            "type": "integer"
+          },
+          "color": {
+            "title": "Color",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "min": {
+            "title": "Min",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "name_es",
+          "min",
+          "color",
+          "coins_to_go"
+        ],
+        "title": "NextTierOut",
+        "type": "object"
+      },
+      "NotificationOut": {
+        "properties": {
+          "coins": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Coins"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "params": {
+            "additionalProperties": true,
+            "title": "Params",
+            "type": "object"
+          },
+          "read": {
+            "title": "Read",
+            "type": "boolean"
+          },
+          "type": {
+            "enum": [
+              "shoutout_received",
+              "tier_reached",
+              "badge_earned",
+              "spin_earned",
+              "spin_result",
+              "reward_requested",
+              "reward_approved",
+              "reward_declined",
+              "award_won"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "params",
+          "coins",
+          "read",
+          "created_at"
+        ],
+        "title": "NotificationOut",
+        "type": "object"
+      },
+      "NotificationPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/NotificationOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_before": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unread": {
+            "title": "Unread",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "next_before",
+          "unread"
+        ],
+        "title": "NotificationPage",
+        "type": "object"
+      },
+      "OverviewOut": {
+        "properties": {
+          "month": {
+            "title": "Month",
+            "type": "string"
+          },
+          "not_recognized": {
+            "items": {
+              "$ref": "#/components/schemas/UnrecognizedOut"
+            },
+            "title": "Not Recognized",
+            "type": "array"
+          },
+          "recent": {
+            "items": {
+              "$ref": "#/components/schemas/PostOut"
+            },
+            "title": "Recent",
+            "type": "array"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/OverviewStats"
+          },
+          "stores": {
+            "items": {
+              "$ref": "#/components/schemas/StoreRow"
+            },
+            "title": "Stores",
+            "type": "array"
+          }
+        },
+        "required": [
+          "month",
+          "stats",
+          "stores",
+          "not_recognized",
+          "recent"
+        ],
+        "title": "OverviewOut",
+        "type": "object"
+      },
+      "OverviewStats": {
+        "properties": {
+          "coins_earned": {
+            "title": "Coins Earned",
+            "type": "integer"
+          },
+          "coins_earned_usd": {
+            "title": "Coins Earned Usd",
+            "type": "number"
+          },
+          "coins_redeemed": {
+            "title": "Coins Redeemed",
+            "type": "integer"
+          },
+          "coins_redeemed_usd": {
+            "title": "Coins Redeemed Usd",
+            "type": "number"
+          },
+          "crew_recognized": {
+            "title": "Crew Recognized",
+            "type": "integer"
+          },
+          "crew_total": {
+            "title": "Crew Total",
+            "type": "integer"
+          },
+          "requests_waiting": {
+            "title": "Requests Waiting",
+            "type": "integer"
+          },
+          "shoutouts": {
+            "title": "Shoutouts",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "shoutouts",
+          "crew_recognized",
+          "crew_total",
+          "coins_earned",
+          "coins_earned_usd",
+          "coins_redeemed",
+          "coins_redeemed_usd",
+          "requests_waiting"
+        ],
+        "title": "OverviewStats",
+        "type": "object"
+      },
       "OwnerAuthOut": {
         "description": "An owner sign-in step. ``done`` carries the tokens (the portal's proxy keeps them in\ncookies). With the second factor on (plan D8), ``mfa`` asks for an authenticator code\nand ``mfa_setup`` for one to be set up first, each with a short-lived ``mfa_token``.",
         "properties": {
@@ -863,6 +1280,87 @@
         "title": "OwnerAuthOut",
         "type": "object"
       },
+      "OwnerGiveContextOut": {
+        "properties": {
+          "amounts": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Amounts",
+            "type": "array"
+          },
+          "custom_max": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Max"
+          },
+          "custom_min": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom Min"
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/RecipientGroup"
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "kudos": {
+            "$ref": "#/components/schemas/KudosOut"
+          },
+          "message_max": {
+            "title": "Message Max",
+            "type": "integer"
+          },
+          "recent": {
+            "items": {
+              "$ref": "#/components/schemas/PostOut"
+            },
+            "title": "Recent",
+            "type": "array"
+          },
+          "tags": {
+            "items": {
+              "enum": [
+                "guest",
+                "rush",
+                "team",
+                "clean",
+                "above",
+                "lead"
+              ],
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          }
+        },
+        "required": [
+          "kudos",
+          "amounts",
+          "custom_min",
+          "custom_max",
+          "tags",
+          "message_max",
+          "groups",
+          "recent"
+        ],
+        "title": "OwnerGiveContextOut",
+        "type": "object"
+      },
       "OwnerLoginIn": {
         "properties": {
           "email": {
@@ -883,6 +1381,65 @@
           "password"
         ],
         "title": "OwnerLoginIn",
+        "type": "object"
+      },
+      "PartyOut": {
+        "description": "Someone on a post or in a picker. Names, role and store only: never a phone, an\nemail or an Employee ID (NF-06).",
+        "properties": {
+          "first_name": {
+            "title": "First Name",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "initials": {
+            "title": "Initials",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "crew",
+                  "shift",
+                  "gm",
+                  "supervisor",
+                  "director"
+                ],
+                "type": "string"
+              },
+              {
+                "const": "owner",
+                "type": "string"
+              }
+            ],
+            "title": "Role"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "first_name",
+          "initials",
+          "role",
+          "store"
+        ],
+        "title": "PartyOut",
         "type": "object"
       },
       "PeoplePage": {
@@ -1296,6 +1853,112 @@
         "title": "PersonRef",
         "type": "object"
       },
+      "PostOut": {
+        "properties": {
+          "award_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Award Name"
+          },
+          "can_hide": {
+            "title": "Can Hide",
+            "type": "boolean"
+          },
+          "coins": {
+            "title": "Coins",
+            "type": "integer"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "is_award": {
+            "title": "Is Award",
+            "type": "boolean"
+          },
+          "like_count": {
+            "title": "Like Count",
+            "type": "integer"
+          },
+          "liked": {
+            "title": "Liked",
+            "type": "boolean"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "recipient": {
+            "$ref": "#/components/schemas/PartyOut"
+          },
+          "sender": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PartyOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tag": {
+            "enum": [
+              "guest",
+              "rush",
+              "team",
+              "clean",
+              "above",
+              "lead"
+            ],
+            "title": "Tag",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "sender",
+          "recipient",
+          "tag",
+          "message",
+          "coins",
+          "created_at",
+          "like_count",
+          "liked",
+          "is_award",
+          "award_name",
+          "store",
+          "can_hide"
+        ],
+        "title": "PostOut",
+        "type": "object"
+      },
       "PreferencesIn": {
         "properties": {
           "language": {
@@ -1405,6 +2068,47 @@
         "minLength": 24,
         "pattern": "^[0-9a-f]{24}$",
         "type": "string"
+      },
+      "ReadAllOut": {
+        "properties": {
+          "unread": {
+            "title": "Unread",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "unread"
+        ],
+        "title": "ReadAllOut",
+        "type": "object"
+      },
+      "RecipientGroup": {
+        "properties": {
+          "people": {
+            "items": {
+              "$ref": "#/components/schemas/PartyOut"
+            },
+            "title": "People",
+            "type": "array"
+          },
+          "role": {
+            "enum": [
+              "crew",
+              "shift",
+              "gm",
+              "supervisor",
+              "director"
+            ],
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "people"
+        ],
+        "title": "RecipientGroup",
+        "type": "object"
       },
       "Redeem": {
         "description": "Redemption limits (OP-15).",
@@ -1764,6 +2468,71 @@
         "title": "SetupVerifyOut",
         "type": "object"
       },
+      "ShoutoutIn": {
+        "properties": {
+          "coins": {
+            "maximum": 5000.0,
+            "minimum": 1.0,
+            "title": "Coins",
+            "type": "integer"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "tag": {
+            "enum": [
+              "guest",
+              "rush",
+              "team",
+              "clean",
+              "above",
+              "lead"
+            ],
+            "title": "Tag",
+            "type": "string"
+          },
+          "to_id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          }
+        },
+        "required": [
+          "to_id",
+          "tag",
+          "coins"
+        ],
+        "title": "ShoutoutIn",
+        "type": "object"
+      },
+      "ShoutoutResult": {
+        "properties": {
+          "kudos": {
+            "$ref": "#/components/schemas/KudosOut"
+          },
+          "post": {
+            "$ref": "#/components/schemas/PostOut"
+          },
+          "replayed": {
+            "title": "Replayed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "post",
+          "kudos",
+          "replayed"
+        ],
+        "title": "ShoutoutResult",
+        "type": "object"
+      },
       "Spin": {
         "properties": {
           "enabled": {
@@ -2026,6 +2795,257 @@
         "title": "StoreRef",
         "type": "object"
       },
+      "StoreRow": {
+        "properties": {
+          "budget": {
+            "title": "Budget",
+            "type": "integer"
+          },
+          "budget_used": {
+            "title": "Budget Used",
+            "type": "integer"
+          },
+          "coins_earned": {
+            "title": "Coins Earned",
+            "type": "integer"
+          },
+          "crew_recognized": {
+            "title": "Crew Recognized",
+            "type": "integer"
+          },
+          "crew_total": {
+            "title": "Crew Total",
+            "type": "integer"
+          },
+          "gm": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requests_waiting": {
+            "title": "Requests Waiting",
+            "type": "integer"
+          },
+          "store": {
+            "$ref": "#/components/schemas/StoreRef"
+          },
+          "supervisor": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PersonRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "store",
+          "gm",
+          "supervisor",
+          "crew_recognized",
+          "crew_total",
+          "coins_earned",
+          "budget_used",
+          "budget",
+          "requests_waiting"
+        ],
+        "title": "StoreRow",
+        "type": "object"
+      },
+      "SummaryOut": {
+        "description": "Home's numbers (CR-10 to CR-14), all from live settings, so a changed allowance or\nthreshold shows on the next screen load.",
+        "properties": {
+          "balance": {
+            "title": "Balance",
+            "type": "integer"
+          },
+          "earned_this_month": {
+            "title": "Earned This Month",
+            "type": "integer"
+          },
+          "kudos": {
+            "$ref": "#/components/schemas/KudosOut"
+          },
+          "lifetime": {
+            "title": "Lifetime",
+            "type": "integer"
+          },
+          "next_tier": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NextTierOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "spins_available": {
+            "title": "Spins Available",
+            "type": "integer"
+          },
+          "store_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Rank"
+          },
+          "tier": {
+            "$ref": "#/components/schemas/TierOut"
+          },
+          "unread_notifications": {
+            "title": "Unread Notifications",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "balance",
+          "lifetime",
+          "tier",
+          "next_tier",
+          "kudos",
+          "earned_this_month",
+          "store_rank",
+          "spins_available",
+          "unread_notifications"
+        ],
+        "title": "SummaryOut",
+        "type": "object"
+      },
+      "TeamOut": {
+        "properties": {
+          "people": {
+            "items": {
+              "$ref": "#/components/schemas/TeamRow"
+            },
+            "title": "People",
+            "type": "array"
+          },
+          "stores": {
+            "items": {
+              "$ref": "#/components/schemas/StoreRow"
+            },
+            "title": "Stores",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "stores",
+          "people",
+          "total"
+        ],
+        "title": "TeamOut",
+        "type": "object"
+      },
+      "TeamRow": {
+        "properties": {
+          "area": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AreaRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "badges": {
+            "title": "Badges",
+            "type": "integer"
+          },
+          "balance": {
+            "title": "Balance",
+            "type": "integer"
+          },
+          "earned_this_month": {
+            "title": "Earned This Month",
+            "type": "integer"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "initials": {
+            "title": "Initials",
+            "type": "string"
+          },
+          "kudos_allowance": {
+            "title": "Kudos Allowance",
+            "type": "integer"
+          },
+          "kudos_left": {
+            "title": "Kudos Left",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "crew",
+              "shift",
+              "gm",
+              "supervisor",
+              "director"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stores": {
+            "items": {
+              "$ref": "#/components/schemas/StoreRef"
+            },
+            "title": "Stores",
+            "type": "array"
+          },
+          "tier": {
+            "$ref": "#/components/schemas/TierOut"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "initials",
+          "role",
+          "store",
+          "stores",
+          "area",
+          "balance",
+          "earned_this_month",
+          "tier",
+          "kudos_left",
+          "kudos_allowance",
+          "badges"
+        ],
+        "title": "TeamRow",
+        "type": "object"
+      },
       "Tier": {
         "properties": {
           "color": {
@@ -2078,6 +3098,46 @@
         "title": "Tier",
         "type": "object"
       },
+      "TierOut": {
+        "properties": {
+          "color": {
+            "title": "Color",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "min": {
+            "title": "Min",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "name_es",
+          "min",
+          "color"
+        ],
+        "title": "TierOut",
+        "type": "object"
+      },
       "TokenOut": {
         "properties": {
           "access_token": {
@@ -2119,6 +3179,63 @@
         "title": "TokenOut",
         "type": "object"
       },
+      "UnrecognizedOut": {
+        "properties": {
+          "days_on_team": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Days On Team"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "initials": {
+            "title": "Initials",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "crew",
+              "shift",
+              "gm",
+              "supervisor",
+              "director"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "initials",
+          "role",
+          "store",
+          "days_on_team"
+        ],
+        "title": "UnrecognizedOut",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "ctx": {
@@ -2157,6 +3274,33 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "WallPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PostOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_before": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_before"
+        ],
+        "title": "WallPage",
         "type": "object"
       }
     }
@@ -2574,6 +3718,27 @@
         ]
       }
     },
+    "/api/v1/give/context": {
+      "get": {
+        "operationId": "give_context_api_v1_give_context_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GiveContextOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Give Context",
+        "tags": [
+          "recognition"
+        ]
+      }
+    },
     "/api/v1/me": {
       "get": {
         "operationId": "get_me_api_v1_me_get",
@@ -2592,6 +3757,89 @@
         "summary": "Get Me",
         "tags": [
           "auth"
+        ]
+      }
+    },
+    "/api/v1/me/notifications": {
+      "get": {
+        "description": "Newest first, a page at a time (``before`` = the last page's ``next_before``).",
+        "operationId": "my_notifications_api_v1_me_notifications_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Notifications",
+        "tags": [
+          "notifications"
+        ]
+      }
+    },
+    "/api/v1/me/notifications/read-all": {
+      "post": {
+        "operationId": "read_all_api_v1_me_notifications_read_all_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadAllOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Read All",
+        "tags": [
+          "notifications"
         ]
       }
     },
@@ -2634,6 +3882,91 @@
         "summary": "Set Preferences",
         "tags": [
           "auth"
+        ]
+      }
+    },
+    "/api/v1/me/shoutouts": {
+      "get": {
+        "operationId": "my_shoutouts_api_v1_me_shoutouts_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "direction",
+            "required": false,
+            "schema": {
+              "default": "received",
+              "enum": [
+                "received",
+                "sent"
+              ],
+              "title": "Direction",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 4,
+              "maximum": 20,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PostOut"
+                  },
+                  "title": "Response My Shoutouts Api V1 Me Shoutouts Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Shoutouts",
+        "tags": [
+          "recognition"
+        ]
+      }
+    },
+    "/api/v1/me/summary": {
+      "get": {
+        "description": "Home (CR-10 to CR-14): balance, tier, kudos left, this month, rank if top 5.",
+        "operationId": "my_summary_api_v1_me_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "My Summary",
+        "tags": [
+          "dashboards"
         ]
       }
     },
@@ -2770,6 +4103,56 @@
         "summary": "Update Area",
         "tags": [
           "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/overview": {
+      "get": {
+        "description": "Overview (OP-01 to OP-05) for all stores or one.",
+        "operationId": "portal_overview_api_v1_portal_overview_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "store",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Store"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Portal Overview",
+        "tags": [
+          "dashboards"
         ]
       }
     },
@@ -3213,6 +4596,159 @@
         ]
       }
     },
+    "/api/v1/portal/recognize/candidates": {
+      "get": {
+        "description": "OP-06: Leaders (directors, supervisors, GMs) by default.",
+        "operationId": "owner_candidates_api_v1_portal_recognize_candidates_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "default": "leaders",
+              "enum": [
+                "leaders",
+                "director",
+                "supervisor",
+                "gm",
+                "shift",
+                "crew",
+                "everyone"
+              ],
+              "title": "Filter",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "store",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Store"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 80,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CandidateOut"
+                  },
+                  "title": "Response Owner Candidates Api V1 Portal Recognize Candidates Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Candidates",
+        "tags": [
+          "recognition"
+        ]
+      }
+    },
+    "/api/v1/portal/recognize/candidates/{person_id}": {
+      "get": {
+        "description": "One person, for a link straight to recognizing them (Overview's Recognize button).",
+        "operationId": "owner_candidate_api_v1_portal_recognize_candidates__person_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "person_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Candidate",
+        "tags": [
+          "recognition"
+        ]
+      }
+    },
+    "/api/v1/portal/recognize/context": {
+      "get": {
+        "operationId": "owner_context_api_v1_portal_recognize_context_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerGiveContextOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Owner Context",
+        "tags": [
+          "recognition"
+        ]
+      }
+    },
     "/api/v1/portal/settings": {
       "get": {
         "description": "Every owner rule, with the version an edit is based on.",
@@ -3272,6 +4808,102 @@
         "summary": "Patch Settings",
         "tags": [
           "settings"
+        ]
+      }
+    },
+    "/api/v1/portal/shoutouts": {
+      "post": {
+        "description": "An owner recognizes anyone (OP-07), paid from their own allowance.",
+        "operationId": "owner_send_api_v1_portal_shoutouts_post",
+        "parameters": [
+          {
+            "description": "One per tap on Send (a UUID). A repeat returns the first result.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "One per tap on Send (a UUID). A repeat returns the first result.",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoutoutIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoutoutResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Send",
+        "tags": [
+          "recognition"
+        ]
+      }
+    },
+    "/api/v1/portal/shoutouts/{post_id}/hide": {
+      "post": {
+        "operationId": "owner_hide_api_v1_portal_shoutouts__post_id__hide_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Hide",
+        "tags": [
+          "recognition"
         ]
       }
     },
@@ -3388,6 +5020,371 @@
         "summary": "Update Store",
         "tags": [
           "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/team": {
+      "get": {
+        "description": "Stores & people (OP-08).",
+        "operationId": "portal_team_api_v1_portal_team_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "store",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Store"
+            }
+          },
+          {
+            "in": "query",
+            "name": "role",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "crew",
+                    "shift",
+                    "gm",
+                    "supervisor",
+                    "director"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Role"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 80,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Portal Team",
+        "tags": [
+          "dashboards"
+        ]
+      }
+    },
+    "/api/v1/shoutouts": {
+      "post": {
+        "description": "Recognize someone (CR-15 to CR-19). 409 ``kudos_insufficient`` (details.kudos_left),\n403 ``not_in_scope``, 422 ``tag_not_allowed``, ``amount_not_allowed``,\n``message_too_long``, ``idempotency_key_required``.",
+        "operationId": "send_api_v1_shoutouts_post",
+        "parameters": [
+          {
+            "description": "One per tap on Send (a UUID). A repeat returns the first result.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "One per tap on Send (a UUID). A repeat returns the first result.",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoutoutIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoutoutResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send",
+        "tags": [
+          "recognition"
+        ]
+      }
+    },
+    "/api/v1/shoutouts/{post_id}/hide": {
+      "post": {
+        "description": "A GM hides a post on their store's wall (NF-06). 403 ``cannot_hide``.",
+        "operationId": "hide_api_v1_shoutouts__post_id__hide_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Hide",
+        "tags": [
+          "recognition"
+        ]
+      }
+    },
+    "/api/v1/shoutouts/{post_id}/like": {
+      "delete": {
+        "operationId": "unlike_api_v1_shoutouts__post_id__like_delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LikeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Unlike",
+        "tags": [
+          "recognition"
+        ]
+      },
+      "put": {
+        "operationId": "like_api_v1_shoutouts__post_id__like_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LikeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Like",
+        "tags": [
+          "recognition"
+        ]
+      }
+    },
+    "/api/v1/wall": {
+      "get": {
+        "operationId": "wall_api_v1_wall_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "default": "everyone",
+              "enum": [
+                "everyone",
+                "for_you"
+              ],
+              "title": "Filter",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WallPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Wall",
+        "tags": [
+          "recognition"
         ]
       }
     }

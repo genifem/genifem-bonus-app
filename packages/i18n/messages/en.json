@@ -10,7 +10,14 @@
       "en": "English",
       "es": "Español"
     },
-    "close": "Close"
+    "close": "Close",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "seeAll": "See all",
+    "coins": "{count, plural, one {# coin} other {# coins}}",
+    "coinOne": "coin",
+    "coinOther": "coins",
+    "plusCoins": "{count, plural, one {Plus # coin} other {Plus # coins}}"
   },
   "welcome": {
     "title": "Crew Stars",
@@ -72,15 +79,72 @@
     "greeting": "Hey, {name}! 👋",
     "greetingNoName": "Hey there! 👋",
     "lead": "Your good work doesn't go unnoticed.",
-    "managerLead": "A little recognition. A big difference."
+    "managerLead": "A little recognition. A big difference.",
+    "balanceLabel": "Your coin balance",
+    "balanceA11y": "Your coin balance: {count, plural, one {# coin} other {# coins}}",
+    "nextTier": "Next stop: {tier} ✨",
+    "topTier": "You're at the top tier ✨",
+    "toGo": "{count} to go",
+    "toGoA11y": "{count, plural, one {# more coin to {tier}} other {# more coins to {tier}}}",
+    "lifetime": "{lifetime} / {target} earned all time",
+    "lifetimeTop": "{lifetime} earned all time",
+    "kudosTitle": "{left} of {allowance} kudos to give",
+    "kudosLead": "From the company, not your coins. Resets {date}",
+    "rankTitle": "You're #{rank} at your store",
+    "rankLead": "{count, plural, one {{amount} coin} other {{amount} coins}} this month",
+    "rankA11y": "You're number {rank} at your store this month, with {count, plural, one {# coin} other {# coins}}.",
+    "monthTitle": "{count, plural, one {{amount} coin} other {{amount} coins}} this month",
+    "monthLead": "Keep going!",
+    "monthA11y": "{count, plural, one {# coin this month, keep going!} other {# coins this month, keep going!}}",
+    "giveTitle": "Make someone's day",
+    "giveLead": "Good energy deserves a shout-out.",
+    "latest": "Your latest shout-outs",
+    "received": "Received",
+    "sent": "Sent",
+    "listLabel": "Show shout-outs",
+    "emptyReceived": "Your first shout-out is coming. Keep shining!",
+    "emptySent": "No shout-outs sent yet. Make someone's day!",
+    "loadError": "We couldn't load your coins.",
+    "listError": "We couldn't load your shout-outs."
   },
   "wall": {
     "title": "The crew wall 🙌",
-    "lead": "Good things happen together."
+    "lead": "Good things happen together.",
+    "everyone": "Everyone",
+    "forYou": "For you",
+    "filterLabel": "Show posts",
+    "emptyTitle": "Nothing here yet.",
+    "emptyLead": "Shout-outs at your store show up here.",
+    "emptyForYouTitle": "Nothing for you yet.",
+    "emptyForYouLead": "Your first shout-out is coming. Keep shining!",
+    "loadError": "We couldn't load the wall.",
+    "moreError": "We couldn't load more posts.",
+    "loadingMore": "Loading more posts"
   },
   "give": {
     "title": "Who made your day? 💛",
-    "lead": "Big or small, let them know it mattered."
+    "lead": "Big or small, let them know it mattered.",
+    "kudosBanner": "<b>{left} of {allowance} kudos coins left</b> to give this month. They come from the company, not your own coins, and reset {date}.",
+    "to": "Choose a teammate",
+    "toChange": "Change",
+    "toA11y": "Recognizing {name}. Tap to change.",
+    "pickerTitle": "Choose a teammate",
+    "search": "Search by name",
+    "noMatch": "No one matches “{query}”.",
+    "nobody": "There's no one you can recognize right now.",
+    "otherStore": "Store {number}",
+    "tag": "What stood out?",
+    "message": "Make it personal ♡",
+    "messagePlaceholder": "Tell them what they did and why it mattered...",
+    "counterA11y": "{count} of {max} characters",
+    "amount": "Add some coins",
+    "usedUp": "You've used your kudos for this month. More on {date}.",
+    "send": "Send shout-out",
+    "sentTitle": "Shout-out sent!",
+    "sentLead": "{name} got <b>+{coins, plural, one {# coin} other {# coins}}</b>. You have <b>{left, plural, one {# kudos coin} other {# kudos coins}}</b> left to give this month.",
+    "seeWall": "See it on the wall",
+    "another": "Send another",
+    "loadError": "We couldn't load who you can recognize."
   },
   "rewards": {
     "title": "You earned this 🎁",
@@ -92,7 +156,15 @@
   },
   "profile": {
     "title": "Your profile",
-    "languageNotSaved": "Language changed on this phone only. We couldn't save it to your profile."
+    "languageNotSaved": "Language changed on this phone only. We couldn't save it to your profile.",
+    "balance": "coin balance",
+    "lifetime": "earned all time",
+    "thisMonth": "this month",
+    "shoutouts": "Your shout-outs",
+    "notifications": "Notifications",
+    "unreadCount": "{count} new",
+    "settings": "Settings",
+    "loadError": "We couldn't load your profile."
   },
   "soon": {
     "title": "On its way ✨",
@@ -118,6 +190,121 @@
     "password_weak": "Use 8 or more characters, with at least one number.",
     "token_expired": "That took too long. Please start again.",
     "token_used": "That step is already done. Please start again.",
-    "token_invalid": "That didn't work. Please start again."
+    "token_invalid": "That didn't work. Please start again.",
+    "kudos_insufficient": "You don't have enough kudos left for that amount.",
+    "kudos_insufficient_left": "{count, plural, =0 {You have no kudos left this month.} one {You only have # kudos coin left this month.} other {You only have # kudos coins left this month.}}",
+    "not_in_scope": "You can't recognize that person.",
+    "recipient_not_found": "We can't find that person anymore. Pick someone else.",
+    "tag_not_allowed": "That tag isn't available to you. Pick another.",
+    "amount_not_allowed": "Pick one of the amounts shown.",
+    "message_too_long": "That message is too long.",
+    "message_too_long_max": "Keep your message to {max} characters.",
+    "idempotency_key_required": "That didn't send. Try again.",
+    "cannot_hide": "Only your store's GM can hide this post.",
+    "not_found": "That post isn't there anymore."
+  },
+  "header": {
+    "notifications": "Notifications",
+    "notificationsUnread": "Notifications, {count} unread",
+    "profile": "Your profile",
+    "store": "Store {number} · {name}"
+  },
+  "time": {
+    "justNow": "just now",
+    "minutes": "{count}m ago",
+    "hours": "{count}h ago",
+    "days": "{count}d ago",
+    "minutesLong": "{count, plural, one {# minute ago} other {# minutes ago}}",
+    "hoursLong": "{count, plural, one {# hour ago} other {# hours ago}}",
+    "daysLong": "{count, plural, one {# day ago} other {# days ago}}"
+  },
+  "roles": {
+    "crew": {
+      "label": "Crew",
+      "short": "Crew",
+      "plural": "Crew"
+    },
+    "shift": {
+      "label": "Shift Manager",
+      "short": "Shift Manager",
+      "plural": "Shift managers"
+    },
+    "gm": {
+      "label": "General Manager",
+      "short": "GM",
+      "plural": "GMs"
+    },
+    "supervisor": {
+      "label": "Supervisor",
+      "short": "Supervisor",
+      "plural": "Supervisors"
+    },
+    "director": {
+      "label": "Director",
+      "short": "Director",
+      "plural": "Directors"
+    },
+    "owner": {
+      "label": "Owner",
+      "short": "Owner",
+      "plural": "Owners"
+    }
+  },
+  "tags": {
+    "guest": "Guest Hero",
+    "rush": "Rush Hour Hustle",
+    "team": "Team Player",
+    "clean": "Clean Machine",
+    "above": "Above and Beyond",
+    "lead": "Great Leadership"
+  },
+  "tiers": {
+    "chip": "{tier} crew"
+  },
+  "post": {
+    "you": "You",
+    "from": "from {name}",
+    "fromRole": "from {name} · {role}",
+    "fromYou": "from you",
+    "fromCrewStars": "from Crew Stars",
+    "awardWinner": "{award} winner",
+    "summary": "{sender} recognized {recipient} for {tag}",
+    "summaryAward": "{recipient} won {award}",
+    "like": "Love this, {count, plural, one {# like} other {# likes}}",
+    "likeFailed": "We couldn't save your like. Try again.",
+    "more": "More options for this post",
+    "optionsTitle": "Post options",
+    "hide": "Hide post",
+    "hideTitle": "Hide this post?",
+    "hideLead": "It comes off the wall for everyone. {name} keeps the coins.",
+    "hidden": "Post hidden"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "emptyTitle": "You're all caught up.",
+    "emptyLead": "Shout-outs and news for you show up here.",
+    "unreadA11y": "New: {text}",
+    "loadError": "We couldn't load your notifications.",
+    "moreError": "We couldn't load older notifications.",
+    "types": {
+      "shoutout_received": "{name} recognized you for {tag}",
+      "tier_reached": "You reached {tier}!",
+      "badge_earned": "New badge: {badge}",
+      "badge_earned_bonus": "New badge: {badge} (+{coins, plural, one {# coin} other {# coins}})",
+      "spin_earned": "You earned a spin!",
+      "spin_earned_for": "You earned a spin for {reason}",
+      "spin_result": "You won {prize} on the wheel",
+      "reward_requested": "{name} asked to redeem {reward}",
+      "reward_approved": "Your {reward} is ready to collect",
+      "reward_declined": "Your {reward} request was declined.",
+      "reward_declined_refund": "Your {reward} request was declined. {coins, plural, one {# coin is} other {# coins are}} back in your balance",
+      "award_won": "You won {award} for {month}!",
+      "other": "You have a new notification"
+    },
+    "spinReasons": {
+      "coins": "earning coins",
+      "badge": "a new badge",
+      "milestone": "reaching a milestone"
+    }
   }
 }

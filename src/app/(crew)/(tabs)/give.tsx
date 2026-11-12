@@ -1,1 +1,1 @@
-export { Give as default } from "@/screens/Tabs";
+export { Give as default } from "@/screens/Give";

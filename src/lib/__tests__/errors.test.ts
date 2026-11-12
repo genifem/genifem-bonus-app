@@ -5,7 +5,7 @@
 import { createTranslator } from "@crewstars/i18n";
 
 import { ApiError } from "@/lib/apiError";
-import { explain, type Problem, say, setupProblem, signInProblem, waitSeconds } from "@/lib/errors";
+import { explain, type Problem, say, sendProblem, setupProblem, signInProblem, waitSeconds } from "@/lib/errors";
 
 const en = createTranslator("en");
 const es = createTranslator("es");
@@ -195,5 +195,57 @@ describe("waitSeconds", () => {
     expect(waitSeconds(fail(403, "x", { until: "not a date" }), NOW)).toBeNull();
     expect(waitSeconds(fail(403, "x", { until: null }), NOW)).toBeNull();
     expect(waitSeconds(fail(403, "x"), NOW)).toBeNull();
+  });
+});
+
+describe("a refused shout-out (CR-19 to CR-23)", () => {
+  it("says how many kudos are really left", () => {
+    expect(first(sendProblem(en, fail(409, "kudos_insufficient", { kudos_left: 5 })))).toBe(
+      "You only have 5 kudos coins left this month.",
+    );
+    expect(first(sendProblem(en, fail(409, "kudos_insufficient", { kudos_left: 1 })))).toBe(
+      "You only have 1 kudos coin left this month.",
+    );
+    expect(first(sendProblem(en, fail(409, "kudos_insufficient", { kudos_left: 0 })))).toBe(
+      "You have no kudos left this month.",
+    );
+    expect(first(sendProblem(es, fail(409, "kudos_insufficient", { kudos_left: 5 })), es)).toBe(
+      "Solo te quedan 5 monedas kudos este mes.",
+    );
+    expect(first(sendProblem(en, fail(409, "kudos_insufficient")))).toBe(
+      "You don't have enough kudos left for that amount.",
+    );
+  });
+
+  it("gives the longest message allowed", () => {
+    expect(first(sendProblem(en, fail(422, "message_too_long", { max: 140 })))).toBe(
+      "Keep your message to 140 characters.",
+    );
+    expect(first(sendProblem(en, fail(422, "message_too_long")))).toBe("That message is too long.");
+  });
+
+  it.each(["not_in_scope", "tag_not_allowed", "amount_not_allowed", "recipient_not_found", "idempotency_key_required"])(
+    "%s has its own words in both languages",
+    (code) => {
+      const english = first(sendProblem(en, fail(422, code)));
+      const spanish = first(sendProblem(es, fail(422, code)), es);
+      expect(english).not.toBe("Something went wrong. Try again.");
+      expect(spanish).not.toBe(english);
+    },
+  );
+
+  it("says offline for no connection, and the generic words for anything unknown", () => {
+    expect(first(sendProblem(en, new ApiError(0, "network", "")))).toBe(
+      "You're offline. Check your connection and try again.",
+    );
+    expect(first(sendProblem(en, fail(500, "http_500")))).toBe("Something went wrong. Try again.");
+    expect(first(sendProblem(en, new Error("boom")))).toBe("Something went wrong. Try again.");
+  });
+});
+
+describe("the wall's error codes", () => {
+  it.each(["cannot_hide", "not_found"])("%s has its own words in English and Spanish", (code) => {
+    expect(en.has(`errors.${code}`)).toBe(true);
+    expect(explain(es, fail(403, code))).not.toBe(explain(en, fail(403, code)));
   });
 });

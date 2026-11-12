@@ -10,7 +10,14 @@
       "en": "English",
       "es": "Español"
     },
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "retry": "Reintentar",
+    "cancel": "Cancelar",
+    "seeAll": "Ver todo",
+    "coins": "{count, plural, one {# moneda} other {# monedas}}",
+    "coinOne": "moneda",
+    "coinOther": "monedas",
+    "plusCoins": "{count, plural, one {Más # moneda} other {Más # monedas}}"
   },
   "welcome": {
     "title": "Crew Stars",
@@ -72,15 +79,72 @@
     "greeting": "¡Hola, {name}! 👋",
     "greetingNoName": "¡Hola! 👋",
     "lead": "Tu buen trabajo no pasa desapercibido.",
-    "managerLead": "Un poco de reconocimiento hace una gran diferencia."
+    "managerLead": "Un poco de reconocimiento hace una gran diferencia.",
+    "balanceLabel": "Tu saldo de monedas",
+    "balanceA11y": "Tu saldo: {count, plural, one {# moneda} other {# monedas}}",
+    "nextTier": "Próxima parada: {tier} ✨",
+    "topTier": "Estás en el nivel más alto ✨",
+    "toGo": "faltan {count}",
+    "toGoA11y": "{count, plural, one {Te falta # moneda para {tier}} other {Te faltan # monedas para {tier}}}",
+    "lifetime": "{lifetime} / {target} ganadas en total",
+    "lifetimeTop": "{lifetime} ganadas en total",
+    "kudosTitle": "{left} de {allowance} kudos para dar",
+    "kudosLead": "Vienen de la empresa, no de tus monedas. Se renuevan el {date}",
+    "rankTitle": "Vas #{rank} en tu tienda",
+    "rankLead": "{count, plural, one {{amount} moneda} other {{amount} monedas}} este mes",
+    "rankA11y": "Vas en el puesto {rank} de tu tienda este mes, con {count, plural, one {# moneda} other {# monedas}}.",
+    "monthTitle": "{count, plural, one {{amount} moneda} other {{amount} monedas}} este mes",
+    "monthLead": "¡Sigue así!",
+    "monthA11y": "{count, plural, one {# moneda este mes, ¡sigue así!} other {# monedas este mes, ¡sigue así!}}",
+    "giveTitle": "Alégrale el día a alguien",
+    "giveLead": "La buena energía merece un reconocimiento.",
+    "latest": "Tus últimos reconocimientos",
+    "received": "Recibidos",
+    "sent": "Enviados",
+    "listLabel": "Mostrar reconocimientos",
+    "emptyReceived": "Tu primer reconocimiento ya viene. ¡Sigue brillando!",
+    "emptySent": "Aún no has enviado reconocimientos. ¡Alégrale el día a alguien!",
+    "loadError": "No pudimos cargar tus monedas.",
+    "listError": "No pudimos cargar tus reconocimientos."
   },
   "wall": {
     "title": "El muro del equipo 🙌",
-    "lead": "Las cosas buenas pasan en equipo."
+    "lead": "Las cosas buenas pasan en equipo.",
+    "everyone": "Todos",
+    "forYou": "Para ti",
+    "filterLabel": "Mostrar publicaciones",
+    "emptyTitle": "Aún no hay nada aquí.",
+    "emptyLead": "Aquí aparecen los reconocimientos de tu tienda.",
+    "emptyForYouTitle": "Aún no hay nada para ti.",
+    "emptyForYouLead": "Tu primer reconocimiento ya viene. ¡Sigue brillando!",
+    "loadError": "No pudimos cargar el muro.",
+    "moreError": "No pudimos cargar más publicaciones.",
+    "loadingMore": "Cargando más publicaciones"
   },
   "give": {
     "title": "¿Quién te alegró el día? 💛",
-    "lead": "Grande o pequeño, hazle saber que importó."
+    "lead": "Grande o pequeño, hazle saber que importó.",
+    "kudosBanner": "<b>Te quedan {left} de {allowance} monedas kudos</b> para dar este mes. Vienen de la empresa, no de tus monedas, y se renuevan el {date}.",
+    "to": "Elige a quién reconocer",
+    "toChange": "Cambiar",
+    "toA11y": "Vas a reconocer a {name}. Toca para cambiar.",
+    "pickerTitle": "Elige a quién reconocer",
+    "search": "Busca por nombre",
+    "noMatch": "Nadie coincide con “{query}”.",
+    "nobody": "Por ahora no hay nadie a quien puedas reconocer.",
+    "otherStore": "Tienda {number}",
+    "tag": "¿Qué destacó?",
+    "message": "Hazlo personal ♡",
+    "messagePlaceholder": "Cuéntale qué hizo y por qué importó...",
+    "counterA11y": "{count} de {max} caracteres",
+    "amount": "Agrega monedas",
+    "usedUp": "Ya usaste tus kudos de este mes. Tendrás más el {date}.",
+    "send": "Enviar reconocimiento",
+    "sentTitle": "¡Reconocimiento enviado!",
+    "sentLead": "{name} recibió <b>+{coins, plural, one {# moneda} other {# monedas}}</b>. Te {left, plural, one {queda <b># moneda kudos</b>} other {quedan <b># monedas kudos</b>}} para dar este mes.",
+    "seeWall": "Verlo en el muro",
+    "another": "Enviar otro",
+    "loadError": "No pudimos cargar a quién puedes reconocer."
   },
   "rewards": {
     "title": "Te lo ganaste 🎁",
@@ -92,7 +156,15 @@
   },
   "profile": {
     "title": "Tu perfil",
-    "languageNotSaved": "Idioma cambiado solo en este teléfono. No pudimos guardarlo en tu perfil."
+    "languageNotSaved": "Idioma cambiado solo en este teléfono. No pudimos guardarlo en tu perfil.",
+    "balance": "saldo de monedas",
+    "lifetime": "ganadas en total",
+    "thisMonth": "este mes",
+    "shoutouts": "Tus reconocimientos",
+    "notifications": "Notificaciones",
+    "unreadCount": "{count, plural, one {# nueva} other {# nuevas}}",
+    "settings": "Configuración",
+    "loadError": "No pudimos cargar tu perfil."
   },
   "soon": {
     "title": "Ya viene en camino ✨",
@@ -118,6 +190,121 @@
     "password_weak": "Usa 8 caracteres o más, con al menos un número.",
     "token_expired": "Pasó demasiado tiempo. Empieza de nuevo.",
     "token_used": "Ese paso ya se completó. Empieza de nuevo.",
-    "token_invalid": "Eso no funcionó. Empieza de nuevo."
+    "token_invalid": "Eso no funcionó. Empieza de nuevo.",
+    "kudos_insufficient": "No te quedan suficientes kudos para esa cantidad.",
+    "kudos_insufficient_left": "{count, plural, =0 {No te quedan kudos este mes.} one {Solo te queda # moneda kudos este mes.} other {Solo te quedan # monedas kudos este mes.}}",
+    "not_in_scope": "No puedes reconocer a esa persona.",
+    "recipient_not_found": "Ya no encontramos a esa persona. Elige a otra.",
+    "tag_not_allowed": "Esa etiqueta no está disponible para ti. Elige otra.",
+    "amount_not_allowed": "Elige una de las cantidades que ves.",
+    "message_too_long": "Ese mensaje es demasiado largo.",
+    "message_too_long_max": "Tu mensaje puede tener hasta {max} caracteres.",
+    "idempotency_key_required": "No se envió. Inténtalo de nuevo.",
+    "cannot_hide": "Solo el gerente general de tu tienda puede ocultar esta publicación.",
+    "not_found": "Esa publicación ya no está."
+  },
+  "header": {
+    "notifications": "Notificaciones",
+    "notificationsUnread": "Notificaciones, {count} sin leer",
+    "profile": "Tu perfil",
+    "store": "Tienda {number} · {name}"
+  },
+  "time": {
+    "justNow": "ahora mismo",
+    "minutes": "hace {count} min",
+    "hours": "hace {count} h",
+    "days": "hace {count} d",
+    "minutesLong": "{count, plural, one {hace # minuto} other {hace # minutos}}",
+    "hoursLong": "{count, plural, one {hace # hora} other {hace # horas}}",
+    "daysLong": "{count, plural, one {hace # día} other {hace # días}}"
+  },
+  "roles": {
+    "crew": {
+      "label": "Miembro del equipo",
+      "short": "Equipo",
+      "plural": "Equipo"
+    },
+    "shift": {
+      "label": "Gerente de turno",
+      "short": "Gerente de turno",
+      "plural": "Gerentes de turno"
+    },
+    "gm": {
+      "label": "Gerente general",
+      "short": "GM",
+      "plural": "Gerentes generales"
+    },
+    "supervisor": {
+      "label": "Supervisor",
+      "short": "Supervisor",
+      "plural": "Supervisores"
+    },
+    "director": {
+      "label": "Director",
+      "short": "Director",
+      "plural": "Directores"
+    },
+    "owner": {
+      "label": "Propietario",
+      "short": "Propietario",
+      "plural": "Propietarios"
+    }
+  },
+  "tags": {
+    "guest": "Héroe del cliente",
+    "rush": "A todo ritmo en hora pico",
+    "team": "Espíritu de equipo",
+    "clean": "Todo impecable",
+    "above": "Más allá del deber",
+    "lead": "Gran liderazgo"
+  },
+  "tiers": {
+    "chip": "Nivel {tier}"
+  },
+  "post": {
+    "you": "Tú",
+    "from": "de {name}",
+    "fromRole": "de {name} · {role}",
+    "fromYou": "de ti",
+    "fromCrewStars": "de Crew Stars",
+    "awardWinner": "Ganó {award}",
+    "summary": "{sender} reconoció a {recipient} por {tag}",
+    "summaryAward": "{recipient} ganó {award}",
+    "like": "Me encanta, {count, plural, one {# me gusta} other {# me gusta}}",
+    "likeFailed": "No pudimos guardar tu me gusta. Inténtalo de nuevo.",
+    "more": "Más opciones para esta publicación",
+    "optionsTitle": "Opciones de la publicación",
+    "hide": "Ocultar publicación",
+    "hideTitle": "¿Ocultar esta publicación?",
+    "hideLead": "Se quita del muro para todos. {name} conserva las monedas.",
+    "hidden": "Publicación oculta"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "emptyTitle": "Estás al día.",
+    "emptyLead": "Aquí aparecen tus reconocimientos y novedades.",
+    "unreadA11y": "Nueva: {text}",
+    "loadError": "No pudimos cargar tus notificaciones.",
+    "moreError": "No pudimos cargar notificaciones anteriores.",
+    "types": {
+      "shoutout_received": "{name} te reconoció por {tag}",
+      "tier_reached": "¡Llegaste a {tier}!",
+      "badge_earned": "Nueva insignia: {badge}",
+      "badge_earned_bonus": "Nueva insignia: {badge} (+{coins, plural, one {# moneda} other {# monedas}})",
+      "spin_earned": "¡Ganaste un giro!",
+      "spin_earned_for": "Ganaste un giro por {reason}",
+      "spin_result": "Ganaste {prize} en la ruleta",
+      "reward_requested": "{name} pidió canjear {reward}",
+      "reward_approved": "Ya puedes recoger tu {reward}",
+      "reward_declined": "Rechazaron tu solicitud de {reward}.",
+      "reward_declined_refund": "Rechazaron tu solicitud de {reward}. {coins, plural, one {Se devolvió # moneda} other {Se devolvieron # monedas}} a tu saldo",
+      "award_won": "¡Ganaste {award} de {month}!",
+      "other": "Tienes una notificación nueva"
+    },
+    "spinReasons": {
+      "coins": "ganar monedas",
+      "badge": "una insignia nueva",
+      "milestone": "alcanzar un hito"
+    }
   }
 }

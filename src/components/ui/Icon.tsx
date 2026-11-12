@@ -34,6 +34,18 @@ const ICONS = {
   approve: "M4 4h16v16H4zM8.5 12l2.5 2.5 4.5-5",
   globe:
     "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.6 3.8 6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-6-3.8-9S9.5 5.6 12 3z",
+  // The value tags' glyphs.
+  bolt: "M13 2L4 14h7l-1 8 9-12h-7z",
+  users:
+    "M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5M16.5 11a2.5 2.5 0 1 0 0-5M18 14.6c2 .5 3.3 2.2 3.7 5.4",
+  sparkle:
+    "M10 3l1.8 4.7 4.7 1.8-4.7 1.8L10 16l-1.8-4.7L3.5 9.5l4.7-1.8zM18 14l.9 2.1 2.1.9-2.1.9L18 20l-.9-2.1L15 17l2.1-.9z",
+  arrowUp: "M12 19V5M5 12l7-7 7 7",
+  flag: "M5 21V4M5 4h11l-2 4 2 4H5",
+  wallet: "M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l12-4 2 4M16 13.5h.01",
+  search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-5-5",
+  // Three dots ("⋯"), as small rings the stroke fills in.
+  more: "M6.2 12a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0zM13.2 12a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0zM20.2 12a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z",
 } as const satisfies Record<string, string>;
 
 export type IconName = keyof typeof ICONS;

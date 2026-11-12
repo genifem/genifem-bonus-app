@@ -191,6 +191,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/give/context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Give Context */
+        get: operations["give_context_api_v1_give_context_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me": {
         parameters: {
             query?: never;
@@ -202,6 +219,43 @@ export interface paths {
         get: operations["get_me_api_v1_me_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My Notifications
+         * @description Newest first, a page at a time (``before`` = the last page's ``next_before``).
+         */
+        get: operations["my_notifications_api_v1_me_notifications_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Read All */
+        post: operations["read_all_api_v1_me_notifications_read_all_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -226,6 +280,43 @@ export interface paths {
          * @description Language (NF-02) and whether to get push notifications.
          */
         patch: operations["set_preferences_api_v1_me_preferences_patch"];
+        trace?: never;
+    };
+    "/api/v1/me/shoutouts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Shoutouts */
+        get: operations["my_shoutouts_api_v1_me_shoutouts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My Summary
+         * @description Home (CR-10 to CR-14): balance, tier, kudos left, this month, rank if top 5.
+         */
+        get: operations["my_summary_api_v1_me_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/meta": {
@@ -278,6 +369,26 @@ export interface paths {
         head?: never;
         /** Update Area */
         patch: operations["update_area_api_v1_portal_areas__area_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/portal/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Portal Overview
+         * @description Overview (OP-01 to OP-05) for all stores or one.
+         */
+        get: operations["portal_overview_api_v1_portal_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/portal/people": {
@@ -421,6 +532,63 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/portal/recognize/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Owner Candidates
+         * @description OP-06: Leaders (directors, supervisors, GMs) by default.
+         */
+        get: operations["owner_candidates_api_v1_portal_recognize_candidates_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/recognize/candidates/{person_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Owner Candidate
+         * @description One person, for a link straight to recognizing them (Overview's Recognize button).
+         */
+        get: operations["owner_candidate_api_v1_portal_recognize_candidates__person_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/recognize/context": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Owner Context */
+        get: operations["owner_context_api_v1_portal_recognize_context_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/portal/settings": {
         parameters: {
             query?: never;
@@ -446,6 +614,43 @@ export interface paths {
          *     save is written to the audit log with the before and after values (NF-09).
          */
         patch: operations["patch_settings_api_v1_portal_settings_patch"];
+        trace?: never;
+    };
+    "/api/v1/portal/shoutouts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Owner Send
+         * @description An owner recognizes anyone (OP-07), paid from their own allowance.
+         */
+        post: operations["owner_send_api_v1_portal_shoutouts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/shoutouts/{post_id}/hide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Owner Hide */
+        post: operations["owner_hide_api_v1_portal_shoutouts__post_id__hide_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/portal/stores": {
@@ -484,6 +689,103 @@ export interface paths {
          * @description 409 ``store_has_people`` when closing a store someone still works at.
          */
         patch: operations["update_store_api_v1_portal_stores__store_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/portal/team": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Portal Team
+         * @description Stores & people (OP-08).
+         */
+        get: operations["portal_team_api_v1_portal_team_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/shoutouts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send
+         * @description Recognize someone (CR-15 to CR-19). 409 ``kudos_insufficient`` (details.kudos_left),
+         *     403 ``not_in_scope``, 422 ``tag_not_allowed``, ``amount_not_allowed``,
+         *     ``message_too_long``, ``idempotency_key_required``.
+         */
+        post: operations["send_api_v1_shoutouts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/shoutouts/{post_id}/hide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Hide
+         * @description A GM hides a post on their store's wall (NF-06). 403 ``cannot_hide``.
+         */
+        post: operations["hide_api_v1_shoutouts__post_id__hide_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/shoutouts/{post_id}/like": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Like */
+        put: operations["like_api_v1_shoutouts__post_id__like_put"];
+        post?: never;
+        /** Unlike */
+        delete: operations["unlike_api_v1_shoutouts__post_id__like_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wall": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Wall */
+        get: operations["wall_api_v1_wall_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
 }
@@ -633,6 +935,28 @@ export interface components {
             /** Tag */
             tag: ("guest" | "rush" | "team" | "clean" | "above" | "lead") | null;
         };
+        /**
+         * CandidateOut
+         * @description A row of "Recognize anyone" (OP-06): who they are, where, and their balance.
+         */
+        CandidateOut: {
+            area: components["schemas"]["AreaRef"] | null;
+            /** Balance */
+            balance: number;
+            /** First Name */
+            first_name: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Initials */
+            initials: string;
+            /** Name */
+            name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "crew" | "shift" | "gm" | "supervisor" | "director";
+            store: components["schemas"]["StoreRef"] | null;
+        };
         /** CsvIn */
         CsvIn: {
             /** Csv */
@@ -683,10 +1007,55 @@ export interface components {
             /** Role */
             role: string | null;
         };
+        /**
+         * GiveContextOut
+         * @description Everything the Give screen needs, decided on the server (plan D6).
+         */
+        GiveContextOut: {
+            /** Amounts */
+            amounts: number[];
+            /** Custom Max */
+            custom_max: number | null;
+            /** Custom Min */
+            custom_min: number | null;
+            /** Groups */
+            groups: components["schemas"]["RecipientGroup"][];
+            kudos: components["schemas"]["KudosOut"];
+            /** Message Max */
+            message_max: number;
+            /** Tags */
+            tags: ("guest" | "rush" | "team" | "clean" | "above" | "lead")[];
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /**
+         * KudosOut
+         * @description The giving wallet (spec "Two wallets").
+         */
+        KudosOut: {
+            /** Allowance */
+            allowance: number;
+            /** Bonus */
+            bonus: number;
+            /** Left */
+            left: number;
+            /**
+             * Resets On
+             * Format: date
+             */
+            resets_on: string;
+            /** Used */
+            used: number;
+        };
+        /** LikeOut */
+        LikeOut: {
+            /** Like Count */
+            like_count: number;
+            /** Liked */
+            liked: boolean;
         };
         /** LoginIn */
         LoginIn: {
@@ -776,6 +1145,82 @@ export interface components {
             /** Mfa Token */
             mfa_token: string;
         };
+        /** NextTierOut */
+        NextTierOut: {
+            /** Coins To Go */
+            coins_to_go: number;
+            /** Color */
+            color: string;
+            /** Id */
+            id: string;
+            /** Min */
+            min: number;
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+        };
+        /** NotificationOut */
+        NotificationOut: {
+            /** Coins */
+            coins: number | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Params */
+            params: {
+                [key: string]: unknown;
+            };
+            /** Read */
+            read: boolean;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "shoutout_received" | "tier_reached" | "badge_earned" | "spin_earned" | "spin_result" | "reward_requested" | "reward_approved" | "reward_declined" | "award_won";
+        };
+        /** NotificationPage */
+        NotificationPage: {
+            /** Items */
+            items: components["schemas"]["NotificationOut"][];
+            next_before: components["schemas"]["PydanticObjectId"] | null;
+            /** Unread */
+            unread: number;
+        };
+        /** OverviewOut */
+        OverviewOut: {
+            /** Month */
+            month: string;
+            /** Not Recognized */
+            not_recognized: components["schemas"]["UnrecognizedOut"][];
+            /** Recent */
+            recent: components["schemas"]["PostOut"][];
+            stats: components["schemas"]["OverviewStats"];
+            /** Stores */
+            stores: components["schemas"]["StoreRow"][];
+        };
+        /** OverviewStats */
+        OverviewStats: {
+            /** Coins Earned */
+            coins_earned: number;
+            /** Coins Earned Usd */
+            coins_earned_usd: number;
+            /** Coins Redeemed */
+            coins_redeemed: number;
+            /** Coins Redeemed Usd */
+            coins_redeemed_usd: number;
+            /** Crew Recognized */
+            crew_recognized: number;
+            /** Crew Total */
+            crew_total: number;
+            /** Requests Waiting */
+            requests_waiting: number;
+            /** Shoutouts */
+            shoutouts: number;
+        };
         /**
          * OwnerAuthOut
          * @description An owner sign-in step. ``done`` carries the tokens (the portal's proxy keeps them in
@@ -792,12 +1237,47 @@ export interface components {
             step: "done" | "mfa" | "mfa_setup";
             tokens: components["schemas"]["TokenOut"] | null;
         };
+        /** OwnerGiveContextOut */
+        OwnerGiveContextOut: {
+            /** Amounts */
+            amounts: number[];
+            /** Custom Max */
+            custom_max: number | null;
+            /** Custom Min */
+            custom_min: number | null;
+            /** Groups */
+            groups: components["schemas"]["RecipientGroup"][];
+            kudos: components["schemas"]["KudosOut"];
+            /** Message Max */
+            message_max: number;
+            /** Recent */
+            recent: components["schemas"]["PostOut"][];
+            /** Tags */
+            tags: ("guest" | "rush" | "team" | "clean" | "above" | "lead")[];
+        };
         /** OwnerLoginIn */
         OwnerLoginIn: {
             /** Email */
             email: string;
             /** Password */
             password: string;
+        };
+        /**
+         * PartyOut
+         * @description Someone on a post or in a picker. Names, role and store only: never a phone, an
+         *     email or an Employee ID (NF-06).
+         */
+        PartyOut: {
+            /** First Name */
+            first_name: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Initials */
+            initials: string;
+            /** Name */
+            name: string;
+            /** Role */
+            role: ("crew" | "shift" | "gm" | "supervisor" | "director") | "owner";
+            store: components["schemas"]["StoreRef"] | null;
         };
         /** PeoplePage */
         PeoplePage: {
@@ -909,6 +1389,37 @@ export interface components {
              */
             role: "crew" | "shift" | "gm" | "supervisor" | "director";
         };
+        /** PostOut */
+        PostOut: {
+            /** Award Name */
+            award_name: string | null;
+            /** Can Hide */
+            can_hide: boolean;
+            /** Coins */
+            coins: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Is Award */
+            is_award: boolean;
+            /** Like Count */
+            like_count: number;
+            /** Liked */
+            liked: boolean;
+            /** Message */
+            message: string | null;
+            recipient: components["schemas"]["PartyOut"];
+            sender: components["schemas"]["PartyOut"] | null;
+            store: components["schemas"]["StoreRef"] | null;
+            /**
+             * Tag
+             * @enum {string}
+             */
+            tag: "guest" | "rush" | "team" | "clean" | "above" | "lead";
+        };
         /** PreferencesIn */
         PreferencesIn: {
             /** Language */
@@ -941,6 +1452,21 @@ export interface components {
         };
         /** @example 5eb7cf5a86d9755df3a6c593 */
         PydanticObjectId: string;
+        /** ReadAllOut */
+        ReadAllOut: {
+            /** Unread */
+            unread: number;
+        };
+        /** RecipientGroup */
+        RecipientGroup: {
+            /** People */
+            people: components["schemas"]["PartyOut"][];
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "crew" | "shift" | "gm" | "supervisor" | "director";
+        };
         /**
          * Redeem
          * @description Redemption limits (OP-15).
@@ -1097,6 +1623,26 @@ export interface components {
             /** Setup Token */
             setup_token: string;
         };
+        /** ShoutoutIn */
+        ShoutoutIn: {
+            /** Coins */
+            coins: number;
+            /** Message */
+            message?: string | null;
+            /**
+             * Tag
+             * @enum {string}
+             */
+            tag: "guest" | "rush" | "team" | "clean" | "above" | "lead";
+            to_id: components["schemas"]["PydanticObjectId"];
+        };
+        /** ShoutoutResult */
+        ShoutoutResult: {
+            kudos: components["schemas"]["KudosOut"];
+            post: components["schemas"]["PostOut"];
+            /** Replayed */
+            replayed: boolean;
+        };
         /** Spin */
         Spin: {
             /**
@@ -1179,6 +1725,83 @@ export interface components {
             /** Number */
             number: string;
         };
+        /** StoreRow */
+        StoreRow: {
+            /** Budget */
+            budget: number;
+            /** Budget Used */
+            budget_used: number;
+            /** Coins Earned */
+            coins_earned: number;
+            /** Crew Recognized */
+            crew_recognized: number;
+            /** Crew Total */
+            crew_total: number;
+            gm: components["schemas"]["PersonRef"] | null;
+            /** Requests Waiting */
+            requests_waiting: number;
+            store: components["schemas"]["StoreRef"];
+            supervisor: components["schemas"]["PersonRef"] | null;
+        };
+        /**
+         * SummaryOut
+         * @description Home's numbers (CR-10 to CR-14), all from live settings, so a changed allowance or
+         *     threshold shows on the next screen load.
+         */
+        SummaryOut: {
+            /** Balance */
+            balance: number;
+            /** Earned This Month */
+            earned_this_month: number;
+            kudos: components["schemas"]["KudosOut"];
+            /** Lifetime */
+            lifetime: number;
+            next_tier: components["schemas"]["NextTierOut"] | null;
+            /** Spins Available */
+            spins_available: number;
+            /** Store Rank */
+            store_rank: number | null;
+            tier: components["schemas"]["TierOut"];
+            /** Unread Notifications */
+            unread_notifications: number;
+        };
+        /** TeamOut */
+        TeamOut: {
+            /** People */
+            people: components["schemas"]["TeamRow"][];
+            /** Stores */
+            stores: components["schemas"]["StoreRow"][];
+            /** Total */
+            total: number;
+        };
+        /** TeamRow */
+        TeamRow: {
+            area: components["schemas"]["AreaRef"] | null;
+            /** Badges */
+            badges: number;
+            /** Balance */
+            balance: number;
+            /** Earned This Month */
+            earned_this_month: number;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Initials */
+            initials: string;
+            /** Kudos Allowance */
+            kudos_allowance: number;
+            /** Kudos Left */
+            kudos_left: number;
+            /** Name */
+            name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "crew" | "shift" | "gm" | "supervisor" | "director";
+            store: components["schemas"]["StoreRef"] | null;
+            /** Stores */
+            stores: components["schemas"]["StoreRef"][];
+            tier: components["schemas"]["TierOut"];
+        };
         /** Tier */
         Tier: {
             /**
@@ -1191,6 +1814,19 @@ export interface components {
              * @enum {string}
              */
             id: "bronze" | "silver" | "gold" | "platinum";
+            /** Min */
+            min: number;
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+        };
+        /** TierOut */
+        TierOut: {
+            /** Color */
+            color: string;
+            /** Id */
+            id: string;
             /** Min */
             min: number;
             /** Name */
@@ -1214,6 +1850,22 @@ export interface components {
             token_type: "bearer";
             user: components["schemas"]["MeOut"];
         };
+        /** UnrecognizedOut */
+        UnrecognizedOut: {
+            /** Days On Team */
+            days_on_team: number | null;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Initials */
+            initials: string;
+            /** Name */
+            name: string;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "crew" | "shift" | "gm" | "supervisor" | "director";
+            store: components["schemas"]["StoreRef"] | null;
+        };
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -1226,6 +1878,12 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /** WallPage */
+        WallPage: {
+            /** Items */
+            items: components["schemas"]["PostOut"][];
+            next_before: components["schemas"]["PydanticObjectId"] | null;
         };
     };
     responses: never;
@@ -1564,6 +2222,26 @@ export interface operations {
             };
         };
     };
+    give_context_api_v1_give_context_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["GiveContextOut"];
+                };
+            };
+        };
+    };
     get_me_api_v1_me_get: {
         parameters: {
             query?: never;
@@ -1580,6 +2258,58 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MeOut"];
+                };
+            };
+        };
+    };
+    my_notifications_api_v1_me_notifications_get: {
+        parameters: {
+            query?: {
+                before?: components["schemas"]["PydanticObjectId"] | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_all_api_v1_me_notifications_read_all_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadAllOut"];
                 };
             };
         };
@@ -1613,6 +2343,58 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    my_shoutouts_api_v1_me_shoutouts_get: {
+        parameters: {
+            query?: {
+                direction?: "received" | "sent";
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    my_summary_api_v1_me_summary_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SummaryOut"];
                 };
             };
         };
@@ -1712,6 +2494,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AreaOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    portal_overview_api_v1_portal_overview_get: {
+        parameters: {
+            query?: {
+                store?: components["schemas"]["PydanticObjectId"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OverviewOut"];
                 };
             };
             /** @description Validation Error */
@@ -2006,6 +2819,90 @@ export interface operations {
             };
         };
     };
+    owner_candidates_api_v1_portal_recognize_candidates_get: {
+        parameters: {
+            query?: {
+                filter?: "leaders" | "director" | "supervisor" | "gm" | "shift" | "crew" | "everyone";
+                store?: components["schemas"]["PydanticObjectId"] | null;
+                q?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CandidateOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_candidate_api_v1_portal_recognize_candidates__person_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                person_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CandidateOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_context_api_v1_portal_recognize_context_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerGiveContextOut"];
+                };
+            };
+        };
+    };
     get_settings_api_v1_portal_settings_get: {
         parameters: {
             query?: never;
@@ -2047,6 +2944,71 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["SettingsOut"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_send_api_v1_portal_shoutouts_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description One per tap on Send (a UUID). A repeat returns the first result. */
+                "Idempotency-Key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShoutoutIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShoutoutResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_hide_api_v1_portal_shoutouts__post_id__hide_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -2134,6 +3096,201 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["StoreOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    portal_team_api_v1_portal_team_get: {
+        parameters: {
+            query?: {
+                store?: components["schemas"]["PydanticObjectId"] | null;
+                role?: ("crew" | "shift" | "gm" | "supervisor" | "director") | null;
+                q?: string | null;
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_api_v1_shoutouts_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description One per tap on Send (a UUID). A repeat returns the first result. */
+                "Idempotency-Key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShoutoutIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShoutoutResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    hide_api_v1_shoutouts__post_id__hide_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    like_api_v1_shoutouts__post_id__like_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LikeOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unlike_api_v1_shoutouts__post_id__like_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LikeOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    wall_api_v1_wall_get: {
+        parameters: {
+            query?: {
+                filter?: "everyone" | "for_you";
+                before?: components["schemas"]["PydanticObjectId"] | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WallPage"];
                 };
             };
             /** @description Validation Error */

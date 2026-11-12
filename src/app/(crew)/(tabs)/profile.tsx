@@ -1,1 +1,1 @@
-export { Profile as default } from "@/screens/Tabs";
+export { Profile as default } from "@/screens/Profile";

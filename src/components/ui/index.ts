@@ -16,9 +16,11 @@ export {
   type PillStatus,
   ProgressBar,
   Rich,
+  Segmented,
   Skeleton,
   StatusPill,
   T,
+  TextArea,
   TextLink,
 } from "./primitives";
 export {

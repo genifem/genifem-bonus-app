@@ -1,1 +1,1 @@
-export { Wall as default } from "@/screens/Tabs";
+export { Wall as default } from "@/screens/Wall";

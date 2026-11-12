@@ -126,6 +126,27 @@ export function setupProblem(t: Translator, err: unknown, now: number): Problem 
 }
 
 /**
+ * A shout-out the server refused or never answered (CR-19 to CR-23), with the numbers it
+ * sends back: how many kudos are really left, the longest message allowed.
+ */
+export function sendProblem(t: Translator, err: unknown): Problem {
+  if (!(err instanceof ApiError)) return GENERIC;
+  switch (err.code) {
+    case "kudos_insufficient": {
+      const left = detailNumber(err, "kudos_left");
+      return left === null
+        ? plain(err.code)
+        : { code: err.code, key: "errors.kudos_insufficient_left", values: { count: left } };
+    }
+    case "message_too_long": {
+      const max = detailNumber(err, "max");
+      return max === null ? plain(err.code) : { code: err.code, key: "errors.message_too_long_max", values: { max } };
+    }
+  }
+  return t.has(`errors.${err.code}`) ? plain(err.code) : GENERIC;
+}
+
+/**
  * The words for a problem, `secondsLeft` into its countdown (null before the first tick, when
  * the values worked out as it happened still stand). Null once a wait is over: there is
  * nothing left to say.

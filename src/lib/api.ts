@@ -30,10 +30,12 @@ interface CallOptions {
   body?: unknown;
   /** Skip the token: used by sign-in calls. */
   anonymous?: boolean;
+  /** Extra headers, such as the Idempotency-Key on a coin action (plan D13). */
+  headers?: Record<string, string>;
 }
 
 async function send(path: string, options: CallOptions, token: string | null) {
-  const headers: Record<string, string> = { "x-client": "app" };
+  const headers: Record<string, string> = { ...options.headers, "x-client": "app" };
   const tenant = tenantSlug();
   if (tenant) headers["x-tenant"] = tenant;
   if (options.body !== undefined) headers["content-type"] = "application/json";

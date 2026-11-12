@@ -12,6 +12,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { colors, ToastProvider } from "@/components/ui";
 import { AuthProvider, homeGroupFor, useAuth } from "@/lib/auth";
+import { MeProvider } from "@/lib/me";
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -78,10 +79,12 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <ToastProvider>
-          <StatusBar style="dark" />
-          <RootStack />
-        </ToastProvider>
+        <MeProvider>
+          <ToastProvider>
+            <StatusBar style="dark" />
+            <RootStack />
+          </ToastProvider>
+        </MeProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );

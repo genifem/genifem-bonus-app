@@ -16,6 +16,7 @@ export default function CrewLayout() {
     <RoleGate group="crew">
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="notifications" />
       </Stack>
     </RoleGate>
   );

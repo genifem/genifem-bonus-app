@@ -1,0 +1,247 @@
+import type { Locale } from "@crewstars/i18n";
+import { useRouter } from "expo-router";
+import { type ReactNode, useCallback, useState } from "react";
+import { StyleSheet, View } from "react-native";
+
+import { AppHeader } from "@/components/AppHeader";
+import { RoleChip, TierChip } from "@/components/Chips";
+import { Coin } from "@/components/Coin";
+import { PostCard, type PostOut } from "@/components/PostCard";
+import {
+  Avatar,
+  Body,
+  Card,
+  colors,
+  ErrorState,
+  Icon,
+  LanguageSwitch,
+  minTouchTarget,
+  Page,
+  Segmented,
+  Skeleton,
+  T,
+  Touchable,
+  useToast,
+} from "@/components/ui";
+import { useAuth } from "@/lib/auth";
+import { explain } from "@/lib/errors";
+import { formatCount } from "@/lib/format";
+import { translatorFor } from "@/lib/i18n";
+import { useMe, useMeRefreshOnFocus } from "@/lib/me";
+import { useRoutes } from "@/lib/routes";
+import { useApi, useRefreshOnFocus } from "@/lib/useApi";
+import { useLikes } from "@/lib/useLikes";
+import { useNow } from "@/lib/useNow";
+
+type Direction = "received" | "sent";
+
+function Stat({ value, label, coin = false }: { value: string; label: string; coin?: boolean }) {
+  return (
+    <View accessible accessibilityLabel={`${value} ${label}`} style={styles.stat}>
+      <View style={styles.statValue}>
+        {coin ? <Coin size={18} /> : null}
+        <T size={20} weight={900} tabular numberOfLines={1} adjustsFontSizeToFit>
+          {value}
+        </T>
+      </View>
+      <T size={11} color={colors.muted} align="center">
+        {label}
+      </T>
+    </View>
+  );
+}
+
+/** A row in a settings card (`.setrow`). */
+function Row({ children, last = false }: { children: ReactNode; last?: boolean }) {
+  return <View style={[styles.setRow, !last && styles.setRowLine]}>{children}</View>;
+}
+
+/**
+ * The profile (CR-32, CR-34 so far), in both tab groups: who this is (role, store, tier),
+ * their coins, their latest shout-outs received and sent, the way to notifications, and
+ * settings: the language and signing out. Badges and the leaderboard join it with P4.
+ *
+ * The language changes on screen at once (NF-02) and is then saved to the profile, so the
+ * texts and the next phone this person signs in on use it too. A save that fails says so,
+ * but leaves the switch where it is: it still holds on this phone.
+ */
+export function Profile() {
+  const { t, me, locale, signOut, setLocale, savePreferences } = useAuth();
+  const { summary, error, refresh: refreshMe } = useMe();
+  const toast = useToast();
+  const router = useRouter();
+  const routes = useRoutes();
+  const now = useNow();
+  const [direction, setDirection] = useState<Direction>("received");
+  const [refreshing, setRefreshing] = useState(false);
+  const received = useApi<PostOut[]>("/me/shoutouts?direction=received&limit=4");
+  const sent = useApi<PostOut[]>("/me/shoutouts?direction=sent&limit=4");
+  const likes = useLikes({ onSettled: () => void refreshMe() });
+  const { forgetSettled } = likes;
+
+  useMeRefreshOnFocus();
+  const { revalidate: revalidateReceived } = received;
+  const { revalidate: revalidateSent } = sent;
+  const revalidateLists = useCallback(async () => {
+    await Promise.all([revalidateReceived(), revalidateSent()]);
+    forgetSettled();
+  }, [revalidateReceived, revalidateSent, forgetSettled]);
+  useRefreshOnFocus(revalidateLists);
+
+  const pull = async () => {
+    setRefreshing(true);
+    await Promise.all([refreshMe(), revalidateLists()]);
+    setRefreshing(false);
+  };
+
+  const chooseLanguage = (language: Locale) => {
+    void setLocale(language);
+    savePreferences({ language }).catch(() => {
+      // In the language just chosen: `t` still speaks the one being left.
+      toast.show(translatorFor(language)("profile.languageNotSaved"), { icon: "info" });
+    });
+  };
+
+  const list = direction === "received" ? received : sent;
+  const posts = list.data ?? [];
+  const unread = summary?.unread_notifications ?? 0;
+  const place = me?.store
+    ? t("header.store", { number: me.store.number, name: me.store.name })
+    : (me?.area?.name ?? "");
+
+  return (
+    <Page refreshing={refreshing} onRefresh={() => void pull()}>
+      <Body>
+        <AppHeader />
+        <View style={styles.who}>
+          <Avatar name={me?.name ?? ""} seed={me?.id} size={76} />
+          <T size={24} weight={900} align="center" heading>
+            {me?.name}
+          </T>
+          <View style={styles.roleLine}>
+            {me ? <RoleChip role={me.role} /> : null}
+            {place ? (
+              <T size={12} color={colors.muted}>
+                {place}
+              </T>
+            ) : null}
+          </View>
+          {summary ? <TierChip tier={summary.tier} /> : null}
+        </View>
+
+        {summary ? (
+          <Card padding={0} style={styles.stats}>
+            <Stat coin value={formatCount(summary.balance, locale)} label={t("profile.balance")} />
+            <View style={styles.statLine} />
+            <Stat value={formatCount(summary.lifetime, locale)} label={t("profile.lifetime")} />
+            <View style={styles.statLine} />
+            <Stat value={formatCount(summary.earned_this_month, locale)} label={t("profile.thisMonth")} />
+          </Card>
+        ) : error ? (
+          <ErrorState
+            message={`${t("profile.loadError")} ${explain(t, error)}`}
+            retryLabel={t("common.retry")}
+            onRetry={() => void refreshMe()}
+          />
+        ) : (
+          <Skeleton height={76} />
+        )}
+
+        <T size={17} weight={900} heading style={{ marginBottom: -6 }}>
+          {t("profile.shoutouts")}
+        </T>
+        <Segmented
+          label={t("home.listLabel")}
+          value={direction}
+          onChange={setDirection}
+          options={[
+            { value: "received", label: t("home.received") },
+            { value: "sent", label: t("home.sent") },
+          ]}
+        />
+        {list.loading && !list.data ? (
+          <Skeleton height={132} />
+        ) : list.error && !list.data ? (
+          <ErrorState message={t("home.listError")} retryLabel={t("common.retry")} onRetry={() => void list.reload()} />
+        ) : posts.length ? (
+          posts.map((post) => {
+            const like = likes.view(post);
+            return (
+              <PostCard
+                key={post.id}
+                post={post}
+                meId={me?.id}
+                now={now}
+                liked={like.liked}
+                likes={like.count}
+                onLike={likes.toggle}
+              />
+            );
+          })
+        ) : (
+          <Card style={{ alignItems: "center", paddingVertical: 20 }}>
+            <T size={13} color={colors.muted} align="center">
+              {direction === "sent" ? t("home.emptySent") : t("home.emptyReceived")}
+            </T>
+          </Card>
+        )}
+
+        <Card style={styles.rows}>
+          <Touchable
+            accessibilityRole="button"
+            accessibilityLabel={
+              unread > 0 ? t("header.notificationsUnread", { count: unread }) : t("profile.notifications")
+            }
+            onPress={() => router.push(routes.notifications)}
+          >
+            <Row last>
+              <Icon name="bell" size={20} color={colors.brand} />
+              <T weight={700} style={{ flex: 1 }}>
+                {t("profile.notifications")}
+              </T>
+              {unread > 0 ? (
+                <T size={12} weight={800} color={colors.brandInk}>
+                  {t("profile.unreadCount", { count: unread })}
+                </T>
+              ) : null}
+              <Icon name="chev" size={16} color={colors.muted} />
+            </Row>
+          </Touchable>
+        </Card>
+
+        <T size={17} weight={900} heading style={{ marginBottom: -6 }}>
+          {t("profile.settings")}
+        </T>
+        <Card style={styles.rows}>
+          <Row>
+            <Icon name="globe" size={20} />
+            <T weight={700} style={{ flex: 1 }}>
+              {t("common.language")}
+            </T>
+            <LanguageSwitch onChange={chooseLanguage} />
+          </Row>
+          <Touchable accessibilityRole="button" accessibilityLabel={t("common.signOut")} onPress={() => void signOut()}>
+            <Row last>
+              <Icon name="logout" size={20} color={colors.brandInk} />
+              <T weight={800} color={colors.brandInk} style={{ flex: 1 }}>
+                {t("common.signOut")}
+              </T>
+            </Row>
+          </Touchable>
+        </Card>
+      </Body>
+    </Page>
+  );
+}
+
+const styles = StyleSheet.create({
+  who: { alignItems: "center", gap: 8 },
+  roleLine: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", justifyContent: "center", gap: 6 },
+  stats: { flexDirection: "row" },
+  stat: { flex: 1, alignItems: "center", gap: 2, paddingVertical: 14, paddingHorizontal: 6 },
+  statValue: { flexDirection: "row", alignItems: "center", gap: 5 },
+  statLine: { width: 1, alignSelf: "stretch", backgroundColor: colors.border },
+  rows: { paddingVertical: 4 },
+  setRow: { minHeight: minTouchTarget + 12, flexDirection: "row", alignItems: "center", gap: 10 },
+  setRowLine: { borderBottomWidth: 1, borderBottomColor: colors.border },
+});

@@ -554,6 +554,117 @@ export function Field({
   );
 }
 
+/**
+ * A multi-line field (`textarea.input`): the prototype's 96px box, label above, and a counter
+ * under the right edge ("12 / 140") when `counter` is given. `counterLabel` is what a screen
+ * reader hears for it ("12 of 140 characters").
+ */
+export function TextArea({
+  label,
+  counter,
+  counterLabel,
+  ref,
+  onFocus,
+  onBlur,
+  ...input
+}: Omit<TextInputProps, "style" | "multiline"> & {
+  label: string;
+  counter?: string;
+  counterLabel?: string;
+  ref?: Ref<TextInput>;
+}) {
+  const [focused, setFocused] = useState(false);
+  return (
+    <View style={{ gap: 7 }}>
+      <T size={13} weight={800} maxFontSizeMultiplier={CHROME_SCALE}>
+        {label}
+      </T>
+      <TextInput
+        {...input}
+        ref={ref}
+        multiline
+        textAlignVertical="top"
+        accessibilityLabel={label}
+        placeholderTextColor={colors.muted}
+        onFocus={(event) => {
+          setFocused(true);
+          onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setFocused(false);
+          onBlur?.(event);
+        }}
+        maxFontSizeMultiplier={CHROME_SCALE}
+        style={[
+          styles.textArea,
+          { borderColor: focused ? colors.brand : colors.controlBorder, boxShadow: focused ? shadow.focus : undefined },
+        ]}
+      />
+      {counter ? (
+        <T
+          size={11}
+          color={colors.muted}
+          align="right"
+          tabular
+          accessibilityLabel={counterLabel}
+          accessibilityLiveRegion="polite"
+        >
+          {counter}
+        </T>
+      ) : null}
+    </View>
+  );
+}
+
+/**
+ * Two or three ways to see one list (`.seg`): Everyone / For you, Received / Sent. A tab list
+ * to a screen reader, the current one raised on paper.
+ */
+export function Segmented<V extends string>({
+  options,
+  value,
+  onChange,
+  label,
+}: {
+  options: readonly { value: V; label: string }[];
+  value: V;
+  onChange: (value: V) => void;
+  label: string;
+}) {
+  return (
+    <View accessibilityRole="tablist" accessibilityLabel={label} style={styles.segmented}>
+      {options.map((option) => {
+        const active = option.value === value;
+        return (
+          <Touchable
+            key={option.value}
+            haptic={active ? "none" : "selection"}
+            accessibilityRole="tab"
+            accessibilityLabel={option.label}
+            aria-selected={active}
+            // 38 drawn, 44 touched.
+            hitSlop={{ top: 3, bottom: 3 }}
+            onPress={() => {
+              if (!active) onChange(option.value);
+            }}
+            style={[styles.segment, active && styles.segmentActive]}
+          >
+            <T
+              size={13}
+              weight={800}
+              color={active ? colors.foreground : colors.muted}
+              numberOfLines={1}
+              maxFontSizeMultiplier={CHROME_SCALE}
+            >
+              {option.label}
+            </T>
+          </Touchable>
+        );
+      })}
+    </View>
+  );
+}
+
 /** English / Español, both visible, one tap (`.langseg`). Remembered on this device, and it
  *  beats the profile's language, which beats the phone's. `onChange` replaces the plain
  *  switch, for a screen that also saves the choice somewhere (the profile). */
@@ -646,6 +757,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.foreground,
   },
+  textArea: {
+    minHeight: 96,
+    paddingHorizontal: 14,
+    paddingTop: 12,
+    paddingBottom: 12,
+    borderRadius: radius.control,
+    borderWidth: 1.5,
+    backgroundColor: colors.raised,
+    fontFamily: fontFamily(600),
+    fontSize: 15,
+    lineHeight: 21,
+    color: colors.foreground,
+  },
+  segmented: {
+    flexDirection: "row",
+    padding: 3,
+    borderRadius: radius.chip,
+    backgroundColor: colors.well,
+  },
+  segment: {
+    flex: 1,
+    minHeight: 38,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  segmentActive: { backgroundColor: colors.raised, boxShadow: shadow.segment },
   switch: {
     flexDirection: "row",
     padding: 3,
