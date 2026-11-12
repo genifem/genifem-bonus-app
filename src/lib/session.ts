@@ -15,6 +15,7 @@ import { Platform } from "react-native";
 const ACCESS = "cs_access";
 const REFRESH = "cs_refresh";
 const LOCALE = "cs_locale";
+const PUSH = "cs_push";
 
 export interface Session {
   accessToken: string | null;
@@ -78,4 +79,14 @@ export async function loadLocale(): Promise<string | null> {
 
 export async function saveLocale(locale: string | null): Promise<void> {
   await write(LOCALE, locale);
+}
+
+/** This phone's Expo push token, as last handed to the API (plan D10), so signing out can
+ *  name it to `/auth/logout` and the server stops pushing here. */
+export async function loadPushToken(): Promise<string | null> {
+  return read(PUSH);
+}
+
+export async function savePushToken(token: string | null): Promise<void> {
+  await write(PUSH, token);
 }

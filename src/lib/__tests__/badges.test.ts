@@ -1,4 +1,4 @@
-/** The badge grid (CR-33) and the profile's "shout-outs given" (CR-32). */
+/** The badge grid (CR-33). */
 import { createTranslator } from "@crewstars/i18n";
 
 import {
@@ -8,7 +8,6 @@ import {
   earnedCount,
   howToEarn,
   type MyBadge,
-  shoutoutsGiven,
 } from "@/lib/badges";
 
 const en = createTranslator("en");
@@ -90,17 +89,5 @@ describe("the grid's names and glyphs", () => {
 
   it("counts the earned ones", () => {
     expect(earnedCount([badge({ earned: true }), badge({}), badge({ earned: true })])).toBe(2);
-  });
-});
-
-describe("shout-outs given (CR-32)", () => {
-  it("is the 'give N shout-outs' badge's progress, all time", () => {
-    const badges = [badge({}), badge({ id: "giver", rule: "given", tag: null, count: 8, progress: 11, earned: true })];
-    expect(shoutoutsGiven(badges)).toBe(11);
-  });
-
-  it("is unknown without such a badge", () => {
-    expect(shoutoutsGiven([badge({})])).toBeNull();
-    expect(shoutoutsGiven([])).toBeNull();
   });
 });

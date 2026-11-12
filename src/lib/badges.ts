@@ -85,13 +85,3 @@ export function badgeProgress(badge: Pick<MyBadge, "earned" | "progress" | "coun
 export function earnedCount(badges: readonly Pick<MyBadge, "earned">[]): number {
   return badges.filter((badge) => badge.earned).length;
 }
-
-/**
- * CR-32's "shout-outs given": the API has no field of its own for it, but the "give N
- * shout-outs" badge's progress is exactly that count (all time). Null when the owners have no
- * such badge, so the stat is left out rather than shown wrong.
- */
-export function shoutoutsGiven(badges: readonly Pick<MyBadge, "rule" | "progress">[]): number | null {
-  const giver = badges.find((badge) => badge.rule === "given" && badge.progress !== null);
-  return giver ? Math.max(0, giver.progress ?? 0) : null;
-}

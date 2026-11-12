@@ -266,7 +266,12 @@ export function CrewHome() {
             />
           </>
         ) : error ? (
-          <ErrorState message={`${t("home.loadError")} ${explain(t, error)}`} retryLabel={t("common.retry")} onRetry={() => void refreshMe()} />
+          <ErrorState
+            message={`${t("home.loadError")} ${explain(t, error)}`}
+            retryLabel={t("common.retry")}
+            onRetry={() => void refreshMe()}
+            error={error}
+          />
         ) : (
           <HomeSkeleton />
         )}
@@ -314,7 +319,13 @@ export function CrewHome() {
             <Skeleton height={132} />
           </>
         ) : list.error && !list.data ? (
-          <ErrorState message={t("home.listError")} retryLabel={t("common.retry")} onRetry={() => void list.reload()} />
+          <ErrorState
+            message={t("home.listError")}
+            retryLabel={t("common.retry")}
+            onRetry={() => void list.reload()}
+            error={list.error}
+            compact
+          />
         ) : posts.length ? (
           posts.map((post) => {
             const like = likes.view(post);

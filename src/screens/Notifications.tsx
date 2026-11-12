@@ -119,6 +119,7 @@ export function Notifications() {
           message={`${t("notifications.loadError")} ${explain(t, feed.error)}`}
           retryLabel={t("common.retry")}
           onRetry={() => void feed.reload()}
+          error={feed.error}
         />
       </View>
     );

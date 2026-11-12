@@ -85,7 +85,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             style={styles.toast}
           >
             {current.icon ? <Icon name={current.icon} size={16} color={colors.inverseFg} stroke={2.6} /> : null}
-            <T size={13} weight={800} color={colors.inverseFg} numberOfLines={2} style={{ flexShrink: 1 }}>
+            <T size={13} weight={800} color={colors.inverseFg} numberOfLines={3} style={{ flexShrink: 1 }}>
               {current.message}
             </T>
           </Animated.View>

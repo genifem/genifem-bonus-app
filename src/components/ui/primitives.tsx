@@ -22,6 +22,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { useAuth } from "@/lib/auth";
+import { isOffline } from "@/lib/errors";
 import { initials } from "@/lib/format";
 
 import { Icon, type IconName } from "./Icon";
@@ -286,7 +287,9 @@ export function TextLink({
 
 export type PillStatus = "pending" | "approved" | "declined" | "info";
 
-/** A state as a small pill (`.status` in the prototype): always a word, never colour alone. */
+/** A state as a small pill (`.status` in the prototype): always a word, never colour alone.
+ *  It never grows past its row, and a long Spanish state wraps inside it rather than being
+ *  cut short (NF-02). */
 export function StatusPill({ status, label, icon }: { status: PillStatus; label: string; icon?: IconName }) {
   const look: Record<PillStatus, { bg: string; fg: string }> = {
     pending: { bg: colors.warningSubtle, fg: colors.warningInk },
@@ -298,7 +301,7 @@ export function StatusPill({ status, label, icon }: { status: PillStatus; label:
   return (
     <View style={[styles.pill, { backgroundColor: bg }]}>
       {icon ? <Icon name={icon} size={12} color={fg} stroke={2.4} /> : null}
-      <T size={11} weight={800} color={fg} numberOfLines={1} maxFontSizeMultiplier={1.3}>
+      <T size={11} weight={800} color={fg} maxFontSizeMultiplier={1.3} style={{ flexShrink: 1 }}>
         {label}
       </T>
     </View>
@@ -403,21 +406,62 @@ export function Alert({
 }
 
 /** A screen that could not load: why, in words (read out as it appears), and a way to try
- *  again. One component, so every screen says it the same way. */
+ *  again. One component, so every screen says it the same way. Given the `error`, no
+ *  connection is said calmly instead (OfflineState): nothing is wrong, the phone is offline.
+ *  `compact` is for a screen's second and later sections, so one dead spot shows one card. */
 export function ErrorState({
   message,
   retryLabel,
   onRetry,
+  error,
+  compact = false,
 }: {
   message: string;
   retryLabel: string;
   onRetry: () => void;
+  error?: unknown;
+  compact?: boolean;
 }) {
+  if (isOffline(error)) return <OfflineState onRetry={onRetry} compact={compact} />;
   return (
     <>
       <Alert>{message}</Alert>
       <Button title={retryLabel} variant="soft" onPress={onRetry} />
     </>
+  );
+}
+
+/**
+ * No connection (opening the app in a dead spot, say): information, not an alarm. The session
+ * is kept and nothing is lost; Retry fetches again once the phone is back online. `compact` is
+ * one line with the retry beside it, under a section that already said so in full.
+ */
+export function OfflineState({ onRetry, compact = false }: { onRetry: () => void; compact?: boolean }) {
+  const { t } = useAuth();
+  if (compact) {
+    return (
+      <View accessibilityLiveRegion="polite" style={[styles.card, styles.offlineRow]}>
+        <Icon name="offline" size={18} color={colors.infoInk} />
+        <T size={13} weight={700} color={colors.infoInk} style={{ flex: 1 }}>
+          {t("offline.title")}
+        </T>
+        <TextLink title={t("common.retry")} role="button" onPress={onRetry} />
+      </View>
+    );
+  }
+  return (
+    <View accessibilityLiveRegion="polite" style={[styles.card, styles.empty]}>
+      <View style={styles.offlineIcon}>
+        <Icon name="offline" size={22} color={colors.infoInk} />
+      </View>
+      <T size={16} weight={900} align="center" heading>
+        {t("offline.title")}
+      </T>
+      <T size={13} color={colors.muted} align="center">
+        {t("offline.lead")}
+      </T>
+      <Button title={t("common.retry")} variant="soft" size="sm" onPress={onRetry} style={{ marginTop: 4 }} />
+    </View>
   );
 }
 
@@ -721,11 +765,13 @@ const styles = StyleSheet.create({
   textLink: { minHeight: minTouchTarget, justifyContent: "center", paddingHorizontal: 6 },
   pill: {
     minHeight: 22,
+    maxWidth: "100%",
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",
     gap: 5,
     paddingHorizontal: 9,
+    paddingVertical: 2,
     borderRadius: radius.pill,
   },
   card: { backgroundColor: colors.raised, borderWidth: 1, borderColor: colors.border },
@@ -736,6 +782,22 @@ const styles = StyleSheet.create({
     borderRadius: radius.card,
     paddingHorizontal: 18,
     paddingVertical: 24,
+  },
+  offlineRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    borderRadius: radius.card,
+    paddingLeft: 14,
+    paddingRight: 6,
+  },
+  offlineIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.infoSubtle,
+    alignItems: "center",
+    justifyContent: "center",
   },
   field: {
     height: controlHeight.input,

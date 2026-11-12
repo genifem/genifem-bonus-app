@@ -11,6 +11,22 @@ export function explain(t: Translator, err: unknown): string {
   return t.has(`errors.${code}`) ? t(`errors.${code}`) : t("errors.generic");
 }
 
+/** No answer at all: the phone has no connection, or the request never got through. A screen
+ *  says so calmly ("You're offline", with a Retry) rather than as a failure. */
+export function isOffline(err: unknown): boolean {
+  return err instanceof ApiError && err.code === "network";
+}
+
+/**
+ * Whether a launch that could not reach `/me` still finds the person signed in. Only the
+ * server saying who this isn't ends the session: a 401 (the refresh token was refused) or a
+ * 403. No connection, a server fault or too many requests keep it, and the app opens on the
+ * person's own tabs with what it last knew of them.
+ */
+export function keepsSession(err: unknown): boolean {
+  return !(err instanceof ApiError && (err.status === 401 || err.status === 403));
+}
+
 /**
  * A failure as something to say, kept as a catalog key rather than a sentence so it can be
  * said again in the other language, or with a countdown that has moved on.

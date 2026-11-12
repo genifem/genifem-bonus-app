@@ -347,6 +347,7 @@ export function Spin() {
             message={`${t("spin.loadError")} ${explain(t, wheel.error)}`}
             retryLabel={t("common.retry")}
             onRetry={() => void wheel.reload()}
+            error={wheel.error}
           />
         ) : !shown ? (
           <SpinSkeleton size={size} />

@@ -230,6 +230,7 @@ export function Leaderboard() {
             message={`${t("leaderboard.loadError")} ${explain(t, board.error)}`}
             retryLabel={t("common.retry")}
             onRetry={() => void board.reload()}
+            error={board.error}
           />
         ) : (
           <Skeleton height={260} />
@@ -242,6 +243,8 @@ export function Leaderboard() {
             message={`${t("awards.loadError")} ${explain(t, awards.error)}`}
             retryLabel={t("common.retry")}
             onRetry={() => void awards.reload()}
+            error={awards.error}
+            compact
           />
         ) : (
           <>
@@ -265,7 +268,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.chip,
   },
   rank: { width: 24, alignItems: "center" },
-  name: { flex: 1, minWidth: 0, flexDirection: "row", alignItems: "center", gap: 6 },
+  // A long role chip ("Gerente de turno") moves under the name rather than squeezing it.
+  name: { flex: 1, minWidth: 0, flexDirection: "row", alignItems: "center", flexWrap: "wrap", columnGap: 6, rowGap: 2 },
   own: {
     flexDirection: "row",
     alignItems: "center",

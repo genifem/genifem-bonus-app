@@ -13,6 +13,7 @@ export {
   Field,
   IconButton,
   LanguageSwitch,
+  OfflineState,
   type PillStatus,
   ProgressBar,
   Rich,

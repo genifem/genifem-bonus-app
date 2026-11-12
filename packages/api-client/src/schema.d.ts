@@ -385,6 +385,30 @@ export interface paths {
         patch: operations["set_preferences_api_v1_me_preferences_patch"];
         trace?: never;
     };
+    "/api/v1/me/push-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Register Phone
+         * @description This phone gets my pushes (after sign-in, once the person allowed notifications).
+         */
+        put: operations["register_phone_api_v1_me_push_tokens_put"];
+        post?: never;
+        /**
+         * Forget Phone
+         * @description This phone stops getting my pushes. Sign-out does it too (``/auth/logout``).
+         */
+        delete: operations["forget_phone_api_v1_me_push_tokens_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me/reward-requests": {
         parameters: {
             query?: never;
@@ -492,6 +516,28 @@ export interface paths {
         head?: never;
         /** Update Area */
         patch: operations["update_area_api_v1_portal_areas__area_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/portal/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Audit Log
+         * @description Who changed what, newest first (NF-09). ``kind`` filters by the kind of change,
+         *     ``target_id`` to one person, store, reward... ``before`` = the last page's
+         *     ``next_before``.
+         */
+        get: operations["audit_log_api_v1_portal_audit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/portal/awards/announce": {
@@ -1381,6 +1427,60 @@ export interface components {
             /** Name */
             name: string;
         };
+        /** AuditActorOut */
+        AuditActorOut: {
+            id: components["schemas"]["PydanticObjectId"] | null;
+            /** Name */
+            name: string | null;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "person" | "owner" | "system";
+        };
+        /** AuditEventOut */
+        AuditEventOut: {
+            /** Action */
+            action: string;
+            actor: components["schemas"]["AuditActorOut"];
+            /** After */
+            after: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            /** Before */
+            before: {
+                [key: string]: unknown;
+            } | null;
+            /** Details */
+            details: {
+                [key: string]: unknown;
+            };
+            id: components["schemas"]["PydanticObjectId"];
+            /** Kind */
+            kind: ("settings" | "rewards" | "requests" | "recognition" | "roster" | "awards" | "sign_in") | null;
+            /** Reason */
+            reason: string | null;
+            target: components["schemas"]["AuditTargetOut"] | null;
+        };
+        /** AuditPage */
+        AuditPage: {
+            /** Items */
+            items: components["schemas"]["AuditEventOut"][];
+            next_before: components["schemas"]["PydanticObjectId"] | null;
+        };
+        /** AuditTargetOut */
+        AuditTargetOut: {
+            id: components["schemas"]["PydanticObjectId"] | null;
+            /** Label */
+            label: string | null;
+            /** Type */
+            type: string;
+        };
         /** Award */
         Award: {
             /**
@@ -1540,6 +1640,8 @@ export interface components {
              */
             role: "crew" | "shift" | "gm" | "supervisor" | "director";
             store: components["schemas"]["StoreRef"] | null;
+            /** Stores */
+            stores: components["schemas"]["StoreRef"][];
         };
         /** CsvIn */
         CsvIn: {
@@ -1555,12 +1657,34 @@ export interface components {
             errors: number;
             /** Rejected */
             rejected: string | null;
+            /** Rejected Code */
+            rejected_code: string | null;
+            /** Rejected Params */
+            rejected_params: {
+                [key: string]: string;
+            };
             /** Rows */
             rows: components["schemas"]["CsvRow"][];
             /** To Create */
             to_create: number;
             /** To Update */
             to_update: number;
+        };
+        /**
+         * CsvProblem
+         * @description A row's problem as a code and its values, for the portal to word in the owner's
+         *     language (NF-02). Codes: eid_required, eid_invalid, eid_repeated, name_required,
+         *     role_required, role_invalid, store_unknown, area_unknown, phone_invalid,
+         *     hire_date_invalid, language_invalid, store_required, stores_required, area_required,
+         *     gm_twice, store_has_gm. ``value`` is the cell as typed.
+         */
+        CsvProblem: {
+            /** Code */
+            code: string;
+            /** Params */
+            params: {
+                [key: string]: string;
+            };
         };
         /** CsvResult */
         CsvResult: {
@@ -1588,6 +1712,8 @@ export interface components {
             line: number;
             /** Name */
             name: string | null;
+            /** Problems */
+            problems: components["schemas"]["CsvProblem"][];
             /** Role */
             role: string | null;
         };
@@ -1719,6 +1845,13 @@ export interface components {
             eid: string;
             /** Password */
             password: string;
+        };
+        /** LogoutIn */
+        LogoutIn: {
+            /** Push Token */
+            push_token?: string | null;
+            /** Refresh Token */
+            refresh_token: string;
         };
         /** ManagerHomeOut */
         ManagerHomeOut: {
@@ -2243,6 +2376,21 @@ export interface components {
             label: string;
             /** Label Es */
             label_es: string | null;
+        };
+        /** PushTokenDelete */
+        PushTokenDelete: {
+            /** Token */
+            token: string;
+        };
+        /** PushTokenIn */
+        PushTokenIn: {
+            /**
+             * Platform
+             * @enum {string}
+             */
+            platform: "ios" | "android";
+            /** Token */
+            token: string;
         };
         /** @example 5eb7cf5a86d9755df3a6c593 */
         PydanticObjectId: string;
@@ -2829,6 +2977,8 @@ export interface components {
             next_tier: components["schemas"]["NextTierOut"] | null;
             /** Pending Approvals */
             pending_approvals: number;
+            /** Shoutouts Given */
+            shoutouts_given: number;
             /** Spins Available */
             spins_available: number;
             /** Store Rank */
@@ -3062,7 +3212,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["RefreshIn"];
+                "application/json": components["schemas"]["LogoutIn"];
             };
         };
         responses: {
@@ -3573,6 +3723,68 @@ export interface operations {
             };
         };
     };
+    register_phone_api_v1_me_push_tokens_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PushTokenIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    forget_phone_api_v1_me_push_tokens_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PushTokenDelete"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     my_requests_api_v1_me_reward_requests_get: {
         parameters: {
             query?: {
@@ -3751,6 +3963,40 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AreaOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    audit_log_api_v1_portal_audit_get: {
+        parameters: {
+            query?: {
+                kind?: ("settings" | "rewards" | "requests" | "recognition" | "roster" | "awards" | "sign_in") | null;
+                target_id?: components["schemas"]["PydanticObjectId"] | null;
+                before?: components["schemas"]["PydanticObjectId"] | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditPage"];
                 };
             };
             /** @description Validation Error */

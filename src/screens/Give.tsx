@@ -98,11 +98,14 @@ function RecipientField({ person, onPress }: { person: PartyOut | null; onPress:
         {person ? (
           <>
             <Avatar name={person.name} seed={person.id} size={34} />
-            <T size={15} weight={800} numberOfLines={1} style={{ flexShrink: 1 }}>
-              {person.name}
-            </T>
-            {person.role !== "crew" ? <RoleChip role={person.role} /> : null}
-            <View style={{ flex: 1 }} />
+            {/* The name and a long role chip ("Gerente de turno") wrap in the room before
+                "Change" rather than squeezing the name to nothing (NF-02). */}
+            <View style={styles.recipientName}>
+              <T size={15} weight={800} numberOfLines={1} style={{ flexShrink: 1 }}>
+                {person.name}
+              </T>
+              {person.role !== "crew" ? <RoleChip role={person.role} /> : null}
+            </View>
             <T size={13} weight={800} color={colors.brandInk}>
               {t("give.toChange")}
             </T>
@@ -142,7 +145,7 @@ function TagPicker({ tags, value, onChange }: { tags: TagId[]; value: TagId | nu
               style={[styles.tag, { backgroundColor: look.bg, borderColor: on ? look.fg : "transparent" }]}
             >
               <Icon name={TAG_ICONS[tag]} size={14} color={look.fg} stroke={2.4} />
-              <T size={12} weight={800} color={look.fg} maxFontSizeMultiplier={CHROME_SCALE}>
+              <T size={12} weight={800} color={look.fg} maxFontSizeMultiplier={CHROME_SCALE} style={{ flexShrink: 1 }}>
                 {t(`tags.${tag}`)}
               </T>
             </Touchable>
@@ -386,6 +389,7 @@ export function Give() {
             message={`${t("give.loadError")} ${explain(t, context.error)}`}
             retryLabel={t("common.retry")}
             onRetry={() => void context.reload()}
+            error={context.error}
           />
         ) : !data ? (
           <GiveSkeleton />
@@ -474,9 +478,20 @@ const styles = StyleSheet.create({
     borderColor: colors.controlBorder,
     backgroundColor: colors.raised,
   },
+  recipientName: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    columnGap: 6,
+    rowGap: 2,
+    paddingVertical: 6,
+  },
   tags: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   tag: {
     minHeight: minTouchTarget,
+    maxWidth: "100%",
     flexDirection: "row",
     alignItems: "center",
     gap: 6,

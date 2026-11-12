@@ -298,6 +298,7 @@ export function ManagerHome() {
             message={`${t("managerHome.loadError")} ${explain(t, home.error)}`}
             retryLabel={t("common.retry")}
             onRetry={() => void home.reload()}
+            error={home.error}
           />
         ) : !data || !kudos ? (
           <ManagerHomeSkeleton />

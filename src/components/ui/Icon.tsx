@@ -46,6 +46,8 @@ const ICONS = {
   flag: "M5 21V4M5 4h11l-2 4 2 4H5",
   wallet: "M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l12-4 2 4M16 13.5h.01",
   search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-5-5",
+  // No connection: the wifi fan, struck through (the offline state, P5).
+  offline: "M2 8.8a15 15 0 0 1 20 0M5 12.4a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 19.5h.01M3 3l18 18",
   // Three dots ("⋯"), as small rings the stroke fills in.
   more: "M6.2 12a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0zM13.2 12a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0zM20.2 12a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z",
   // The rewards' glyphs (the owner picks one per reward).

@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -26,7 +27,7 @@ import {
 } from "@/components/ui";
 import { api, ApiError } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import { explain } from "@/lib/errors";
+import { explain, isOffline } from "@/lib/errors";
 import { useMe, useMeRefreshOnFocus } from "@/lib/me";
 import { useRefreshOnFocus } from "@/lib/useApi";
 import { useFeed } from "@/lib/useFeed";
@@ -34,6 +35,10 @@ import { useLikes } from "@/lib/useLikes";
 import { useNow } from "@/lib/useNow";
 
 type Filter = "everyone" | "for_you";
+
+function isFilter(value: unknown): value is Filter {
+  return value === "everyone" || value === "for_you";
+}
 
 function Gap() {
   return <View style={{ height: 12 }} />;
@@ -114,7 +119,12 @@ function HidePostSheet({
           {problem ? <Alert>{problem}</Alert> : null}
         </>
       ) : (
-        <Touchable accessibilityRole="button" onPress={() => setConfirming(true)} style={styles.menuRow}>
+        <Touchable
+          accessibilityRole="button"
+          accessibilityLabel={t("post.hide")}
+          onPress={() => setConfirming(true)}
+          style={styles.menuRow}
+        >
           <Icon name="eyeOff" size={20} color={colors.brandInk} />
           <T size={15} weight={800} color={colors.brandInk}>
             {t("post.hide")}
@@ -130,13 +140,23 @@ function HidePostSheet({
  * area's for supervisors and directors; the server decides) and For you. A flat list read
  * 20 at a time, newest first; pull down for the latest, and coming back to the tab quietly
  * lays the newest page on top.
+ *
+ * `?filter=for_you` opens it on For you (a tapped shout-out push, routes.ts); a new `at` with
+ * it chooses that list again, even after the person moved the wall on to Everyone.
  */
 export function Wall() {
   const { t, me } = useAuth();
   const { refresh: refreshMe } = useMe();
   const toast = useToast();
   const now = useNow();
-  const [filter, setFilter] = useState<Filter>("everyone");
+  const params = useLocalSearchParams<{ filter?: string; at?: string }>();
+  const [filter, setFilter] = useState<Filter>(isFilter(params.filter) ? params.filter : "everyone");
+  const asked = isFilter(params.filter) ? `${params.filter}@${params.at ?? ""}` : null;
+  const [opened, setOpened] = useState(asked);
+  if (asked !== opened) {
+    setOpened(asked);
+    if (isFilter(params.filter)) setFilter(params.filter);
+  }
   const [menuFor, setMenuFor] = useState<PostOut | null>(null);
   const feed = useFeed<PostOut>(`/wall?filter=${filter}`);
   const likes = useLikes({
@@ -181,7 +201,9 @@ export function Wall() {
           { value: "for_you", label: t("wall.forYou") },
         ]}
       />
-      {feed.error && feed.items.length > 0 ? <Alert>{explain(t, feed.error)}</Alert> : null}
+      {feed.error && feed.items.length > 0 ? (
+        <Alert kind={isOffline(feed.error) ? "info" : "error"}>{explain(t, feed.error)}</Alert>
+      ) : null}
     </View>
   );
 
@@ -201,6 +223,7 @@ export function Wall() {
           message={`${t("wall.loadError")} ${explain(t, feed.error)}`}
           retryLabel={t("common.retry")}
           onRetry={() => void feed.reload()}
+          error={feed.error}
         />
       </View>
     );

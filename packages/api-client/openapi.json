@@ -233,6 +233,213 @@
         "title": "AreaRef",
         "type": "object"
       },
+      "AuditActorOut": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "type": {
+            "enum": [
+              "person",
+              "owner",
+              "system"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "name"
+        ],
+        "title": "AuditActorOut",
+        "type": "object"
+      },
+      "AuditEventOut": {
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/AuditActorOut"
+          },
+          "after": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "After"
+          },
+          "at": {
+            "format": "date-time",
+            "title": "At",
+            "type": "string"
+          },
+          "before": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Before"
+          },
+          "details": {
+            "additionalProperties": true,
+            "title": "Details",
+            "type": "object"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "enum": [
+                  "settings",
+                  "rewards",
+                  "requests",
+                  "recognition",
+                  "roster",
+                  "awards",
+                  "sign_in"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AuditTargetOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "at",
+          "action",
+          "kind",
+          "actor",
+          "target",
+          "before",
+          "after",
+          "reason",
+          "details"
+        ],
+        "title": "AuditEventOut",
+        "type": "object"
+      },
+      "AuditPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AuditEventOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_before": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_before"
+        ],
+        "title": "AuditPage",
+        "type": "object"
+      },
+      "AuditTargetOut": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "label"
+        ],
+        "title": "AuditTargetOut",
+        "type": "object"
+      },
       "Award": {
         "properties": {
           "active": {
@@ -652,6 +859,13 @@
                 "type": "null"
               }
             ]
+          },
+          "stores": {
+            "items": {
+              "$ref": "#/components/schemas/StoreRef"
+            },
+            "title": "Stores",
+            "type": "array"
           }
         },
         "required": [
@@ -661,6 +875,7 @@
           "initials",
           "role",
           "store",
+          "stores",
           "area",
           "balance"
         ],
@@ -700,6 +915,24 @@
             ],
             "title": "Rejected"
           },
+          "rejected_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejected Code"
+          },
+          "rejected_params": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Rejected Params",
+            "type": "object"
+          },
           "rows": {
             "items": {
               "$ref": "#/components/schemas/CsvRow"
@@ -721,9 +954,33 @@
           "to_create",
           "to_update",
           "errors",
-          "rejected"
+          "rejected",
+          "rejected_code",
+          "rejected_params"
         ],
         "title": "CsvPreview",
+        "type": "object"
+      },
+      "CsvProblem": {
+        "description": "A row's problem as a code and its values, for the portal to word in the owner's\nlanguage (NF-02). Codes: eid_required, eid_invalid, eid_repeated, name_required,\nrole_required, role_invalid, store_unknown, area_unknown, phone_invalid,\nhire_date_invalid, language_invalid, store_required, stores_required, area_required,\ngm_twice, store_has_gm. ``value`` is the cell as typed.",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "params": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Params",
+            "type": "object"
+          }
+        },
+        "required": [
+          "code",
+          "params"
+        ],
+        "title": "CsvProblem",
         "type": "object"
       },
       "CsvResult": {
@@ -801,6 +1058,13 @@
             ],
             "title": "Name"
           },
+          "problems": {
+            "items": {
+              "$ref": "#/components/schemas/CsvProblem"
+            },
+            "title": "Problems",
+            "type": "array"
+          },
           "role": {
             "anyOf": [
               {
@@ -819,7 +1083,8 @@
           "eid",
           "name",
           "role",
-          "errors"
+          "errors",
+          "problems"
         ],
         "title": "CsvRow",
         "type": "object"
@@ -1175,6 +1440,33 @@
           "password"
         ],
         "title": "LoginIn",
+        "type": "object"
+      },
+      "LogoutIn": {
+        "properties": {
+          "push_token": {
+            "anyOf": [
+              {
+                "maxLength": 250,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Push Token"
+          },
+          "refresh_token": {
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Refresh Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "refresh_token"
+        ],
+        "title": "LogoutIn",
         "type": "object"
       },
       "ManagerHomeOut": {
@@ -2890,6 +3182,45 @@
         "title": "PrizeOut",
         "type": "object"
       },
+      "PushTokenDelete": {
+        "properties": {
+          "token": {
+            "maxLength": 250,
+            "minLength": 1,
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "title": "PushTokenDelete",
+        "type": "object"
+      },
+      "PushTokenIn": {
+        "properties": {
+          "platform": {
+            "enum": [
+              "ios",
+              "android"
+            ],
+            "title": "Platform",
+            "type": "string"
+          },
+          "token": {
+            "maxLength": 250,
+            "pattern": "^Expo(nent)?PushToken\\[[A-Za-z0-9_\\-]{8,200}\\]$",
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "platform"
+        ],
+        "title": "PushTokenIn",
+        "type": "object"
+      },
       "PydanticObjectId": {
         "example": "5eb7cf5a86d9755df3a6c593",
         "maxLength": 24,
@@ -4535,6 +4866,10 @@
             "title": "Pending Approvals",
             "type": "integer"
           },
+          "shoutouts_given": {
+            "title": "Shoutouts Given",
+            "type": "integer"
+          },
           "spins_available": {
             "title": "Spins Available",
             "type": "integer"
@@ -4565,6 +4900,7 @@
           "next_tier",
           "kudos",
           "earned_this_month",
+          "shoutouts_given",
           "store_rank",
           "spins_available",
           "unread_notifications",
@@ -5137,7 +5473,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RefreshIn"
+                "$ref": "#/components/schemas/LogoutIn"
               }
             }
           },
@@ -5776,6 +6112,74 @@
         ]
       }
     },
+    "/api/v1/me/push-tokens": {
+      "delete": {
+        "description": "This phone stops getting my pushes. Sign-out does it too (``/auth/logout``).",
+        "operationId": "forget_phone_api_v1_me_push_tokens_delete",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushTokenDelete"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Forget Phone",
+        "tags": [
+          "notifications"
+        ]
+      },
+      "put": {
+        "description": "This phone gets my pushes (after sign-in, once the person allowed notifications).",
+        "operationId": "register_phone_api_v1_me_push_tokens_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushTokenIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Register Phone",
+        "tags": [
+          "notifications"
+        ]
+      }
+    },
     "/api/v1/me/reward-requests": {
       "get": {
         "description": "My rewards (CR-27), newest first.",
@@ -6044,6 +6448,109 @@
         "summary": "Update Area",
         "tags": [
           "roster"
+        ]
+      }
+    },
+    "/api/v1/portal/audit": {
+      "get": {
+        "description": "Who changed what, newest first (NF-09). ``kind`` filters by the kind of change,\n``target_id`` to one person, store, reward... ``before`` = the last page's\n``next_before``.",
+        "operationId": "audit_log_api_v1_portal_audit_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "settings",
+                    "rewards",
+                    "requests",
+                    "recognition",
+                    "roster",
+                    "awards",
+                    "sign_in"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "target_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Audit Log",
+        "tags": [
+          "audit"
         ]
       }
     },

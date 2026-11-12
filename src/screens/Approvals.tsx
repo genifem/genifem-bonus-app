@@ -84,7 +84,7 @@ const PendingCard = memo(function PendingCard({
           size="sm"
           icon="x"
           onPress={() => onDecline(row)}
-          style={{ flex: 1 }}
+          style={styles.decline}
         />
         <Button
           title={t("approvals.approve")}
@@ -93,7 +93,7 @@ const PendingCard = memo(function PendingCard({
           icon="check"
           haptic="success"
           onPress={() => onApprove(row)}
-          style={{ flex: 2 }}
+          style={styles.approve}
         />
       </View>
     </Card>
@@ -142,6 +142,7 @@ const ReadyRow = memo(function ReadyRow({
         variant="soft"
         size="sm"
         onPress={() => onCollect(row)}
+        style={styles.collect}
       />
     </View>
   );
@@ -311,6 +312,7 @@ export function Approvals() {
             message={`${t("approvals.loadError")} ${explain(t, requests.error)}`}
             retryLabel={t("common.retry")}
             onRetry={() => void requests.reload()}
+            error={requests.error}
           />
         ) : !queues ? (
           <ApprovalsSkeleton />
@@ -384,6 +386,11 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: 10 },
   words: { flex: 1, minWidth: 0, gap: 1 },
   actions: { flexDirection: "row", gap: 10 },
+  // The prototype's 1:2 split, grown from each button's own width, so the words always fit.
+  decline: { flexGrow: 1, flexBasis: "auto" },
+  approve: { flexGrow: 2, flexBasis: "auto" },
+  // Wraps to two lines before it squeezes the name beside it.
+  collect: { maxWidth: "48%" },
   section: { gap: 2, marginBottom: -6 },
   list: { paddingVertical: 4 },
   listRow: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10, minHeight: 56 },

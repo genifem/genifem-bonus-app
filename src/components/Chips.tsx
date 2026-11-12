@@ -30,7 +30,8 @@ const ROLE_LOOK: Record<Role, { fg: string; bg: string }> = {
   crew: { fg: colors.muted, bg: colors.surface },
 };
 
-/** A shout-out's value tag (`.chip`): its glyph and name on its own colour. */
+/** A shout-out's value tag (`.chip`): its glyph and name on its own colour. A long name
+ *  ("A todo ritmo en hora pico") wraps inside the chip rather than running out of it (NF-02). */
 export function TagChip({ tag }: { tag: string }) {
   const { t } = useAuth();
   const known = isTagId(tag);
@@ -38,19 +39,20 @@ export function TagChip({ tag }: { tag: string }) {
   return (
     <View style={[styles.chip, { backgroundColor: look.bg }]}>
       {known ? <Icon name={TAG_ICONS[tag]} size={12} color={look.fg} stroke={2.4} /> : null}
-      <T size={11} weight={800} color={look.fg} numberOfLines={1} maxFontSizeMultiplier={CHROME_SCALE}>
+      <T size={11} weight={800} color={look.fg} maxFontSizeMultiplier={CHROME_SCALE} style={styles.words}>
         {known ? t(`tags.${tag}`) : tag}
       </T>
     </View>
   );
 }
 
-/** A monthly award on a trophy post, in place of the tag. */
+/** A monthly award on a trophy post, in place of the tag. Its name carries the month
+ *  ("Héroe del cliente de noviembre"), so it wraps too. */
 export function AwardChip({ name }: { name: string }) {
   return (
     <View style={[styles.chip, { backgroundColor: colors.raised }]}>
       <Icon name="trophy" size={12} color={colors.coinInk} stroke={2.4} />
-      <T size={11} weight={800} color={colors.coinInk} numberOfLines={1} maxFontSizeMultiplier={CHROME_SCALE}>
+      <T size={11} weight={800} color={colors.coinInk} maxFontSizeMultiplier={CHROME_SCALE} style={styles.words}>
         {name}
       </T>
     </View>
@@ -76,7 +78,7 @@ export function TierChip({ tier }: { tier: { name: string; name_es?: string | nu
   return (
     <View style={styles.tier}>
       <Icon name="award" size={14} color={tier.color} filled stroke={1.5} />
-      <T size={12} weight={800} numberOfLines={1} maxFontSizeMultiplier={CHROME_SCALE}>
+      <T size={12} weight={800} maxFontSizeMultiplier={CHROME_SCALE} style={styles.words}>
         {t("tiers.chip", { tier: tierName(tier, locale) })}
       </T>
     </View>
@@ -85,6 +87,7 @@ export function TierChip({ tier }: { tier: { name: string; name_es?: string | nu
 
 const styles = StyleSheet.create({
   chip: {
+    maxWidth: "100%",
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",
@@ -94,7 +97,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
   },
   role: { alignSelf: "center", borderRadius: 6, paddingVertical: 2, paddingHorizontal: 6 },
+  words: { flexShrink: 1 },
   tier: {
+    maxWidth: "100%",
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",

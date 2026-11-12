@@ -47,9 +47,12 @@ function asApiError(err: unknown): ApiError {
  *
  * Answers can cross (a focus refresh and a post-send refresh); only the newest request's
  * answer is kept, and nothing from before a sign-out lands after it.
+ *
+ * With no connection the summary's error is the network one, and screens show their calm
+ * offline state with a retry (ErrorState); the session itself is untouched (auth.tsx).
  */
 export function MeProvider({ children }: { children: ReactNode }) {
-  const { me } = useAuth();
+  const { me, offline, reload } = useAuth();
   const personId = me?.id ?? null;
   const [summary, setSummary] = useState<Summary | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
@@ -93,6 +96,12 @@ export function MeProvider({ children }: { children: ReactNode }) {
       }
     })();
   }, [personId]);
+
+  // The app opened offline on the profile it last saw (auth.tsx). The first summary to arrive
+  // means the server can be reached again, so the profile is read again too.
+  useEffect(() => {
+    if (offline && summary) void reload();
+  }, [offline, summary, reload]);
 
   // Back from the background: kudos may have reset at midnight, a shout-out may have landed.
   useEffect(() => {

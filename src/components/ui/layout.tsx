@@ -341,7 +341,18 @@ export function TabBar({
               ) : (
                 <Icon name={item.icon} size={22} color={color} />
               )}
-              <T size={11} weight={800} color={color} numberOfLines={1} maxFontSizeMultiplier={1.2}>
+              {/* One line is the bar's whole shape, so a label too long for a fifth of a 360dp
+                  phone ("Aprobaciones") shrinks to fit rather than being cut off (NF-02). */}
+              <T
+                size={11}
+                weight={800}
+                color={color}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+                maxFontSizeMultiplier={1.2}
+                style={styles.tabLabel}
+              >
                 {item.label}
               </T>
               {count > 0 ? (
@@ -399,7 +410,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   barInner: { flexDirection: "row", width: "100%", maxWidth, alignSelf: "center" },
-  tab: { flex: 1, minHeight: 60, alignItems: "center", justifyContent: "center", gap: 3 },
+  tab: { flex: 1, minWidth: 0, minHeight: 60, alignItems: "center", justifyContent: "center", gap: 3 },
+  tabLabel: { maxWidth: "100%", paddingHorizontal: 2, textAlign: "center" },
   give: {
     width: 46,
     height: 40,

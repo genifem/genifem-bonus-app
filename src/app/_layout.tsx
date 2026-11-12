@@ -10,9 +10,11 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { OfflineStart } from "@/components/Gate";
 import { colors, ToastProvider } from "@/components/ui";
 import { AuthProvider, homeGroupFor, useAuth } from "@/lib/auth";
 import { MeProvider } from "@/lib/me";
+import { PushProvider } from "@/lib/usePush";
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -24,16 +26,19 @@ void SplashScreen.preventAutoHideAsync();
  * of its group first: that is where the app opens for someone in it.
  *
  * Nothing is drawn until the saved session has been read, behind the splash screen, so a
- * signed-in person never sees the welcome screen flash by.
+ * signed-in person never sees the welcome screen flash by. With no connection the session is
+ * kept and the person's own tabs open on the profile last seen; only a phone that has never
+ * kept one waits on a calm offline screen instead of the welcome screen.
  */
 function RootStack() {
-  const { ready, me } = useAuth();
+  const { ready, me, offline } = useAuth();
 
   useEffect(() => {
     if (ready) void SplashScreen.hideAsync();
   }, [ready]);
 
   if (!ready) return null;
+  if (!me && offline) return <OfflineStart />;
   const home = me ? homeGroupFor(me) : null;
 
   return (
@@ -61,7 +66,8 @@ function RootStack() {
 /**
  * Every screen draws its own header, as the prototype does, so the stack shows none. The
  * crew's and the GM's tabs are route groups under this stack; the welcome, sign-in and setup
- * screens sit beside them.
+ * screens sit beside them. Push (usePush) sits inside the session and the summary: it
+ * registers whoever is signed in and opens a tapped push's screen in their own group.
  */
 export default function RootLayout() {
   // Only the weights the prototype loads: Nunito 400, 600, 700, 800 and 900.
@@ -81,8 +87,10 @@ export default function RootLayout() {
       <AuthProvider>
         <MeProvider>
           <ToastProvider>
-            <StatusBar style="dark" />
-            <RootStack />
+            <PushProvider>
+              <StatusBar style="dark" />
+              <RootStack />
+            </PushProvider>
           </ToastProvider>
         </MeProvider>
       </AuthProvider>

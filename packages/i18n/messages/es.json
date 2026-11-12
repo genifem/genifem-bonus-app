@@ -192,7 +192,7 @@
       "locked_tier": "Se desbloquea en {tier}",
       "locked_badge": "Se desbloquea con la insignia {badge}",
       "reward_limit": "{count, plural, one {Ya lo canjeaste una vez este mes} other {Ya lo canjeaste # veces este mes}}",
-      "monthly_rewards_used": "{count, plural, one {Ya usaste tu # premio de este mes} other {Ya usaste los # premios de este mes}}",
+      "monthly_rewards_used": "{count, plural, one {Ya usaste tu premio de este mes} other {Ya usaste los # premios de este mes}}",
       "monthly_coin_cap": "Supera tu límite mensual de {max} monedas",
       "coins_short": "{count, plural, one {Te falta {amount} moneda} other {Te faltan {amount} monedas}}",
       "store_budget_used": "El presupuesto de premios de tu tienda se agotó este mes",
@@ -235,8 +235,8 @@
     "emptyLead": "Tu equipo recibe una notificación por cada decisión.",
     "ready": "Listos para recoger",
     "readyLead": "Aprobados. Márcalos al entregarlos.",
-    "collect": "Marcar recogido",
-    "collectA11y": "Marcar {reward} como recogido por {name}",
+    "collect": "Marcar entregado",
+    "collectA11y": "Marcar {reward} como entregado a {name}",
     "recent": "Decisiones recientes",
     "decisionApproved": "Aprobado",
     "decisionDeclined": "Rechazado",
@@ -268,7 +268,7 @@
   },
   "profile": {
     "title": "Tu perfil",
-    "languageNotSaved": "Idioma cambiado solo en este teléfono. No pudimos guardarlo en tu perfil.",
+    "languageNotSaved": "El idioma cambió solo en este teléfono. No pudimos guardarlo en tu perfil.",
     "lifetime": "ganadas en total",
     "thisMonth": "este mes",
     "shoutouts": "Tus reconocimientos",
@@ -279,7 +279,13 @@
     "myRewards": "Mis premios",
     "myRewardsCoins": "{count, plural, one {{amount} moneda} other {{amount} monedas}}",
     "given": "reconocimientos dados",
-    "leaderboard": "Clasificación y premios del mes"
+    "leaderboard": "Clasificación y premios del mes",
+    "push": "Notificaciones push",
+    "pushLead": "Reconocimientos, giros y premios. Nunca entre las 10 p. m. y las 7 a. m.",
+    "pushBlocked": "Las notificaciones de Crew Stars están bloqueadas en los ajustes de tu teléfono.",
+    "openSettings": "Abrir ajustes",
+    "pushAllow": "Permitir notificaciones en este teléfono",
+    "pushNotSaved": "No pudimos guardar el cambio. Inténtalo de nuevo."
   },
   "soon": {
     "title": "Ya viene en camino ✨",
@@ -287,7 +293,7 @@
   },
   "errors": {
     "generic": "Algo salió mal. Inténtalo de nuevo.",
-    "network": "Estás sin conexión. Revisa tu conexión e inténtalo de nuevo.",
+    "network": "Estás sin conexión. Revisa tu internet e inténtalo de nuevo.",
     "credentials_invalid": "Ese EID y esa contraseña no coinciden. Inténtalo de nuevo.",
     "account_locked": "Demasiados intentos. Inténtalo de nuevo en {minutes, plural, one {# minuto} other {# minutos}}.",
     "account_inactive": "Esta cuenta ya no está activa. Habla con tu gerente.",
@@ -326,7 +332,7 @@
     "request_not_found": "Esa solicitud ya no está.",
     "managers_only": "Esta pantalla es para gerentes generales.",
     "no_spins": "Ahora no tienes giros. ¡Gana uno y vuelve!",
-    "spin_disabled": "La ruleta está apagada por ahora.",
+    "spin_disabled": "La ruleta está desactivada por ahora.",
     "no_prize_available": "Por ahora no hay nada en la ruleta que puedas ganar. Inténtalo más tarde."
   },
   "header": {
@@ -357,7 +363,7 @@
     },
     "gm": {
       "label": "Gerente general",
-      "short": "GM",
+      "short": "Gerente general",
       "plural": "Gerentes generales"
     },
     "supervisor": {
@@ -371,9 +377,9 @@
       "plural": "Directores"
     },
     "owner": {
-      "label": "Propietario",
-      "short": "Propietario",
-      "plural": "Propietarios"
+      "label": "Dueño",
+      "short": "Dueño",
+      "plural": "Dueños"
     }
   },
   "tags": {
@@ -434,9 +440,22 @@
       "milestone": "alcanzar un hito"
     }
   },
+  "offline": {
+    "title": "Estás sin conexión",
+    "lead": "Revisa tu conexión y vuelve a intentarlo. No se pierde nada."
+  },
+  "push": {
+    "title": "¿Te avisamos? 🔔",
+    "lead": "Te avisamos cuando alguien te reconozca, cuando ganes un giro y cuando un premio esté listo para recoger.",
+    "leadManager": "Te avisamos cuando alguien te reconozca, cuando tu equipo pida un premio y cuando ganes un giro.",
+    "offClock": "Nada de esto es necesario fuera de tu turno, y nunca enviamos nada entre las 10 p. m. y las 7 a. m.",
+    "allow": "Activar notificaciones",
+    "later": "Ahora no",
+    "channel": "Reconocimientos y premios"
+  },
   "spin": {
     "title": "Gira y gana 🎡",
-    "lead": "Cada giro gana algo.",
+    "lead": "En cada giro ganas algo.",
     "ready": "{count, plural, one {# giro listo} other {# giros listos}}",
     "spin": "Girar la ruleta",
     "spinning": "Girando…",
@@ -451,9 +470,9 @@
     },
     "toGo": "{count, plural, one {Te falta {amount} moneda para tu próximo giro} other {Te faltan {amount} monedas para tu próximo giro}}",
     "earnedOf": "{earned} de {max} ganados este mes",
-    "capped": "{count, plural, one {Ya ganaste tu # giro de este mes. ¡Más el próximo mes!} other {Ya ganaste los # giros de este mes. ¡Más el próximo mes!}}",
+    "capped": "{count, plural, one {Ya ganaste tu giro de este mes. ¡Habrá más el próximo mes!} other {Ya ganaste los # giros de este mes. ¡Habrá más el próximo mes!}}",
     "offTitle": "La ruleta está descansando",
-    "offLead": "La ruleta está apagada por ahora. ¡Vuelve pronto!",
+    "offLead": "La ruleta está desactivada por ahora. ¡Vuelve pronto!",
     "loadError": "No pudimos cargar la ruleta.",
     "wonTitle": "¡Ganaste {prize}!",
     "won": {
@@ -467,7 +486,7 @@
     "seeBadges": "Ver mis insignias",
     "tile": {
       "tap": "Toca para girar y ganar",
-      "allEarned": "{count, plural, one {Ya ganaste tu # giro del mes} other {Ya ganaste los # giros del mes}}",
+      "allEarned": "{count, plural, one {Ya ganaste tu giro del mes} other {Ya ganaste los # giros del mes}}",
       "none": "Este mes no hay giros por ganar",
       "byBadges": "Gana giros con insignias nuevas",
       "byMilestones": "Gana giros al cumplir hitos en el equipo",
@@ -509,7 +528,7 @@
   "awards": {
     "title": "Premios de {month}",
     "leading": "Va ganando: {name}",
-    "leadingYou": "Vas ganando: ¡tú!",
+    "leadingYou": "¡Vas ganando tú!",
     "winner": "Lo ganó: {name}",
     "youWon": "¡Este lo ganaste tú!",
     "upForGrabs": "Todavía sin líder",

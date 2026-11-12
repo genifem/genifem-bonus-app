@@ -421,6 +421,7 @@ function RewardsView({ stacked }: { stacked: boolean }) {
             message={`${t("rewards.loadError")} ${explain(t, catalog.error)}`}
             retryLabel={t("common.retry")}
             onRetry={() => void catalog.reload()}
+            error={catalog.error}
           />
         ) : !data || !limits ? (
           <RewardsSkeleton />
@@ -449,7 +450,13 @@ function RewardsView({ stacked }: { stacked: boolean }) {
         {mine.loading && !mine.data ? (
           <Skeleton height={140} />
         ) : mine.error && !mine.data ? (
-          <ErrorState message={t("rewards.mineError")} retryLabel={t("common.retry")} onRetry={() => void mine.reload()} />
+          <ErrorState
+            message={t("rewards.mineError")}
+            retryLabel={t("common.retry")}
+            onRetry={() => void mine.reload()}
+            error={mine.error}
+            compact
+          />
         ) : requests.length ? (
           <Card style={styles.list}>
             {requests.map((request, index) => (

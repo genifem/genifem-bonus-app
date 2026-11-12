@@ -50,3 +50,5 @@ pnpm gen:api             # after an API change; commit the result
 ## Builds
 
 EAS profiles `development`, `preview` and `production` are in `eas.json`. The EAS project has not been created yet: run `eas init` once to add `extra.eas.projectId` and `owner` to `app.json`.
+
+Push notifications (plan D10, `src/lib/push.ts`) need that project id and a real phone: without one (Expo Go, a local build, a simulator, the web build) the app skips registration quietly and logs it once. They also need the APNs key and FCM credentials uploaded to EAS (`eas credentials`) before the server's pushes reach a phone.

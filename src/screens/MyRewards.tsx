@@ -83,6 +83,7 @@ export function MyRewards() {
             message={`${t("myRewards.loadError")} ${explain(t, list.error)}`}
             retryLabel={t("common.retry")}
             onRetry={() => void list.reload()}
+            error={list.error}
           />
         ) : requests.length ? (
           <Card style={styles.list}>

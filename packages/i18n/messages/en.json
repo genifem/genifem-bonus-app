@@ -279,7 +279,13 @@
     "myRewards": "My rewards",
     "myRewardsCoins": "{count, plural, one {{amount} coin} other {{amount} coins}}",
     "given": "shout-outs given",
-    "leaderboard": "Leaderboard & this month's awards"
+    "leaderboard": "Leaderboard & this month's awards",
+    "push": "Push notifications",
+    "pushLead": "Shout-outs, spins and rewards. Never between 10 pm and 7 am.",
+    "pushBlocked": "Notifications are blocked for Crew Stars in your phone's settings.",
+    "openSettings": "Open settings",
+    "pushAllow": "Allow notifications on this phone",
+    "pushNotSaved": "We couldn't save that. Try again."
   },
   "soon": {
     "title": "On its way ✨",
@@ -433,6 +439,19 @@
       "badge": "a new badge",
       "milestone": "reaching a milestone"
     }
+  },
+  "offline": {
+    "title": "You're offline",
+    "lead": "Check your connection, then try again. Nothing here is lost."
+  },
+  "push": {
+    "title": "Want a heads-up? 🔔",
+    "lead": "We'll let you know when someone recognizes you, when you earn a spin and when a reward is ready to collect.",
+    "leadManager": "We'll let you know when someone recognizes you, when your crew asks for a reward and when you earn a spin.",
+    "offClock": "Nothing here is ever needed off the clock, and we never send anything between 10 pm and 7 am.",
+    "allow": "Turn on notifications",
+    "later": "Not now",
+    "channel": "Shout-outs and rewards"
   },
   "spin": {
     "title": "Spin & win 🎡",

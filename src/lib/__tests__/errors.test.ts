@@ -5,7 +5,17 @@
 import { createTranslator } from "@crewstars/i18n";
 
 import { ApiError } from "@/lib/apiError";
-import { explain, type Problem, say, sendProblem, setupProblem, signInProblem, waitSeconds } from "@/lib/errors";
+import {
+  explain,
+  isOffline,
+  keepsSession,
+  type Problem,
+  say,
+  sendProblem,
+  setupProblem,
+  signInProblem,
+  waitSeconds,
+} from "@/lib/errors";
 
 const en = createTranslator("en");
 const es = createTranslator("es");
@@ -247,5 +257,25 @@ describe("the wall's error codes", () => {
   it.each(["cannot_hide", "not_found"])("%s has its own words in English and Spanish", (code) => {
     expect(en.has(`errors.${code}`)).toBe(true);
     expect(explain(es, fail(403, code))).not.toBe(explain(en, fail(403, code)));
+  });
+});
+
+describe("no connection (P5: opening the app offline)", () => {
+  it("is told apart from a failure, so a screen can say it calmly", () => {
+    expect(isOffline(new ApiError(0, "network", "no connection"))).toBe(true);
+    expect(isOffline(fail(500, "http_500"))).toBe(false);
+    expect(isOffline(fail(401, "token_invalid"))).toBe(false);
+    expect(isOffline(new Error("boom"))).toBe(false);
+  });
+
+  it("keeps the session unless the server says who this isn't", () => {
+    // A dead spot, a bad minute on the server or a busy one: still signed in.
+    expect(keepsSession(new ApiError(0, "network", "no connection"))).toBe(true);
+    expect(keepsSession(fail(503, "http_503"))).toBe(true);
+    expect(keepsSession(fail(429, "rate_limited"))).toBe(true);
+    expect(keepsSession(new Error("boom"))).toBe(true);
+    // The refresh token was refused, or the person may not use the app: signed out.
+    expect(keepsSession(fail(401, "refresh_invalid"))).toBe(false);
+    expect(keepsSession(fail(403, "owner_use_portal"))).toBe(false);
   });
 });

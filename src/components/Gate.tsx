@@ -2,7 +2,8 @@ import { Redirect } from "expo-router";
 import type { ReactNode } from "react";
 import { View } from "react-native";
 
-import { colors } from "@/components/ui";
+import { Mascot } from "@/components/Mascot";
+import { Body, colors, OfflineState, Page } from "@/components/ui";
 import { homeGroupFor, useAuth } from "@/lib/auth";
 
 /** While the session is read: the page colour and a status for screen readers, not a
@@ -16,6 +17,25 @@ export function Waiting() {
       accessibilityLiveRegion="polite"
       style={{ flex: 1, backgroundColor: colors.background }}
     />
+  );
+}
+
+/**
+ * Opened with a saved session but no connection, on a phone that has never kept this
+ * person's profile (auth.tsx): the welcome screen would look like being signed out, so this
+ * waits calmly instead. Retry reads the session again; so does coming back to the app.
+ */
+export function OfflineStart() {
+  const { reload } = useAuth();
+  return (
+    <Page bottomInset>
+      <Body fill top={26} style={{ justifyContent: "center" }}>
+        <View style={{ alignItems: "center" }}>
+          <Mascot pose="wave" size={120} />
+        </View>
+        <OfflineState onRetry={() => void reload()} />
+      </Body>
+    </Page>
   );
 }
 
