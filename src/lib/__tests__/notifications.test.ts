@@ -88,6 +88,24 @@ describe("the later phases' types", () => {
     );
   });
 
+  it("reads the rewards' notifications as the API sends them (MG-08, MG-06)", () => {
+    // The redeem and the decision send the reward's names and the requester's first name;
+    // a decline's refund comes as `coins`.
+    const names = { reward_name: "Meal on us", reward_name_es: "Comida por nuestra cuenta" };
+    const requested = note("reward_requested", { from_name: "Jamal", ...names });
+    expect(notificationText(en, requested)).toBe("Jamal asked to redeem Meal on us");
+    expect(notificationText(es, requested)).toBe("Jamal pidió canjear Comida por nuestra cuenta");
+    expect(notificationText(es, note("reward_approved", names))).toBe("Ya puedes recoger tu Comida por nuestra cuenta");
+    expect(notificationText(en, note("reward_declined", names, 100))).toBe(
+      "Your Meal on us request was declined. 100 coins are back in your balance",
+    );
+    expect(notificationText(es, note("reward_declined", { ...names, reward_name_es: null }, 100))).toBe(
+      "Rechazaron tu solicitud de Meal on us. Se devolvieron 100 monedas a tu saldo",
+    );
+    expect(notificationIcon(requested)).toBe("gift");
+    expect(notificationIcon(note("reward_declined", names, 100))).toBe("info");
+  });
+
   it("names the award's month in the language on screen", () => {
     const award = note("award_won", { award_name: "Guest Hero of the Month", award_name_es: null, month: "2026-10" }, 100);
     expect(notificationText(en, award)).toBe("You won Guest Hero of the Month for October!");

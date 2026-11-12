@@ -46,6 +46,13 @@ const ICONS = {
   search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-5-5",
   // Three dots ("⋯"), as small rings the stroke fills in.
   more: "M6.2 12a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0zM13.2 12a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0zM20.2 12a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z",
+  // The rewards' glyphs (the owner picks one per reward).
+  calendar: "M4 5h16v16H4zM8 3v4M16 3v4M4 10h16",
+  burger: "M4 11c0-3.5 3.6-6 8-6s8 2.5 8 6zM3 14h18M5 17h14v1a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z",
+  cup: "M6 8h12l-1.5 13h-9zM5 8h14M12 8l2-5h3",
+  shirt: "M8 3l-5 3 2 5 2-1v11h10V10l2 1 2-5-5-3a4 4 0 0 1-8 0z",
+  sun: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4",
+  fries: "M6 10h12l-1.5 11h-9zM8 10L7 3M11 10V3M14 10l1-6M17 10l1.5-5",
 } as const satisfies Record<string, string>;
 
 export type IconName = keyof typeof ICONS;

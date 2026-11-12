@@ -208,6 +208,47 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/manager/home": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Manager Home
+         * @description The GM's Home (MG-01 to MG-04): this month, needs some love, the requests waiting
+         *     and the crew spotlight. 403 ``managers_only`` for anyone but a GM.
+         */
+        get: operations["manager_home_api_v1_manager_home_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/manager/requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Manager Requests
+         * @description Approvals (MG-05 to MG-07), for GMs: 403 ``managers_only`` for anyone else.
+         */
+        get: operations["manager_requests_api_v1_manager_requests_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me": {
         parameters: {
             query?: never;
@@ -280,6 +321,26 @@ export interface paths {
          * @description Language (NF-02) and whether to get push notifications.
          */
         patch: operations["set_preferences_api_v1_me_preferences_patch"];
+        trace?: never;
+    };
+    "/api/v1/me/reward-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * My Requests
+         * @description My rewards (CR-27), newest first.
+         */
+        get: operations["my_requests_api_v1_me_reward_requests_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/v1/me/shoutouts": {
@@ -589,6 +650,160 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/portal/redemptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Redemptions
+         * @description Redemptions (OP-09): store budget bars this month, counts per tab and one tab's
+         *     requests with who decided each.
+         */
+        get: operations["redemptions_api_v1_portal_redemptions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/redemptions/payroll.csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Payroll
+         * @description NF-12: cash and gift-card rewards approved in ``month`` (YYYY-MM, the operator's
+         *     time zone; default this month): person, EID, store, reward, value, approval date.
+         */
+        get: operations["payroll_api_v1_portal_redemptions_payroll_csv_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/reward-requests/{request_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Owner Approve
+         * @description Owners approve any pending request (OP-09). 404 ``request_not_found``; 409
+         *     ``request_not_pending`` (details.status) once decided.
+         */
+        post: operations["owner_approve_api_v1_portal_reward_requests__request_id__approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/reward-requests/{request_id}/collect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Owner Collect
+         * @description 409 ``request_not_approved`` (details.status) unless it is approved.
+         */
+        post: operations["owner_collect_api_v1_portal_reward_requests__request_id__collect_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/reward-requests/{request_id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Owner Decline
+         * @description Owners decline any pending request: everything comes back (OP-09). 404
+         *     ``request_not_found``; 409 ``request_not_pending`` (details.status) once decided.
+         */
+        post: operations["owner_decline_api_v1_portal_reward_requests__request_id__decline_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/rewards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Rewards
+         * @description The Rewards page (OP-10): every reward, visible in the app or not, by cost.
+         */
+        get: operations["list_rewards_api_v1_portal_rewards_get"];
+        put?: never;
+        /**
+         * Create Reward
+         * @description Add a reward (OP-11). 422 ``unlock_invalid`` for a badge that doesn't exist.
+         */
+        post: operations["create_reward_api_v1_portal_rewards_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/portal/rewards/{reward_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Reward
+         * @description Delete, only with no request pending for it: 409 ``reward_has_pending``
+         *     (details.pending), so hide it instead (OP-11).
+         */
+        delete: operations["delete_reward_api_v1_portal_rewards__reward_id__delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Reward
+         * @description Edit any field, or hide it from the app with ``active: false``. 404
+         *     ``reward_not_found``; 422 ``unlock_invalid``.
+         */
+        patch: operations["update_reward_api_v1_portal_rewards__reward_id__patch"];
+        trace?: never;
+    };
     "/api/v1/portal/settings": {
         parameters: {
             query?: never;
@@ -703,6 +918,124 @@ export interface paths {
          * @description Stores & people (OP-08).
          */
         get: operations["portal_team_api_v1_portal_team_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reward-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Redeem
+         * @description Redeem a reward. The coins come off at once; the request waits for approval, or is
+         *     ready straight away when approval is off. Refusals carry the eligibility code and its
+         *     params as ``details``: 403 ``locked_tier``, ``locked_badge``; 409 ``reward_limit``,
+         *     ``monthly_rewards_used``, ``monthly_coin_cap``, ``coins_short``,
+         *     ``store_budget_used``. Also 404 ``reward_not_found`` (hidden or deleted); 409
+         *     ``redeem_conflict`` in the rare case another redeem moved a limit mid-way and it no
+         *     longer applies (try again); 422 ``idempotency_key_required``,
+         *     ``idempotency_key_reused``.
+         */
+        post: operations["redeem_api_v1_reward_requests_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reward-requests/{request_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Approve
+         * @description A GM approves a request at their store (MG-06). 403 ``cannot_decide`` for another
+         *     store's, their own, or a GM's, supervisor's or director's (owners decide those). 404
+         *     ``request_not_found``; 409 ``request_not_pending`` (details.status) once decided, so
+         *     a second click changes nothing.
+         */
+        post: operations["approve_api_v1_reward_requests__request_id__approve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reward-requests/{request_id}/collect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Collect
+         * @description Handed over at the store (plan G5). 409 ``request_not_approved`` (details.status)
+         *     unless it is approved; 403 ``cannot_decide`` as for approve.
+         */
+        post: operations["collect_api_v1_reward_requests__request_id__collect_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reward-requests/{request_id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Decline
+         * @description A GM declines: the coins, the monthly count and cap and the store budget come back,
+         *     and the person is notified (MG-06). 403 ``cannot_decide``, 404 ``request_not_found``,
+         *     409 ``request_not_pending`` as for approve.
+         */
+        post: operations["decline_api_v1_reward_requests__request_id__decline_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rewards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Rewards
+         * @description The Rewards screen (CR-24, CR-25): balance, the monthly limits card and the active
+         *     rewards by cost, each with ``eligibility {ok, code, params}``. Codes, first failure in
+         *     the spec's order: ``locked_tier`` (tier_id, tier_name, tier_name_es), ``locked_badge``
+         *     (badge_id, badge_name, badge_name_es), ``reward_limit`` (limit),
+         *     ``monthly_rewards_used`` (max), ``monthly_coin_cap`` (max), ``coins_short`` (short),
+         *     ``store_budget_used``.
+         */
+        get: operations["rewards_api_v1_rewards_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1007,6 +1340,27 @@ export interface components {
             /** Role */
             role: string | null;
         };
+        /** DeciderOut */
+        DeciderOut: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "person" | "owner" | "system";
+            /** Name */
+            name: string | null;
+        };
+        /** Eligibility */
+        Eligibility: {
+            /** Code */
+            code: ("locked_tier" | "locked_badge" | "reward_limit" | "monthly_rewards_used" | "monthly_coin_cap" | "coins_short" | "store_budget_used") | null;
+            /** Ok */
+            ok: boolean;
+            /** Params */
+            params: {
+                [key: string]: unknown;
+            };
+        };
         /**
          * GiveContextOut
          * @description Everything the Give screen needs, decided on the server (plan D6).
@@ -1057,12 +1411,67 @@ export interface components {
             /** Liked */
             liked: boolean;
         };
+        /**
+         * LimitsOut
+         * @description CR-24's card: coins redeemed of the monthly cap, rewards of the monthly count.
+         */
+        LimitsOut: {
+            /** Coins Redeemed */
+            coins_redeemed: number;
+            /** Max Coins */
+            max_coins: number;
+            /** Max Rewards */
+            max_rewards: number;
+            /**
+             * Resets On
+             * Format: date
+             */
+            resets_on: string;
+            /** Rewards Redeemed */
+            rewards_redeemed: number;
+        };
         /** LoginIn */
         LoginIn: {
             /** Eid */
             eid: string;
             /** Password */
             password: string;
+        };
+        /** ManagerHomeOut */
+        ManagerHomeOut: {
+            /** Month */
+            month: string;
+            /** Needs Some Love */
+            needs_some_love: components["schemas"]["PartyOut"][];
+            requests: components["schemas"]["RequestsPreviewOut"];
+            spotlight: components["schemas"]["SpotlightOut"] | null;
+            this_month: components["schemas"]["ManagerMonthOut"];
+        };
+        /**
+         * ManagerMonthOut
+         * @description MG-01: the GM's shout-outs given, crew recognized out of the store's crew and shift
+         *     managers, and their kudos (left, allowance, reset date).
+         */
+        ManagerMonthOut: {
+            /** Crew Recognized */
+            crew_recognized: number;
+            /** Crew Total */
+            crew_total: number;
+            kudos: components["schemas"]["KudosOut"];
+            /** Shoutouts Given Month */
+            shoutouts_given_month: number;
+        };
+        /**
+         * ManagerRequestsOut
+         * @description Approvals (MG-05 to MG-07): the store's requests a GM decides. Never their own.
+         */
+        ManagerRequestsOut: {
+            /** Pending */
+            pending: components["schemas"]["RequestRow"][];
+            /** Ready */
+            ready: components["schemas"]["RequestRow"][];
+            /** Recent */
+            recent: components["schemas"]["RequestRow"][];
         };
         /**
          * MeOut
@@ -1144,6 +1553,46 @@ export interface components {
         MfaTokenIn: {
             /** Mfa Token */
             mfa_token: string;
+        };
+        /**
+         * MyRequestOut
+         * @description One of the person's own requests, on My rewards (CR-27).
+         */
+        MyRequestOut: {
+            /**
+             * Approver
+             * @enum {string}
+             */
+            approver: "gm" | "owner";
+            /** Collected At */
+            collected_at: string | null;
+            /** Cost */
+            cost: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Decided At */
+            decided_at: string | null;
+            /** Icon */
+            icon: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+            reward_id: components["schemas"]["PydanticObjectId"] | null;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "catalog" | "spin";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "approved" | "declined" | "cancelled" | "collected";
         };
         /** NextTierOut */
         NextTierOut: {
@@ -1493,10 +1942,221 @@ export interface components {
              */
             store_budget: number;
         };
+        /** RedeemIn */
+        RedeemIn: {
+            reward_id: components["schemas"]["PydanticObjectId"];
+        };
+        /** RedeemResult */
+        RedeemResult: {
+            /** Balance */
+            balance: number;
+            limits: components["schemas"]["LimitsOut"];
+            /** Replayed */
+            replayed: boolean;
+            request: components["schemas"]["MyRequestOut"];
+        };
+        /** RedemptionCounts */
+        RedemptionCounts: {
+            /** All */
+            all: number;
+            /** Approved */
+            approved: number;
+            /** Declined */
+            declined: number;
+            /** Pending */
+            pending: number;
+        };
+        /**
+         * RedemptionsOut
+         * @description Redemptions (OP-09): store budget bars, then the requests of one tab.
+         */
+        RedemptionsOut: {
+            /** Budgets */
+            budgets: components["schemas"]["StoreBudgetOut"][];
+            counts: components["schemas"]["RedemptionCounts"];
+            /** Items */
+            items: components["schemas"]["RequestRow"][];
+            /** Total */
+            total: number;
+        };
         /** RefreshIn */
         RefreshIn: {
             /** Refresh Token */
             refresh_token: string;
+        };
+        /**
+         * RequestRow
+         * @description A request as an approver sees it: the GM's Approvals (MG-05, MG-07) and the portal's
+         *     Redemptions (OP-09). Name, role and store only: never an EID or a phone (NF-06).
+         */
+        RequestRow: {
+            /**
+             * Approver
+             * @enum {string}
+             */
+            approver: "gm" | "owner";
+            /** Collected At */
+            collected_at: string | null;
+            /** Cost */
+            cost: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Decided At */
+            decided_at: string | null;
+            decided_by: components["schemas"]["DeciderOut"] | null;
+            /** Icon */
+            icon: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+            person: components["schemas"]["PartyOut"];
+            reward_id: components["schemas"]["PydanticObjectId"] | null;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "catalog" | "spin";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "approved" | "declined" | "cancelled" | "collected";
+            store: components["schemas"]["StoreRef"] | null;
+        };
+        /**
+         * RequestsPreviewOut
+         * @description MG-03: how many requests wait for this GM, and the oldest.
+         */
+        RequestsPreviewOut: {
+            oldest: components["schemas"]["RequestRow"] | null;
+            /** Pending Count */
+            pending_count: number;
+        };
+        /**
+         * RewardAdminOut
+         * @description A row of the portal's Rewards table (OP-10).
+         */
+        RewardAdminOut: {
+            /** Active */
+            active: boolean;
+            /** Cost */
+            cost: number;
+            /** Cost Usd */
+            cost_usd: number;
+            /** Description */
+            description: string;
+            /** Description Es */
+            description_es: string | null;
+            /** Icon */
+            icon: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Is Cash */
+            is_cash: boolean;
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+            /** Pending */
+            pending: number;
+            /** Per Person Monthly */
+            per_person_monthly: number;
+            unlock: components["schemas"]["UnlockOut"];
+        };
+        /** RewardIn */
+        RewardIn: {
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+            /** Cost */
+            cost: number;
+            /**
+             * Description
+             * @default
+             */
+            description: string;
+            /** Description Es */
+            description_es?: string | null;
+            /**
+             * Icon
+             * @default gift
+             */
+            icon: string;
+            /**
+             * Is Cash
+             * @default false
+             */
+            is_cash: boolean;
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es?: string | null;
+            /**
+             * Per Person Monthly
+             * @default 1
+             */
+            per_person_monthly: number;
+            unlock?: components["schemas"]["UnlockIn"];
+        };
+        /** RewardOut */
+        RewardOut: {
+            /** Cost */
+            cost: number;
+            /** Description */
+            description: string;
+            /** Description Es */
+            description_es: string | null;
+            eligibility: components["schemas"]["Eligibility"];
+            /** Icon */
+            icon: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Name */
+            name: string;
+            /** Name Es */
+            name_es: string | null;
+            unlock: components["schemas"]["UnlockOut"];
+        };
+        /**
+         * RewardPatch
+         * @description Only the fields sent change. ``name_es``/``description_es`` null or blank clears
+         *     them.
+         */
+        RewardPatch: {
+            /** Active */
+            active?: boolean | null;
+            /** Cost */
+            cost?: number | null;
+            /** Description */
+            description?: string | null;
+            /** Description Es */
+            description_es?: string | null;
+            /** Icon */
+            icon?: string | null;
+            /** Is Cash */
+            is_cash?: boolean | null;
+            /** Name */
+            name?: string | null;
+            /** Name Es */
+            name_es?: string | null;
+            /** Per Person Monthly */
+            per_person_monthly?: number | null;
+            unlock?: components["schemas"]["UnlockIn"] | null;
+        };
+        /** RewardsOut */
+        RewardsOut: {
+            /** Approval */
+            approval: boolean;
+            /** Balance */
+            balance: number;
+            /** Items */
+            items: components["schemas"]["RewardOut"][];
+            limits: components["schemas"]["LimitsOut"];
         };
         /**
          * Rules
@@ -1678,6 +2338,25 @@ export interface components {
              */
             prizes_version: number;
         };
+        /**
+         * SpotlightOut
+         * @description MG-04: the store's top earner this month among crew and shift managers.
+         */
+        SpotlightOut: {
+            /** Earned This Month */
+            earned_this_month: number;
+            person: components["schemas"]["PartyOut"];
+        };
+        /** StoreBudgetOut */
+        StoreBudgetOut: {
+            /** Budget */
+            budget: number;
+            /** Month */
+            month: string;
+            store: components["schemas"]["StoreRef"];
+            /** Used */
+            used: number;
+        };
         /** StoreIn */
         StoreIn: {
             area_id?: components["schemas"]["PydanticObjectId"] | null;
@@ -1757,6 +2436,8 @@ export interface components {
             /** Lifetime */
             lifetime: number;
             next_tier: components["schemas"]["NextTierOut"] | null;
+            /** Pending Approvals */
+            pending_approvals: number;
             /** Spins Available */
             spins_available: number;
             /** Store Rank */
@@ -1849,6 +2530,30 @@ export interface components {
              */
             token_type: "bearer";
             user: components["schemas"]["MeOut"];
+        };
+        /**
+         * UnlockIn
+         * @description Who can redeem it (OP-11): anyone, from a tier up, or with a badge.
+         */
+        UnlockIn: {
+            /** Id */
+            id?: string | null;
+            /**
+             * Type
+             * @default none
+             * @enum {string}
+             */
+            type: "none" | "tier" | "badge";
+        };
+        /** UnlockOut */
+        UnlockOut: {
+            /** Id */
+            id: string | null;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "none" | "tier" | "badge";
         };
         /** UnrecognizedOut */
         UnrecognizedOut: {
@@ -2242,6 +2947,46 @@ export interface operations {
             };
         };
     };
+    manager_home_api_v1_manager_home_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManagerHomeOut"];
+                };
+            };
+        };
+    };
+    manager_requests_api_v1_manager_requests_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ManagerRequestsOut"];
+                };
+            };
+        };
+    };
     get_me_api_v1_me_get: {
         parameters: {
             query?: never;
@@ -2334,6 +3079,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MeOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    my_requests_api_v1_me_reward_requests_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyRequestOut"][];
                 };
             };
             /** @description Validation Error */
@@ -2903,6 +3679,279 @@ export interface operations {
             };
         };
     };
+    redemptions_api_v1_portal_redemptions_get: {
+        parameters: {
+            query?: {
+                status?: "pending" | "approved" | "declined" | "all";
+                store?: components["schemas"]["PydanticObjectId"] | null;
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RedemptionsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    payroll_api_v1_portal_redemptions_payroll_csv_get: {
+        parameters: {
+            query?: {
+                month?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_approve_api_v1_portal_reward_requests__request_id__approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RequestRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_collect_api_v1_portal_reward_requests__request_id__collect_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RequestRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_decline_api_v1_portal_reward_requests__request_id__decline_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RequestRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_rewards_api_v1_portal_rewards_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RewardAdminOut"][];
+                };
+            };
+        };
+    };
+    create_reward_api_v1_portal_rewards_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RewardIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RewardAdminOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_reward_api_v1_portal_rewards__reward_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reward_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_reward_api_v1_portal_rewards__reward_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reward_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RewardPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RewardAdminOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_settings_api_v1_portal_settings_get: {
         parameters: {
             query?: never;
@@ -3140,6 +4189,155 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    redeem_api_v1_reward_requests_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description One per tap on Redeem (a UUID). A repeat returns the first result. */
+                "Idempotency-Key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RedeemIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RedeemResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    approve_api_v1_reward_requests__request_id__approve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RequestRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    collect_api_v1_reward_requests__request_id__collect_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RequestRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    decline_api_v1_reward_requests__request_id__decline_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RequestRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rewards_api_v1_rewards_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RewardsOut"];
                 };
             };
         };

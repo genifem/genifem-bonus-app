@@ -8,8 +8,8 @@ import { colors } from "@/components/ui";
  * a launch lands ("/" resolves here first), so its gate decides the way in: the welcome
  * screen, or the manager tabs for a GM.
  *
- * A stack over the tabs, so the screens you go into later (spin, leaderboard, notifications)
- * push in over the bar and swipe back.
+ * A stack over the tabs, so the screens you go into later (my rewards, spin, leaderboard,
+ * notifications) push in over the bar and swipe back.
  */
 export default function CrewLayout() {
   return (
@@ -17,6 +17,7 @@ export default function CrewLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="notifications" />
+        <Stack.Screen name="my-rewards" />
       </Stack>
     </RoleGate>
   );

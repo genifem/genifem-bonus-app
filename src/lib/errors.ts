@@ -2,6 +2,7 @@ import type { Translator, Values } from "@crewstars/i18n";
 
 import { ApiError } from "@/lib/apiError";
 import { clockTime, minutesLeft } from "@/lib/format";
+import { eligibilityReason, isEligibilityCode } from "@/lib/rewards";
 
 /** What went wrong, in the person's language: the API's error code when the catalog has a
  *  message for it (`errors.<code>`), else the generic one. */
@@ -142,6 +143,20 @@ export function sendProblem(t: Translator, err: unknown): Problem {
       const max = detailNumber(err, "max");
       return max === null ? plain(err.code) : { code: err.code, key: "errors.message_too_long_max", values: { max } };
     }
+  }
+  return t.has(`errors.${err.code}`) ? plain(err.code) : GENERIC;
+}
+
+/**
+ * A redeem the server refused or never answered (CR-25, CR-26). A refusal carries the same
+ * eligibility code and numbers a card would have shown ("75 more coins to go"), since the
+ * card can be a moment out of date; anything else is said the usual way.
+ */
+export function redeemProblem(t: Translator, err: unknown): Problem {
+  if (!(err instanceof ApiError)) return GENERIC;
+  if (isEligibilityCode(err.code)) {
+    const reason = eligibilityReason({ ok: false, code: err.code, params: details(err) }, t.locale);
+    if (reason) return { code: err.code, key: reason.key, values: reason.values };
   }
   return t.has(`errors.${err.code}`) ? plain(err.code) : GENERIC;
 }

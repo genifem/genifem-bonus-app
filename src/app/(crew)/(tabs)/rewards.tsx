@@ -1,1 +1,1 @@
-export { Rewards as default } from "@/screens/Tabs";
+export { Rewards as default } from "@/screens/Rewards";

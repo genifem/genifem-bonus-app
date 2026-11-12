@@ -58,8 +58,9 @@ function Row({ children, last = false }: { children: ReactNode; last?: boolean }
 
 /**
  * The profile (CR-32, CR-34 so far), in both tab groups: who this is (role, store, tier),
- * their coins, their latest shout-outs received and sent, the way to notifications, and
- * settings: the language and signing out. Badges and the leaderboard join it with P4.
+ * their coins, their latest shout-outs received and sent, the way to My rewards (CR-27; for a
+ * GM the only way, MG-09) and to notifications, and settings: the language and signing out.
+ * Badges and the leaderboard join it with P4.
  *
  * The language changes on screen at once (NF-02) and is then saved to the profile, so the
  * texts and the next phone this person signs in on use it too. A save that fails says so,
@@ -105,6 +106,7 @@ export function Profile() {
   const list = direction === "received" ? received : sent;
   const posts = list.data ?? [];
   const unread = summary?.unread_notifications ?? 0;
+  const coinsLabel = (count: number) => t("profile.myRewardsCoins", { count, amount: formatCount(count, locale) });
   const place = me?.store
     ? t("header.store", { number: me.store.number, name: me.store.name })
     : (me?.area?.name ?? "");
@@ -187,6 +189,26 @@ export function Profile() {
         )}
 
         <Card style={styles.rows}>
+          <Touchable
+            accessibilityRole="button"
+            accessibilityLabel={
+              summary ? `${t("profile.myRewards")}, ${coinsLabel(summary.balance)}` : t("profile.myRewards")
+            }
+            onPress={() => router.push(routes.myRewards)}
+          >
+            <Row>
+              <Icon name="gift" size={20} color={colors.brand} />
+              <T weight={700} style={{ flex: 1 }}>
+                {t("profile.myRewards")}
+              </T>
+              {summary ? (
+                <T size={12} weight={800} color={colors.coinInk} tabular>
+                  {coinsLabel(summary.balance)}
+                </T>
+              ) : null}
+              <Icon name="chev" size={16} color={colors.muted} />
+            </Row>
+          </Touchable>
           <Touchable
             accessibilityRole="button"
             accessibilityLabel={

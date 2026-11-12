@@ -1,1 +1,1 @@
-export { ManagerHome as default } from "@/screens/Home";
+export { ManagerHome as default } from "@/screens/ManagerHome";

@@ -608,6 +608,76 @@
         "title": "CsvRow",
         "type": "object"
       },
+      "DeciderOut": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "person",
+              "owner",
+              "system"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "required": [
+          "kind",
+          "name"
+        ],
+        "title": "DeciderOut",
+        "type": "object"
+      },
+      "Eligibility": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "enum": [
+                  "locked_tier",
+                  "locked_badge",
+                  "reward_limit",
+                  "monthly_rewards_used",
+                  "monthly_coin_cap",
+                  "coins_short",
+                  "store_budget_used"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "params": {
+            "additionalProperties": true,
+            "title": "Params",
+            "type": "object"
+          }
+        },
+        "required": [
+          "ok",
+          "code",
+          "params"
+        ],
+        "title": "Eligibility",
+        "type": "object"
+      },
       "GiveContextOut": {
         "description": "Everything the Give screen needs, decided on the server (plan D6).",
         "properties": {
@@ -748,6 +818,41 @@
         "title": "LikeOut",
         "type": "object"
       },
+      "LimitsOut": {
+        "description": "CR-24's card: coins redeemed of the monthly cap, rewards of the monthly count.",
+        "properties": {
+          "coins_redeemed": {
+            "title": "Coins Redeemed",
+            "type": "integer"
+          },
+          "max_coins": {
+            "title": "Max Coins",
+            "type": "integer"
+          },
+          "max_rewards": {
+            "title": "Max Rewards",
+            "type": "integer"
+          },
+          "resets_on": {
+            "format": "date",
+            "title": "Resets On",
+            "type": "string"
+          },
+          "rewards_redeemed": {
+            "title": "Rewards Redeemed",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "coins_redeemed",
+          "max_coins",
+          "rewards_redeemed",
+          "max_rewards",
+          "resets_on"
+        ],
+        "title": "LimitsOut",
+        "type": "object"
+      },
       "LoginIn": {
         "properties": {
           "eid": {
@@ -768,6 +873,107 @@
           "password"
         ],
         "title": "LoginIn",
+        "type": "object"
+      },
+      "ManagerHomeOut": {
+        "properties": {
+          "month": {
+            "title": "Month",
+            "type": "string"
+          },
+          "needs_some_love": {
+            "items": {
+              "$ref": "#/components/schemas/PartyOut"
+            },
+            "title": "Needs Some Love",
+            "type": "array"
+          },
+          "requests": {
+            "$ref": "#/components/schemas/RequestsPreviewOut"
+          },
+          "spotlight": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpotlightOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "this_month": {
+            "$ref": "#/components/schemas/ManagerMonthOut"
+          }
+        },
+        "required": [
+          "month",
+          "this_month",
+          "needs_some_love",
+          "requests",
+          "spotlight"
+        ],
+        "title": "ManagerHomeOut",
+        "type": "object"
+      },
+      "ManagerMonthOut": {
+        "description": "MG-01: the GM's shout-outs given, crew recognized out of the store's crew and shift\nmanagers, and their kudos (left, allowance, reset date).",
+        "properties": {
+          "crew_recognized": {
+            "title": "Crew Recognized",
+            "type": "integer"
+          },
+          "crew_total": {
+            "title": "Crew Total",
+            "type": "integer"
+          },
+          "kudos": {
+            "$ref": "#/components/schemas/KudosOut"
+          },
+          "shoutouts_given_month": {
+            "title": "Shoutouts Given Month",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "shoutouts_given_month",
+          "crew_recognized",
+          "crew_total",
+          "kudos"
+        ],
+        "title": "ManagerMonthOut",
+        "type": "object"
+      },
+      "ManagerRequestsOut": {
+        "description": "Approvals (MG-05 to MG-07): the store's requests a GM decides. Never their own.",
+        "properties": {
+          "pending": {
+            "items": {
+              "$ref": "#/components/schemas/RequestRow"
+            },
+            "title": "Pending",
+            "type": "array"
+          },
+          "ready": {
+            "items": {
+              "$ref": "#/components/schemas/RequestRow"
+            },
+            "title": "Ready",
+            "type": "array"
+          },
+          "recent": {
+            "items": {
+              "$ref": "#/components/schemas/RequestRow"
+            },
+            "title": "Recent",
+            "type": "array"
+          }
+        },
+        "required": [
+          "pending",
+          "ready",
+          "recent"
+        ],
+        "title": "ManagerRequestsOut",
         "type": "object"
       },
       "MeOut": {
@@ -1013,6 +1219,119 @@
           "mfa_token"
         ],
         "title": "MfaTokenIn",
+        "type": "object"
+      },
+      "MyRequestOut": {
+        "description": "One of the person's own requests, on My rewards (CR-27).",
+        "properties": {
+          "approver": {
+            "enum": [
+              "gm",
+              "owner"
+            ],
+            "title": "Approver",
+            "type": "string"
+          },
+          "collected_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collected At"
+          },
+          "cost": {
+            "title": "Cost",
+            "type": "integer"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "decided_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided At"
+          },
+          "icon": {
+            "title": "Icon",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          },
+          "reward_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "enum": [
+              "catalog",
+              "spin"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "approved",
+              "declined",
+              "cancelled",
+              "collected"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "reward_id",
+          "source",
+          "name",
+          "name_es",
+          "icon",
+          "cost",
+          "status",
+          "approver",
+          "created_at",
+          "decided_at",
+          "collected_at"
+        ],
+        "title": "MyRequestOut",
         "type": "object"
       },
       "NextTierOut": {
@@ -2149,6 +2468,106 @@
         "title": "Redeem",
         "type": "object"
       },
+      "RedeemIn": {
+        "properties": {
+          "reward_id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          }
+        },
+        "required": [
+          "reward_id"
+        ],
+        "title": "RedeemIn",
+        "type": "object"
+      },
+      "RedeemResult": {
+        "properties": {
+          "balance": {
+            "title": "Balance",
+            "type": "integer"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/LimitsOut"
+          },
+          "replayed": {
+            "title": "Replayed",
+            "type": "boolean"
+          },
+          "request": {
+            "$ref": "#/components/schemas/MyRequestOut"
+          }
+        },
+        "required": [
+          "request",
+          "balance",
+          "limits",
+          "replayed"
+        ],
+        "title": "RedeemResult",
+        "type": "object"
+      },
+      "RedemptionCounts": {
+        "properties": {
+          "all": {
+            "title": "All",
+            "type": "integer"
+          },
+          "approved": {
+            "title": "Approved",
+            "type": "integer"
+          },
+          "declined": {
+            "title": "Declined",
+            "type": "integer"
+          },
+          "pending": {
+            "title": "Pending",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "pending",
+          "approved",
+          "declined",
+          "all"
+        ],
+        "title": "RedemptionCounts",
+        "type": "object"
+      },
+      "RedemptionsOut": {
+        "description": "Redemptions (OP-09): store budget bars, then the requests of one tab.",
+        "properties": {
+          "budgets": {
+            "items": {
+              "$ref": "#/components/schemas/StoreBudgetOut"
+            },
+            "title": "Budgets",
+            "type": "array"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/RedemptionCounts"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RequestRow"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "budgets",
+          "counts",
+          "items",
+          "total"
+        ],
+        "title": "RedemptionsOut",
+        "type": "object"
+      },
       "RefreshIn": {
         "properties": {
           "refresh_token": {
@@ -2162,6 +2581,556 @@
           "refresh_token"
         ],
         "title": "RefreshIn",
+        "type": "object"
+      },
+      "RequestRow": {
+        "description": "A request as an approver sees it: the GM's Approvals (MG-05, MG-07) and the portal's\nRedemptions (OP-09). Name, role and store only: never an EID or a phone (NF-06).",
+        "properties": {
+          "approver": {
+            "enum": [
+              "gm",
+              "owner"
+            ],
+            "title": "Approver",
+            "type": "string"
+          },
+          "collected_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collected At"
+          },
+          "cost": {
+            "title": "Cost",
+            "type": "integer"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "decided_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided At"
+          },
+          "decided_by": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeciderOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "icon": {
+            "title": "Icon",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          },
+          "person": {
+            "$ref": "#/components/schemas/PartyOut"
+          },
+          "reward_id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "enum": [
+              "catalog",
+              "spin"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "approved",
+              "declined",
+              "cancelled",
+              "collected"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "store": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoreRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "person",
+          "store",
+          "reward_id",
+          "source",
+          "name",
+          "name_es",
+          "icon",
+          "cost",
+          "status",
+          "approver",
+          "created_at",
+          "decided_by",
+          "decided_at",
+          "collected_at"
+        ],
+        "title": "RequestRow",
+        "type": "object"
+      },
+      "RequestsPreviewOut": {
+        "description": "MG-03: how many requests wait for this GM, and the oldest.",
+        "properties": {
+          "oldest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RequestRow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pending_count": {
+            "title": "Pending Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "pending_count",
+          "oldest"
+        ],
+        "title": "RequestsPreviewOut",
+        "type": "object"
+      },
+      "RewardAdminOut": {
+        "description": "A row of the portal's Rewards table (OP-10).",
+        "properties": {
+          "active": {
+            "title": "Active",
+            "type": "boolean"
+          },
+          "cost": {
+            "title": "Cost",
+            "type": "integer"
+          },
+          "cost_usd": {
+            "title": "Cost Usd",
+            "type": "number"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "description_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description Es"
+          },
+          "icon": {
+            "title": "Icon",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "is_cash": {
+            "title": "Is Cash",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          },
+          "pending": {
+            "title": "Pending",
+            "type": "integer"
+          },
+          "per_person_monthly": {
+            "title": "Per Person Monthly",
+            "type": "integer"
+          },
+          "unlock": {
+            "$ref": "#/components/schemas/UnlockOut"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "name_es",
+          "description",
+          "description_es",
+          "icon",
+          "cost",
+          "cost_usd",
+          "unlock",
+          "per_person_monthly",
+          "active",
+          "is_cash",
+          "pending"
+        ],
+        "title": "RewardAdminOut",
+        "type": "object"
+      },
+      "RewardIn": {
+        "properties": {
+          "active": {
+            "default": true,
+            "title": "Active",
+            "type": "boolean"
+          },
+          "cost": {
+            "maximum": 1000000.0,
+            "minimum": 1.0,
+            "title": "Cost",
+            "type": "integer"
+          },
+          "description": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Description",
+            "type": "string"
+          },
+          "description_es": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description Es"
+          },
+          "icon": {
+            "default": "gift",
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Icon",
+            "type": "string"
+          },
+          "is_cash": {
+            "default": false,
+            "title": "Is Cash",
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          },
+          "per_person_monthly": {
+            "default": 1,
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Per Person Monthly",
+            "type": "integer"
+          },
+          "unlock": {
+            "$ref": "#/components/schemas/UnlockIn"
+          }
+        },
+        "required": [
+          "name",
+          "cost"
+        ],
+        "title": "RewardIn",
+        "type": "object"
+      },
+      "RewardOut": {
+        "properties": {
+          "cost": {
+            "title": "Cost",
+            "type": "integer"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "description_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description Es"
+          },
+          "eligibility": {
+            "$ref": "#/components/schemas/Eligibility"
+          },
+          "icon": {
+            "title": "Icon",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          },
+          "unlock": {
+            "$ref": "#/components/schemas/UnlockOut"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "name_es",
+          "description",
+          "description_es",
+          "icon",
+          "cost",
+          "unlock",
+          "eligibility"
+        ],
+        "title": "RewardOut",
+        "type": "object"
+      },
+      "RewardPatch": {
+        "description": "Only the fields sent change. ``name_es``/``description_es`` null or blank clears\nthem.",
+        "properties": {
+          "active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Active"
+          },
+          "cost": {
+            "anyOf": [
+              {
+                "maximum": 1000000.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "description_es": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description Es"
+          },
+          "icon": {
+            "anyOf": [
+              {
+                "maxLength": 32,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Icon"
+          },
+          "is_cash": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Cash"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "name_es": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Es"
+          },
+          "per_person_monthly": {
+            "anyOf": [
+              {
+                "maximum": 100.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Per Person Monthly"
+          },
+          "unlock": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UnlockIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "title": "RewardPatch",
+        "type": "object"
+      },
+      "RewardsOut": {
+        "properties": {
+          "approval": {
+            "title": "Approval",
+            "type": "boolean"
+          },
+          "balance": {
+            "title": "Balance",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RewardOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/LimitsOut"
+          }
+        },
+        "required": [
+          "balance",
+          "limits",
+          "approval",
+          "items"
+        ],
+        "title": "RewardsOut",
         "type": "object"
       },
       "Rules": {
@@ -2589,6 +3558,51 @@
         "title": "Spin",
         "type": "object"
       },
+      "SpotlightOut": {
+        "description": "MG-04: the store's top earner this month among crew and shift managers.",
+        "properties": {
+          "earned_this_month": {
+            "title": "Earned This Month",
+            "type": "integer"
+          },
+          "person": {
+            "$ref": "#/components/schemas/PartyOut"
+          }
+        },
+        "required": [
+          "person",
+          "earned_this_month"
+        ],
+        "title": "SpotlightOut",
+        "type": "object"
+      },
+      "StoreBudgetOut": {
+        "properties": {
+          "budget": {
+            "title": "Budget",
+            "type": "integer"
+          },
+          "month": {
+            "title": "Month",
+            "type": "string"
+          },
+          "store": {
+            "$ref": "#/components/schemas/StoreRef"
+          },
+          "used": {
+            "title": "Used",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "store",
+          "month",
+          "used",
+          "budget"
+        ],
+        "title": "StoreBudgetOut",
+        "type": "object"
+      },
       "StoreIn": {
         "properties": {
           "area_id": {
@@ -2887,6 +3901,10 @@
               }
             ]
           },
+          "pending_approvals": {
+            "title": "Pending Approvals",
+            "type": "integer"
+          },
           "spins_available": {
             "title": "Spins Available",
             "type": "integer"
@@ -2919,7 +3937,8 @@
           "earned_this_month",
           "store_rank",
           "spins_available",
-          "unread_notifications"
+          "unread_notifications",
+          "pending_approvals"
         ],
         "title": "SummaryOut",
         "type": "object"
@@ -3177,6 +4196,64 @@
           "user"
         ],
         "title": "TokenOut",
+        "type": "object"
+      },
+      "UnlockIn": {
+        "description": "Who can redeem it (OP-11): anyone, from a tier up, or with a badge.",
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "type": {
+            "default": "none",
+            "enum": [
+              "none",
+              "tier",
+              "badge"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "title": "UnlockIn",
+        "type": "object"
+      },
+      "UnlockOut": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "type": {
+            "enum": [
+              "none",
+              "tier",
+              "badge"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "UnlockOut",
         "type": "object"
       },
       "UnrecognizedOut": {
@@ -3739,6 +4816,50 @@
         ]
       }
     },
+    "/api/v1/manager/home": {
+      "get": {
+        "description": "The GM's Home (MG-01 to MG-04): this month, needs some love, the requests waiting\nand the crew spotlight. 403 ``managers_only`` for anyone but a GM.",
+        "operationId": "manager_home_api_v1_manager_home_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagerHomeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Manager Home",
+        "tags": [
+          "dashboards"
+        ]
+      }
+    },
+    "/api/v1/manager/requests": {
+      "get": {
+        "description": "Approvals (MG-05 to MG-07), for GMs: 403 ``managers_only`` for anyone else.",
+        "operationId": "manager_requests_api_v1_manager_requests_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagerRequestsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Manager Requests",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
     "/api/v1/me": {
       "get": {
         "operationId": "get_me_api_v1_me_get",
@@ -3882,6 +5003,56 @@
         "summary": "Set Preferences",
         "tags": [
           "auth"
+        ]
+      }
+    },
+    "/api/v1/me/reward-requests": {
+      "get": {
+        "description": "My rewards (CR-27), newest first.",
+        "operationId": "my_requests_api_v1_me_reward_requests_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MyRequestOut"
+                  },
+                  "title": "Response My Requests Api V1 Me Reward Requests Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Requests",
+        "tags": [
+          "rewards"
         ]
       }
     },
@@ -4749,6 +5920,416 @@
         ]
       }
     },
+    "/api/v1/portal/redemptions": {
+      "get": {
+        "description": "Redemptions (OP-09): store budget bars this month, counts per tab and one tab's\nrequests with who decided each.",
+        "operationId": "redemptions_api_v1_portal_redemptions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "default": "pending",
+              "enum": [
+                "pending",
+                "approved",
+                "declined",
+                "all"
+              ],
+              "title": "Status",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "store",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Store"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedemptionsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Redemptions",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/portal/redemptions/payroll.csv": {
+      "get": {
+        "description": "NF-12: cash and gift-card rewards approved in ``month`` (YYYY-MM, the operator's\ntime zone; default this month): person, EID, store, reward, value, approval date.",
+        "operationId": "payroll_api_v1_portal_redemptions_payroll_csv_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "month",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Month"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Payroll",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/portal/reward-requests/{request_id}/approve": {
+      "post": {
+        "description": "Owners approve any pending request (OP-09). 404 ``request_not_found``; 409\n``request_not_pending`` (details.status) once decided.",
+        "operationId": "owner_approve_api_v1_portal_reward_requests__request_id__approve_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Approve",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/portal/reward-requests/{request_id}/collect": {
+      "post": {
+        "description": "409 ``request_not_approved`` (details.status) unless it is approved.",
+        "operationId": "owner_collect_api_v1_portal_reward_requests__request_id__collect_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Collect",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/portal/reward-requests/{request_id}/decline": {
+      "post": {
+        "description": "Owners decline any pending request: everything comes back (OP-09). 404\n``request_not_found``; 409 ``request_not_pending`` (details.status) once decided.",
+        "operationId": "owner_decline_api_v1_portal_reward_requests__request_id__decline_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Decline",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/portal/rewards": {
+      "get": {
+        "description": "The Rewards page (OP-10): every reward, visible in the app or not, by cost.",
+        "operationId": "list_rewards_api_v1_portal_rewards_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RewardAdminOut"
+                  },
+                  "title": "Response List Rewards Api V1 Portal Rewards Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Rewards",
+        "tags": [
+          "rewards"
+        ]
+      },
+      "post": {
+        "description": "Add a reward (OP-11). 422 ``unlock_invalid`` for a badge that doesn't exist.",
+        "operationId": "create_reward_api_v1_portal_rewards_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RewardIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardAdminOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Reward",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/portal/rewards/{reward_id}": {
+      "delete": {
+        "description": "Delete, only with no request pending for it: 409 ``reward_has_pending``\n(details.pending), so hide it instead (OP-11).",
+        "operationId": "delete_reward_api_v1_portal_rewards__reward_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reward_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Reward",
+        "tags": [
+          "rewards"
+        ]
+      },
+      "patch": {
+        "description": "Edit any field, or hide it from the app with ``active: false``. 404\n``reward_not_found``; 422 ``unlock_invalid``.",
+        "operationId": "update_reward_api_v1_portal_rewards__reward_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reward_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RewardPatch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardAdminOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Reward",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
     "/api/v1/portal/settings": {
       "get": {
         "description": "Every owner rule, with the version an edit is based on.",
@@ -5133,6 +6714,216 @@
         "summary": "Portal Team",
         "tags": [
           "dashboards"
+        ]
+      }
+    },
+    "/api/v1/reward-requests": {
+      "post": {
+        "description": "Redeem a reward. The coins come off at once; the request waits for approval, or is\nready straight away when approval is off. Refusals carry the eligibility code and its\nparams as ``details``: 403 ``locked_tier``, ``locked_badge``; 409 ``reward_limit``,\n``monthly_rewards_used``, ``monthly_coin_cap``, ``coins_short``,\n``store_budget_used``. Also 404 ``reward_not_found`` (hidden or deleted); 409\n``redeem_conflict`` in the rare case another redeem moved a limit mid-way and it no\nlonger applies (try again); 422 ``idempotency_key_required``,\n``idempotency_key_reused``.",
+        "operationId": "redeem_api_v1_reward_requests_post",
+        "parameters": [
+          {
+            "description": "One per tap on Redeem (a UUID). A repeat returns the first result.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "One per tap on Redeem (a UUID). A repeat returns the first result.",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedeemIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedeemResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Redeem",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/reward-requests/{request_id}/approve": {
+      "post": {
+        "description": "A GM approves a request at their store (MG-06). 403 ``cannot_decide`` for another\nstore's, their own, or a GM's, supervisor's or director's (owners decide those). 404\n``request_not_found``; 409 ``request_not_pending`` (details.status) once decided, so\na second click changes nothing.",
+        "operationId": "approve_api_v1_reward_requests__request_id__approve_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Approve",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/reward-requests/{request_id}/collect": {
+      "post": {
+        "description": "Handed over at the store (plan G5). 409 ``request_not_approved`` (details.status)\nunless it is approved; 403 ``cannot_decide`` as for approve.",
+        "operationId": "collect_api_v1_reward_requests__request_id__collect_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Collect",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/reward-requests/{request_id}/decline": {
+      "post": {
+        "description": "A GM declines: the coins, the monthly count and cap and the store budget come back,\nand the person is notified (MG-06). 403 ``cannot_decide``, 404 ``request_not_found``,\n409 ``request_not_pending`` as for approve.",
+        "operationId": "decline_api_v1_reward_requests__request_id__decline_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestRow"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Decline",
+        "tags": [
+          "rewards"
+        ]
+      }
+    },
+    "/api/v1/rewards": {
+      "get": {
+        "description": "The Rewards screen (CR-24, CR-25): balance, the monthly limits card and the active\nrewards by cost, each with ``eligibility {ok, code, params}``. Codes, first failure in\nthe spec's order: ``locked_tier`` (tier_id, tier_name, tier_name_es), ``locked_badge``\n(badge_id, badge_name, badge_name_es), ``reward_limit`` (limit),\n``monthly_rewards_used`` (max), ``monthly_coin_cap`` (max), ``coins_short`` (short),\n``store_budget_used``.",
+        "operationId": "rewards_api_v1_rewards_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Rewards",
+        "tags": [
+          "rewards"
         ]
       }
     },

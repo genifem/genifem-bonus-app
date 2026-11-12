@@ -270,14 +270,15 @@ function GiveSkeleton() {
  *
  * Each tap on Send is one intent with its own Idempotency-Key (plan D13); retrying the same
  * draft after a dead connection reuses it, so the coins can never go twice. `?to=<id>` opens
- * it with someone already chosen (CR-20).
+ * it with someone already chosen (CR-20, MG-02); a new `at` with it chooses them again, even
+ * when the form has moved on to someone else since the last time.
  */
 export function Give() {
   const { t, me } = useAuth();
   const { summary, patch, refresh: refreshMe } = useMe();
   const router = useRouter();
   const routes = useRoutes();
-  const params = useLocalSearchParams<{ to?: string }>();
+  const params = useLocalSearchParams<{ to?: string; at?: string }>();
   const context = useApi<GiveContext>("/give/context");
   useRefreshOnFocus(context.revalidate);
   useMeRefreshOnFocus();
@@ -300,8 +301,9 @@ export function Give() {
 
   // CR-20: arrive with someone chosen, once the list says they may be recognized.
   const [prefilled, setPrefilled] = useState<string | null>(null);
-  if (params.to && params.to !== prefilled && data && findPerson(groups, params.to)) {
-    setPrefilled(params.to);
+  const asked = params.to ? `${params.to}@${params.at ?? ""}` : null;
+  if (asked && params.to && asked !== prefilled && data && findPerson(groups, params.to)) {
+    setPrefilled(asked);
     setTo(params.to);
   }
 

@@ -1,1 +1,1 @@
-export { Approvals as default } from "@/screens/Tabs";
+export { Approvals as default } from "@/screens/Approvals";

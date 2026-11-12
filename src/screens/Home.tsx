@@ -33,8 +33,6 @@ import { useApi, useRefreshOnFocus } from "@/lib/useApi";
 import { useLikes } from "@/lib/useLikes";
 import { useNow } from "@/lib/useNow";
 
-import { PlaceholderTab } from "./Placeholder";
-
 /**
  * The balance card (CR-11, `.balance`): earned coins on butter with the mascot holding a
  * coin, the tier, and the way to the next one, "N to go" and a bar from this tier's
@@ -284,21 +282,6 @@ export function CrewHome() {
         )}
       </Body>
     </Page>
-  );
-}
-
-/** The GM's Home stays a placeholder until the manager dashboard lands (P3); the header
- *  still carries the bell, so notifications are reachable. */
-export function ManagerHome() {
-  const { t, me } = useAuth();
-  const name = me ? firstName(me.name) : "";
-  useMeRefreshOnFocus();
-  return (
-    <PlaceholderTab
-      title={name ? t("home.greeting", { name }) : t("home.greetingNoName")}
-      lead={t("home.managerLead")}
-      pose="coin"
-    />
   );
 }
 
