@@ -2,6 +2,7 @@
   "expo": {
     "name": "Crew Stars",
     "slug": "crew-stars",
+    "owner": "muneebkhan043",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -53,7 +54,10 @@
       "reactCompiler": true
     },
     "extra": {
-      "router": {}
+      "router": {},
+      "eas": {
+        "projectId": "14d04c33-b172-45d8-9448-028f6bae9c8b"
+      }
     }
   }
 }
