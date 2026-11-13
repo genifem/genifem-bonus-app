@@ -1,6 +1,7 @@
 import Constants from "expo-constants";
 
 import { ApiError } from "@/lib/apiError";
+import { type TenantProblem, tenantProblemOf } from "@/lib/errors";
 import { clearTokens, loadSession, saveTokens } from "@/lib/session";
 import { tenantSlug } from "@/lib/tenant";
 
@@ -10,7 +11,8 @@ export { ApiError };
  * Talking to the API from the app.
  *
  * Unlike the owner portal, which goes through its Next.js proxy, the app holds its own tokens
- * and names its operator with X-Tenant. An expired access token is renewed once, transparently.
+ * and names its operator with X-Tenant: the company code chosen on this phone (tenant.ts). An
+ * expired access token is renewed once, transparently.
  *
  * There is deliberately no offline queue (plan D11): giving, redeeming, spinning and approving
  * need a connection and show the server's answer, so a failed call is reported, not replayed.
@@ -32,11 +34,14 @@ interface CallOptions {
   anonymous?: boolean;
   /** Extra headers, such as the Idempotency-Key on a coin action (plan D13). */
   headers?: Record<string, string>;
+  /** Name this operator instead of the chosen one: the company screen checking a code before
+   *  it is kept. What such a call hears about its operator is the screen's alone to say. */
+  tenant?: string;
 }
 
 async function send(path: string, options: CallOptions, token: string | null) {
   const headers: Record<string, string> = { ...options.headers, "x-client": "app" };
-  const tenant = tenantSlug();
+  const tenant = options.tenant ?? tenantSlug();
   if (tenant) headers["x-tenant"] = tenant;
   if (options.body !== undefined) headers["content-type"] = "application/json";
   if (token && !options.anonymous) headers.authorization = `Bearer ${token}`;
@@ -51,16 +56,35 @@ async function send(path: string, options: CallOptions, token: string | null) {
   }
 }
 
-/** The API's error envelope as an ApiError, or the bare status when there is none. */
-async function failure(response: Response): Promise<ApiError> {
+const companyHeard = new Set<(problem: TenantProblem) => void>();
+
+/**
+ * Be told when any call about the chosen company hears that it is paused (403
+ * `tenant_suspended`) or gone (404 `tenant_not_found`). The auth provider listens: a paused
+ * company covers the app with the paused screen, a gone one sends the phone back to the
+ * company screen. Returns the way to stop listening.
+ */
+export function onCompanyProblem(listener: (problem: TenantProblem) => void): () => void {
+  companyHeard.add(listener);
+  return () => {
+    companyHeard.delete(listener);
+  };
+}
+
+/** The API's error envelope as an ApiError, or the bare status when there is none. A call
+ *  that named the chosen company passes on what the API said about it. */
+async function failure(response: Response, options: CallOptions): Promise<ApiError> {
   const payload: unknown = await response.json().catch(() => null);
   const error = (payload as { error?: { code?: string; message?: string; details?: unknown } } | null)?.error;
-  return new ApiError(
+  const err = new ApiError(
     response.status,
     error?.code ?? `http_${response.status}`,
     error?.message ?? "request failed",
     error?.details,
   );
+  const problem = options.tenant === undefined ? tenantProblemOf(err) : null;
+  if (problem) for (const listener of companyHeard) listener(problem);
+  return err;
 }
 
 const sessionEnded = new Set<() => void>();
@@ -87,17 +111,14 @@ export function onSessionEnded(listener: () => void): () => void {
  * and the tokens are kept: a dead spot or a bad minute on the server must not sign anyone out.
  */
 async function renew(refreshToken: string): Promise<string | null> {
-  const response = await send(
-    "/auth/refresh",
-    { method: "POST", body: { refresh_token: refreshToken }, anonymous: true },
-    null,
-  );
+  const call: CallOptions = { method: "POST", body: { refresh_token: refreshToken }, anonymous: true };
+  const response = await send("/auth/refresh", call, null);
   if (response.status === 401) {
     await clearTokens();
     for (const listener of sessionEnded) listener();
     return null;
   }
-  if (!response.ok) throw await failure(response);
+  if (!response.ok) throw await failure(response, call);
   const tokens = (await response.json()) as { access_token: string; refresh_token?: string | null };
   await saveTokens(tokens.access_token, tokens.refresh_token ?? null);
   return tokens.access_token;
@@ -148,6 +169,6 @@ export async function api<T>(path: string, options: CallOptions = {}): Promise<T
   }
 
   if (response.status === 204) return undefined as T;
-  if (!response.ok) throw await failure(response);
+  if (!response.ok) throw await failure(response, options);
   return (await response.json().catch(() => null)) as T;
 }

@@ -4,8 +4,9 @@ import { Platform } from "react-native";
 /**
  * Where the app keeps its session.
  *
- * Tokens go in the device keychain, never in plain storage. The tenant is not kept here: one
- * operator per build, named by EXPO_PUBLIC_TENANT (see tenant.ts, plan D3).
+ * Tokens go in the device keychain, never in plain storage. The company code is not kept
+ * here: it is not a secret, so it sits in the app's plain storage (tenant.ts). A session
+ * belongs to the company it was made at, and choosing another one ends it (auth.tsx).
  *
  * The keychain has no web implementation. The app's web build exists only to develop against
  * (`pnpm web`), so there - and only in development - the session lives in the tab's

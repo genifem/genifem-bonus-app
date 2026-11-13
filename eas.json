@@ -9,7 +9,7 @@
     "preview": {
       "distribution": "internal",
       "android": { "buildType": "apk" },
-      "env": { "EXPO_PUBLIC_API_URL": "https://api.stars.genifem.com", "EXPO_PUBLIC_TENANT": "demo" }
+      "env": { "EXPO_PUBLIC_API_URL": "https://api.stars.genifem.com" }
     },
     "production": {
       "autoIncrement": true,

@@ -10,36 +10,43 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { OfflineStart } from "@/components/Gate";
+import { CompanyPaused, OfflineStart } from "@/components/Gate";
 import { colors, ToastProvider } from "@/components/ui";
-import { AuthProvider, homeGroupFor, useAuth } from "@/lib/auth";
+import { AuthProvider, useAuth } from "@/lib/auth";
+import { placeFor } from "@/lib/guards";
 import { MeProvider } from "@/lib/me";
 import { PushProvider } from "@/lib/usePush";
 
 void SplashScreen.preventAutoHideAsync();
 
 /**
- * Which screens exist depends on who is signed in (CR-08), so the stack guards them rather
- * than redirecting between them. Signing in removes the welcome, sign-in and setup screens
- * from the history, so Android's back button can't return to them; signing out (or a
- * session the server ended) removes the tabs the same way. Each guard lists the first screen
- * of its group first: that is where the app opens for someone in it.
+ * Which screens exist depends on the company and on who is signed in (P7, CR-08), so the
+ * stack guards them rather than redirecting between them (guards.ts `placeFor`), in this
+ * order: no company, the company screen alone; a company but nobody signed in, the welcome,
+ * sign-in and setup screens; signed in, the person's own tabs. Choosing a company, signing in,
+ * signing out, changing company or a session the server ended each turn one guard off and
+ * another on: the stack drops the screens that went (so Android's back button can't return
+ * to them) and opens the first one allowed. Each guard lists the first screen of its group
+ * first: that is where the app opens for someone in it. A deep link or a tapped push can only
+ * land on a screen its guard allows.
  *
- * Nothing is drawn until the saved session has been read, behind the splash screen, so a
- * signed-in person never sees the welcome screen flash by. With no connection the session is
- * kept and the person's own tabs open on the profile last seen; only a phone that has never
- * kept one waits on a calm offline screen instead of the welcome screen.
+ * Nothing is drawn until the company and the saved session have been read, behind the splash
+ * screen, so nobody sees the wrong screen flash by. With no connection the session is kept
+ * and the person's own tabs open on the profile last seen; only a phone that has never kept
+ * one waits on a calm offline screen instead of the welcome screen. A paused company covers
+ * everything with the paused screen, which has no stack behind it to slip into.
  */
 function RootStack() {
-  const { ready, me, offline } = useAuth();
+  const { ready, company, me, offline, paused } = useAuth();
+  const place = placeFor({ ready, company: company?.code ?? null, me, offline, paused });
 
   useEffect(() => {
     if (ready) void SplashScreen.hideAsync();
   }, [ready]);
 
-  if (!ready) return null;
-  if (!me && offline) return <OfflineStart />;
-  const home = me ? homeGroupFor(me) : null;
+  if (place === "loading") return null;
+  if (place === "paused") return <CompanyPaused />;
+  if (place === "offline") return <OfflineStart />;
 
   return (
     <Stack
@@ -48,16 +55,19 @@ function RootStack() {
         contentStyle: { backgroundColor: colors.background },
       }}
     >
-      <Stack.Protected guard={home === "crew"}>
+      <Stack.Protected guard={place === "crew"}>
         <Stack.Screen name="(crew)" />
       </Stack.Protected>
-      <Stack.Protected guard={home === "manager"}>
+      <Stack.Protected guard={place === "manager"}>
         <Stack.Screen name="(manager)" />
       </Stack.Protected>
-      <Stack.Protected guard={home === null}>
+      <Stack.Protected guard={place === "signedOut"}>
         <Stack.Screen name="welcome" />
         <Stack.Screen name="sign-in" />
         <Stack.Screen name="setup" />
+      </Stack.Protected>
+      <Stack.Protected guard={place === "company"}>
+        <Stack.Screen name="company" />
       </Stack.Protected>
     </Stack>
   );
@@ -65,8 +75,8 @@ function RootStack() {
 
 /**
  * Every screen draws its own header, as the prototype does, so the stack shows none. The
- * crew's and the GM's tabs are route groups under this stack; the welcome, sign-in and setup
- * screens sit beside them. Push (usePush) sits inside the session and the summary: it
+ * crew's and the GM's tabs are route groups under this stack; the company, welcome, sign-in
+ * and setup screens sit beside them. Push (usePush) sits inside the session and the summary: it
  * registers whoever is signed in and opens a tapped push's screen in their own group.
  */
 export default function RootLayout() {

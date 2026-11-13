@@ -26,6 +26,21 @@
     "signIn": "Iniciar sesión",
     "operatorLogo": "Logotipo de {name}"
   },
+  "company": {
+    "title": "¿Cuál es el código de tu empresa?",
+    "lead": "Tu gerente te lo puede dar. Solo lo necesitas la primera vez.",
+    "code": "Código de empresa",
+    "codeHint": "Por ejemplo, ECC",
+    "confirmTitle": "¿Es tu empresa?",
+    "confirmA11y": "¿Es tu empresa? {name}",
+    "yes": "Sí, es mi empresa",
+    "no": "No, escribir otro código",
+    "change": "¿No es tu empresa? Cambiar",
+    "signingInTo": "Inicias sesión en {name}",
+    "pausedTitle": "Crew Stars está en pausa",
+    "pausedLead": "No se pierde nada: tus monedas y premios estarán aquí cuando vuelva.",
+    "pausedRetry": "Volver a revisar"
+  },
   "signIn": {
     "title": "¡Hola de nuevo! 👋",
     "eid": "Número de empleado (EID)",
@@ -294,6 +309,8 @@
   "errors": {
     "generic": "Algo salió mal. Inténtalo de nuevo.",
     "network": "Estás sin conexión. Revisa tu internet e inténtalo de nuevo.",
+    "tenant_not_found": "No encontramos ese código de empresa. Revísalo o pídeselo a tu gerente.",
+    "tenant_suspended": "Crew Stars está en pausa en esta empresa. Pregúntale a tu gerente.",
     "credentials_invalid": "Ese EID y esa contraseña no coinciden. Inténtalo de nuevo.",
     "account_locked": "Demasiados intentos. Inténtalo de nuevo en {minutes, plural, one {# minuto} other {# minutos}}.",
     "account_inactive": "Esta cuenta ya no está activa. Habla con tu gerente.",

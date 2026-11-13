@@ -19,9 +19,13 @@ import { useSecondsUntil } from "@/lib/useCountdown";
  *
  * A success saves the session, and the gate takes a GM to the manager tabs and everyone else
  * to the crew tabs (CR-08), so this screen never navigates after it.
+ *
+ * It signs in at the company chosen on this phone (P7), named under the title when the phone
+ * knows its name. "Not your company? Change" lets it go, and the guard opens the company
+ * screen.
  */
 function SignInScreen() {
-  const { t, signedIn } = useAuth();
+  const { t, signedIn, company, changeCompany } = useAuth();
   const router = useRouter();
   const [eid, setEid] = useState("");
   const [password, setPassword] = useState("");
@@ -58,7 +62,10 @@ function SignInScreen() {
         <ScreenHeader
           onBack={() => (router.canGoBack() ? router.back() : router.replace("/welcome"))}
         />
-        <ScreenTitle title={t("signIn.title")} />
+        <ScreenTitle
+          title={t("signIn.title")}
+          lead={company?.name ? t("company.signingInTo", { name: company.name }) : undefined}
+        />
         <Field
           label={t("signIn.eid")}
           value={eid}
@@ -111,6 +118,7 @@ function SignInScreen() {
           onPress={() => router.push({ pathname: "/setup/[step]", params: { step: "1", mode: "reset" } })}
         />
         <Button title={t("signIn.submit")} full disabled={!ready} busy={busy} onPress={() => void submit()} />
+        <TextLink title={t("company.change")} disabled={busy} onPress={() => void changeCompany()} />
       </Body>
     </Page>
   );

@@ -14,13 +14,14 @@ The plan is in `../todos/Crew-Stars-Technical-Plan.md`, §8 for this app.
 
 ```
 src/app/              routes (expo-router, typed routes)
+  company                              the company code, asked once (P7)
   welcome · sign-in · setup/[step]     signed-out screens (CR-01 to CR-06)
   (crew)/(tabs)/      Home · Wall · Give · Rewards · Profile
   (manager)/(tabs)/   Home · Wall · Give · Approvals · Profile   (role "gm")
 src/screens/          screens written once and used by both tab groups
 src/components/ui/    the kit: tokens, T, Button, Field, Card, Sheet, TabBar, Toast...
 src/components/       Mascot, Coin / CoinPill, OtpInput, the route gates
-src/lib/              api (tokens, X-Tenant, one refresh at a time), session, auth, i18n
+src/lib/              api (tokens, X-Tenant, one refresh at a time), tenant, session, auth, i18n
 packages/shared       design tokens and contrast helpers (shared with the portal)
 packages/i18n         English and Spanish strings, with a parity test
 packages/api-client   types generated from the API's OpenAPI schema
@@ -34,7 +35,9 @@ cp .env.example .env     # optional: EXPO_PUBLIC_API_URL, EXPO_PUBLIC_TENANT
 pnpm start               # then scan the QR code, with the API running on the same wifi
 ```
 
-An unset `EXPO_PUBLIC_API_URL` points the app at the machine running Metro on port 8000. There is one operator per build (plan D3): `EXPO_PUBLIC_TENANT` is sent as `X-Tenant` on every request, and it defaults to `demo` in development. A release build must set it.
+An unset `EXPO_PUBLIC_API_URL` points the app at the machine running Metro on port 8000.
+
+One app serves every operator (P7). The first screen asks for a **company code** (the operator's slug, as in `{slug}.stars.genifem.com`; `demo` locally), checks it with `GET /meta` and keeps it on the phone; every request then names it in `X-Tenant`. Signing out keeps it; "Not your company? Change" on the welcome and sign-in screens lets it go. `EXPO_PUBLIC_TENANT` is only a default: when it is set the app starts on that company without the screen (the `development` EAS profile sets `demo`); preview and production builds leave it unset, so the screen shows.
 
 ## Checks
 

@@ -43,6 +43,49 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/owner/forgot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Owner Forgot
+         * @description Email a reset link (``/reset#token=…``, 1 hour) if this operator has an active owner
+         *     with that email. Always 202, whoever it is; 429 ``rate_limited`` per IP.
+         */
+        post: operations["owner_forgot_api_v1_auth_owner_forgot_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/owner/invite/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Owner Invite Accept
+         * @description An invited owner chooses a password (the token from ``/invite#token=…``) and is signed
+         *     in, or asked for the authenticator step. 401 ``token_expired`` (7 days), ``token_used``
+         *     (accepted already, or a newer invite was sent), ``token_invalid``; 422 ``password_weak``.
+         */
+        post: operations["owner_invite_accept_api_v1_auth_owner_invite_accept_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/owner/login": {
         parameters: {
             query?: never;
@@ -105,6 +148,178 @@ export interface paths {
         put?: never;
         /** Owner Mfa Verify */
         post: operations["owner_mfa_verify_api_v1_auth_owner_mfa_verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/owner/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Owner Reset
+         * @description A new password from the emailed link; the owner's other sessions end. Answers like
+         *     sign-in. 401 ``token_expired`` (1 hour), ``token_used``, ``token_invalid``; 422
+         *     ``password_weak``.
+         */
+        post: operations["owner_reset_api_v1_auth_owner_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/platform/invite/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Invite Accept
+         * @description An invited admin chooses a password (the token from ``/invite#token=…``; at least 12
+         *     characters and a number). Answers ``mfa_setup``, as a first sign-in does. 401
+         *     ``token_expired`` (7 days), ``token_used``, ``token_invalid``; 422 ``password_weak``.
+         */
+        post: operations["invite_accept_api_v1_auth_platform_invite_accept_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/platform/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Login
+         * @description Email and password. Answers ``mfa`` (a code from the authenticator comes next) or
+         *     ``mfa_setup`` (set one up first), each with an ``mfa_token`` (15 minutes). 401
+         *     ``credentials_invalid``; the fifth wrong password or code in a row answers 403
+         *     ``account_locked`` with ``details.until`` (15 minutes).
+         */
+        post: operations["login_api_v1_auth_platform_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/platform/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Logout
+         * @description Ends the session: its refresh tokens and its access token stop working.
+         */
+        post: operations["logout_api_v1_auth_platform_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/platform/mfa/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mfa Confirm
+         * @description A first code from the new authenticator turns it on and signs in; the recovery codes
+         *     are shown this once. 401 ``mfa_invalid``.
+         */
+        post: operations["mfa_confirm_api_v1_auth_platform_mfa_confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/platform/mfa/setup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mfa Setup
+         * @description A secret and an ``otpauth://`` URI for the authenticator app (show it as a QR code).
+         *     409 ``mfa_already_enabled``.
+         */
+        post: operations["mfa_setup_api_v1_auth_platform_mfa_setup_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/platform/mfa/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Mfa Verify
+         * @description A code from the authenticator, or a recovery code (each works once). 401
+         *     ``mfa_invalid``; wrong codes count towards the lockout.
+         */
+        post: operations["mfa_verify_api_v1_auth_platform_mfa_verify_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/platform/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh
+         * @description The next tokens of the session. 401 ``session_idle`` (20 minutes without a request),
+         *     ``refresh_expired`` (12 hours after sign-in), ``refresh_reused`` (the session is ended:
+         *     an old token came back), ``refresh_revoked``, ``refresh_invalid``.
+         */
+        post: operations["refresh_api_v1_auth_platform_refresh_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -477,6 +692,379 @@ export interface paths {
         get: operations["get_meta_api_v1_meta_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Audit
+         * @description The back office's own log, newest first. ``action`` is a prefix (``operator.``,
+         *     ``owner.mfa_reset``); ``before`` = the last page's ``next_before``.
+         */
+        get: operations["audit_api_v1_platform_audit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** System Health */
+        get: operations["system_health_api_v1_platform_health_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Me
+         * @description The signed-in admin, their role and its permissions.
+         */
+        get: operations["me_api_v1_platform_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/operators": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Operators
+         * @description Every operator, by name, with its counts. ``q`` matches the name or the slug.
+         */
+        get: operations["list_operators_api_v1_platform_operators_get"];
+        put?: never;
+        /**
+         * Create Operator
+         * @description A new operator with the default settings and rewards, and its first owner, invited
+         *     by email (``invite_email``: "failed" means resend it). 409 ``slug_taken``; 422
+         *     ``slug_reserved``, ``validation_failed`` (a bad slug or time zone).
+         */
+        post: operations["create_operator_api_v1_platform_operators_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/operators/{operator_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Operator
+         * @description One operator: its counts, this month's usage and its latest back office events.
+         *     404 ``operator_not_found``.
+         */
+        get: operations["get_operator_api_v1_platform_operators__operator_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Patch Operator
+         * @description Name, time zone, logo (https). 422 ``nothing_to_change``.
+         */
+        patch: operations["patch_operator_api_v1_platform_operators__operator_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/platform/operators/{operator_id}/owners": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Owners */
+        get: operations["list_owners_api_v1_platform_operators__operator_id__owners_get"];
+        put?: never;
+        /**
+         * Invite Owner
+         * @description Another owner, invited by email. 409 ``owner_exists``.
+         */
+        post: operations["invite_owner_api_v1_platform_operators__operator_id__owners_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/operators/{operator_id}/owners/{owner_id}/reactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reactivate Owner
+         * @description 409 ``owner_not_suspended``.
+         */
+        post: operations["reactivate_owner_api_v1_platform_operators__operator_id__owners__owner_id__reactivate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/operators/{operator_id}/owners/{owner_id}/resend-invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resend Owner Invite
+         * @description A fresh link, 7 days from now; the older ones stop working. 409
+         *     ``owner_already_joined``, ``owner_suspended``.
+         */
+        post: operations["resend_owner_invite_api_v1_platform_operators__operator_id__owners__owner_id__resend_invite_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/operators/{operator_id}/owners/{owner_id}/reset-mfa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset Owner Mfa
+         * @description Turns the owner's authenticator off (a lost phone) and ends their sessions.
+         */
+        post: operations["reset_owner_mfa_api_v1_platform_operators__operator_id__owners__owner_id__reset_mfa_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/operators/{operator_id}/owners/{owner_id}/suspend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Suspend Owner
+         * @description The owner can't sign in, and their sessions end. 409 ``owner_already_suspended``.
+         */
+        post: operations["suspend_owner_api_v1_platform_operators__operator_id__owners__owner_id__suspend_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/operators/{operator_id}/reactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reactivate Operator
+         * @description 409 ``operator_not_suspended``.
+         */
+        post: operations["reactivate_operator_api_v1_platform_operators__operator_id__reactivate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/operators/{operator_id}/suspend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Suspend Operator
+         * @description Every request for it answers 403 ``tenant_suspended``, app and portal, until it is
+         *     reactivated. 409 ``operator_already_suspended``.
+         */
+        post: operations["suspend_operator_api_v1_platform_operators__operator_id__suspend_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Overview */
+        get: operations["overview_api_v1_platform_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/staff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Staff */
+        get: operations["list_staff_api_v1_platform_staff_get"];
+        put?: never;
+        /**
+         * Invite Staff
+         * @description An account with no password, and an email with a link to choose one (7 days). 409
+         *     ``staff_exists``.
+         */
+        post: operations["invite_staff_api_v1_platform_staff_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/staff/{staff_id}/reactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reactivate Staff
+         * @description 403 ``staff_self``; 409 ``staff_not_suspended``.
+         */
+        post: operations["reactivate_staff_api_v1_platform_staff__staff_id__reactivate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/staff/{staff_id}/resend-invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resend Staff Invite
+         * @description 409 ``staff_already_joined``, ``staff_suspended``.
+         */
+        post: operations["resend_staff_invite_api_v1_platform_staff__staff_id__resend_invite_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/staff/{staff_id}/reset-mfa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset Staff Mfa
+         * @description Removes their authenticator and ends their sessions; they set up a new one at the
+         *     next sign-in. 403 ``staff_self``.
+         */
+        post: operations["reset_staff_mfa_api_v1_platform_staff__staff_id__reset_mfa_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/staff/{staff_id}/suspend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Suspend Staff
+         * @description Refused from the next request on; every session ends. 403 ``staff_self``; 409
+         *     ``staff_already_suspended``.
+         */
+        post: operations["suspend_staff_api_v1_platform_staff__staff_id__suspend_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1091,6 +1679,28 @@ export interface paths {
         get: operations["portal_team_api_v1_portal_team_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/find-company": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Find Company
+         * @description "Find your company" on the bare domain (no ``X-Tenant``): emails the sign-in address
+         *     (``https://{slug}.<base>/login``) of every active operator where this email is an active
+         *     owner. Always 202; 429 ``rate_limited`` per IP.
+         */
+        post: operations["find_company_api_v1_public_find_company_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1717,6 +2327,16 @@ export interface components {
             /** Role */
             role: string | null;
         };
+        /** DatabaseHealthOut */
+        DatabaseHealthOut: {
+            /** Latency Ms */
+            latency_ms: number | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "down";
+        };
         /** DeciderOut */
         DeciderOut: {
             /**
@@ -1737,6 +2357,29 @@ export interface components {
             params: {
                 [key: string]: unknown;
             };
+        };
+        /** EmailProviderOut */
+        EmailProviderOut: {
+            /** Configured */
+            configured: boolean;
+            /**
+             * Provider
+             * @enum {string}
+             */
+            provider: "console" | "brevo";
+        };
+        /**
+         * EmailRequestIn
+         * @description "Forgot password?" and "Find your company": always answered 202.
+         */
+        EmailRequestIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Language */
+            language?: ("en" | "es") | null;
         };
         /**
          * GiveContextOut
@@ -1761,6 +2404,30 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** JobRunOut */
+        JobRunOut: {
+            /** Counts */
+            counts: {
+                [key: string]: unknown;
+            };
+            /** Error */
+            error: string | null;
+            /** Every S */
+            every_s: number | null;
+            /** Finished At */
+            finished_at: string | null;
+            /** Name */
+            name: string;
+            /** Stale */
+            stale: boolean;
+            /** Started At */
+            started_at: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "running" | "ok" | "failed" | "never";
         };
         /**
          * KudosOut
@@ -1838,6 +2505,17 @@ export interface components {
             resets_on: string;
             /** Rewards Redeemed */
             rewards_redeemed: number;
+        };
+        /**
+         * LinkPasswordIn
+         * @description The token from an emailed link's fragment (``/invite#token=…``, ``/reset#token=…``)
+         *     and the password chosen with it.
+         */
+        LinkPasswordIn: {
+            /** Password */
+            password: string;
+            /** Token */
+            token: string;
         };
         /** LoginIn */
         LoginIn: {
@@ -2097,6 +2775,148 @@ export interface components {
             /** Unread */
             unread: number;
         };
+        /** OperatorCountsOut */
+        OperatorCountsOut: {
+            /** Active */
+            active: number;
+            /** Suspended */
+            suspended: number;
+            /** Total */
+            total: number;
+        };
+        /**
+         * OperatorCreateIn
+         * @description A new operator: its settings and rewards catalog with the spec's defaults (as the
+         *     seed makes them), and its first owner, invited by email.
+         */
+        OperatorCreateIn: {
+            /** Name */
+            name: string;
+            owner: components["schemas"]["OwnerInviteIn"];
+            /** Reason */
+            reason: string;
+            /**
+             * Slug
+             * @example acme
+             */
+            slug: string;
+            /**
+             * Tz
+             * @default America/New_York
+             * @example America/Chicago
+             */
+            tz: string;
+        };
+        /** OperatorCreatedOut */
+        OperatorCreatedOut: {
+            /**
+             * Invite Email
+             * @enum {string}
+             */
+            invite_email: "sent" | "failed";
+            operator: components["schemas"]["OperatorDetailOut"];
+            owner: components["schemas"]["PlatformOwnerOut"];
+        };
+        /** OperatorDetailOut */
+        OperatorDetailOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Last Activity At */
+            last_activity_at: string | null;
+            /** Logo Url */
+            logo_url: string | null;
+            /** Name */
+            name: string;
+            /** Owners */
+            owners: number;
+            /** People */
+            people: number;
+            /** Portal Url */
+            portal_url: string;
+            /** Recent Audit */
+            recent_audit: components["schemas"]["PlatformAuditEventOut"][];
+            /** Shoutouts Month */
+            shoutouts_month: number;
+            /** Slug */
+            slug: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "suspended";
+            /** Stores */
+            stores: number;
+            /** Tz */
+            tz: string;
+            usage: components["schemas"]["UsageOut"];
+        };
+        /** OperatorListOut */
+        OperatorListOut: {
+            /** Items */
+            items: components["schemas"]["OperatorRowOut"][];
+            /** Month */
+            month: string;
+        };
+        /**
+         * OperatorPatchIn
+         * @description Only what is sent changes. ``logo_url: null`` removes the logo.
+         */
+        OperatorPatchIn: {
+            /** Logo Url */
+            logo_url?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Reason */
+            reason: string;
+            /** Tz */
+            tz?: string | null;
+        };
+        /** OperatorRefOut */
+        OperatorRefOut: {
+            id: components["schemas"]["PydanticObjectId"];
+            /** Name */
+            name: string | null;
+            /** Slug */
+            slug: string | null;
+        };
+        /** OperatorRowOut */
+        OperatorRowOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Last Activity At */
+            last_activity_at: string | null;
+            /** Logo Url */
+            logo_url: string | null;
+            /** Name */
+            name: string;
+            /** Owners */
+            owners: number;
+            /** People */
+            people: number;
+            /** Portal Url */
+            portal_url: string;
+            /** Shoutouts Month */
+            shoutouts_month: number;
+            /** Slug */
+            slug: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "suspended";
+            /** Stores */
+            stores: number;
+            /** Tz */
+            tz: string;
+        };
         /** OverviewOut */
         OverviewOut: {
             /** Month */
@@ -2127,6 +2947,24 @@ export interface components {
             requests_waiting: number;
             /** Shoutouts */
             shoutouts: number;
+        };
+        /** OwnerAddIn */
+        OwnerAddIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /**
+             * Language
+             * @default en
+             * @enum {string}
+             */
+            language: "en" | "es";
+            /** Name */
+            name: string;
+            /** Reason */
+            reason: string;
         };
         /**
          * OwnerAuthOut
@@ -2162,6 +3000,36 @@ export interface components {
             /** Tags */
             tags: ("guest" | "rush" | "team" | "clean" | "above" | "lead")[];
         };
+        /** OwnerInviteIn */
+        OwnerInviteIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /**
+             * Language
+             * @default en
+             * @enum {string}
+             */
+            language: "en" | "es";
+            /** Name */
+            name: string;
+        };
+        /** OwnerInvitedOut */
+        OwnerInvitedOut: {
+            /**
+             * Invite Email
+             * @enum {string}
+             */
+            invite_email: "sent" | "failed";
+            owner: components["schemas"]["PlatformOwnerOut"];
+        };
+        /** OwnerListOut */
+        OwnerListOut: {
+            /** Items */
+            items: components["schemas"]["PlatformOwnerOut"][];
+        };
         /** OwnerLoginIn */
         OwnerLoginIn: {
             /** Email */
@@ -2193,6 +3061,11 @@ export interface components {
             /** Total */
             total: number;
         };
+        /**
+         * Perm
+         * @enum {string}
+         */
+        Perm: "overview.read" | "operators.read" | "operators.write" | "owners.invite" | "owners.mfa_reset" | "owners.manage" | "health.read" | "audit.read" | "staff.read" | "staff.write";
         /** PersonIn */
         PersonIn: {
             area_id?: components["schemas"]["PydanticObjectId"] | null;
@@ -2296,6 +3169,229 @@ export interface components {
              */
             role: "crew" | "shift" | "gm" | "supervisor" | "director";
         };
+        /** PlatformAuditActorOut */
+        PlatformAuditActorOut: {
+            /** Email */
+            email: string | null;
+            id: components["schemas"]["PydanticObjectId"] | null;
+            /** Name */
+            name: string | null;
+        };
+        /** PlatformAuditEventOut */
+        PlatformAuditEventOut: {
+            /** Action */
+            action: string;
+            actor: components["schemas"]["PlatformAuditActorOut"];
+            /** After */
+            after: {
+                [key: string]: unknown;
+            } | null;
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            /** Before */
+            before: {
+                [key: string]: unknown;
+            } | null;
+            /** Details */
+            details: {
+                [key: string]: unknown;
+            };
+            id: components["schemas"]["PydanticObjectId"];
+            /** Ip */
+            ip: string | null;
+            operator: components["schemas"]["OperatorRefOut"] | null;
+            /** Reason */
+            reason: string | null;
+            /** Request Id */
+            request_id: string | null;
+            target: components["schemas"]["PlatformAuditTargetOut"] | null;
+        };
+        /** PlatformAuditPage */
+        PlatformAuditPage: {
+            /** Items */
+            items: components["schemas"]["PlatformAuditEventOut"][];
+            next_before: components["schemas"]["PydanticObjectId"] | null;
+        };
+        /** PlatformAuditTargetOut */
+        PlatformAuditTargetOut: {
+            id: components["schemas"]["PydanticObjectId"] | null;
+            /** Type */
+            type: string;
+        };
+        /**
+         * PlatformAuthOut
+         * @description A back office sign-in step. ``mfa`` asks for an authenticator code, ``mfa_setup`` for
+         *     one to be set up first (always, P7), each with a short-lived ``mfa_token``; ``done``
+         *     carries the tokens.
+         */
+        PlatformAuthOut: {
+            /** Mfa Token */
+            mfa_token: string | null;
+            /**
+             * Step
+             * @enum {string}
+             */
+            step: "done" | "mfa" | "mfa_setup";
+            tokens: components["schemas"]["PlatformTokenOut"] | null;
+        };
+        /** PlatformHealthOut */
+        PlatformHealthOut: {
+            backup: components["schemas"]["JobRunOut"];
+            /**
+             * Checked At
+             * Format: date-time
+             */
+            checked_at: string;
+            database: components["schemas"]["DatabaseHealthOut"];
+            /** Env */
+            env: string;
+            /** Jobs */
+            jobs: components["schemas"]["JobRunOut"][];
+            operators: components["schemas"]["OperatorCountsOut"];
+            providers: components["schemas"]["ProvidersOut"];
+            restore_drill: components["schemas"]["JobRunOut"];
+            /** Version */
+            version: string | null;
+        };
+        /** PlatformHealthSummaryOut */
+        PlatformHealthSummaryOut: {
+            /**
+             * Database
+             * @enum {string}
+             */
+            database: "ok" | "down";
+            /** Email Configured */
+            email_configured: boolean;
+            /** Failing Jobs */
+            failing_jobs: string[];
+            /** Last Backup At */
+            last_backup_at: string | null;
+            /**
+             * Last Backup Status
+             * @enum {string}
+             */
+            last_backup_status: "running" | "ok" | "failed" | "never";
+            /** Stale Jobs */
+            stale_jobs: string[];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "watch" | "problem";
+        };
+        /** PlatformLoginIn */
+        PlatformLoginIn: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+        };
+        /**
+         * PlatformMeOut
+         * @description The signed-in admin, with what their role may do, so the back office can hide what
+         *     it can't use (the server refuses it anyway).
+         */
+        PlatformMeOut: {
+            /** Email */
+            email: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Last Login At */
+            last_login_at: string | null;
+            /** Mfa Enabled */
+            mfa_enabled: boolean;
+            /** Name */
+            name: string;
+            /** Permissions */
+            permissions: components["schemas"]["Perm"][];
+            role: components["schemas"]["PlatformRole"];
+        };
+        /** PlatformMfaEnabledOut */
+        PlatformMfaEnabledOut: {
+            auth: components["schemas"]["PlatformAuthOut"];
+            /** Recovery Codes */
+            recovery_codes: string[];
+        };
+        /** PlatformOverviewOut */
+        PlatformOverviewOut: {
+            /** Active People */
+            active_people: number;
+            health: components["schemas"]["PlatformHealthSummaryOut"];
+            /** Month */
+            month: string;
+            operators: components["schemas"]["OperatorCountsOut"];
+            /** Redemptions Month */
+            redemptions_month: number;
+            /** Shoutouts Month */
+            shoutouts_month: number;
+        };
+        /** PlatformOwnerOut */
+        PlatformOwnerOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Email */
+            email: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Invite Expired */
+            invite_expired: boolean;
+            /** Invited */
+            invited: boolean;
+            /** Invited At */
+            invited_at: string | null;
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "en" | "es";
+            /** Last Login At */
+            last_login_at: string | null;
+            /** Locked */
+            locked: boolean;
+            /** Mfa Enabled */
+            mfa_enabled: boolean;
+            /** Name */
+            name: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "active" | "disabled";
+        };
+        /**
+         * PlatformRole
+         * @enum {string}
+         */
+        PlatformRole: "super_admin" | "support";
+        /** PlatformTokenOut */
+        PlatformTokenOut: {
+            /** Access Token */
+            access_token: string;
+            /** Expires In */
+            expires_in: number;
+            /** Refresh Token */
+            refresh_token: string;
+            /**
+             * Token Type
+             * @default bearer
+             * @constant
+             */
+            token_type: "bearer";
+            user: components["schemas"]["PlatformMeOut"];
+        };
+        /**
+         * PlatformWriteIn
+         * @description Every back office write says why (Geniverse ADR 0004 section 2). The reason is kept
+         *     with the audit event, written in the same transaction as the change.
+         */
+        PlatformWriteIn: {
+            /** Reason */
+            reason: string;
+        };
         /** PostOut */
         PostOut: {
             /** Award Month */
@@ -2376,6 +3472,17 @@ export interface components {
             label: string;
             /** Label Es */
             label_es: string | null;
+        };
+        /** ProvidersOut */
+        ProvidersOut: {
+            email: components["schemas"]["EmailProviderOut"];
+            push: components["schemas"]["PushProviderOut"];
+            sms: components["schemas"]["SmsProviderOut"];
+        };
+        /** PushProviderOut */
+        PushProviderOut: {
+            /** Enabled */
+            enabled: boolean;
         };
         /** PushTokenDelete */
         PushTokenDelete: {
@@ -2796,6 +3903,13 @@ export interface components {
             /** Replayed */
             replayed: boolean;
         };
+        /** SmsProviderOut */
+        SmsProviderOut: {
+            /** Configured */
+            configured: boolean;
+            /** Enabled */
+            enabled: boolean;
+        };
         /** Spin */
         Spin: {
             /**
@@ -2871,6 +3985,68 @@ export interface components {
             /** Earned This Month */
             earned_this_month: number;
             person: components["schemas"]["PartyOut"];
+        };
+        /** StaffInviteIn */
+        StaffInviteIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /**
+             * Language
+             * @default en
+             * @enum {string}
+             */
+            language: "en" | "es";
+            /** Name */
+            name: string;
+            /** Reason */
+            reason: string;
+            /** @default support */
+            role: components["schemas"]["PlatformRole"];
+        };
+        /** StaffInvitedOut */
+        StaffInvitedOut: {
+            /**
+             * Invite Email
+             * @enum {string}
+             */
+            invite_email: "sent" | "failed";
+            staff: components["schemas"]["StaffOut"];
+        };
+        /** StaffListOut */
+        StaffListOut: {
+            /** Items */
+            items: components["schemas"]["StaffOut"][];
+        };
+        /** StaffOut */
+        StaffOut: {
+            /** Active */
+            active: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Email */
+            email: string;
+            id: components["schemas"]["PydanticObjectId"];
+            /** Invite Expired */
+            invite_expired: boolean;
+            /** Invited */
+            invited: boolean;
+            /** Invited At */
+            invited_at: string | null;
+            /** Last Login At */
+            last_login_at: string | null;
+            /** Locked */
+            locked: boolean;
+            /** Mfa Enabled */
+            mfa_enabled: boolean;
+            /** Name */
+            name: string;
+            role: components["schemas"]["PlatformRole"];
         };
         /** StoreAwardsOut */
         StoreAwardsOut: {
@@ -3122,6 +4298,24 @@ export interface components {
             role: "crew" | "shift" | "gm" | "supervisor" | "director";
             store: components["schemas"]["StoreRef"] | null;
         };
+        /**
+         * UsageOut
+         * @description This month, in the operator's time zone.
+         */
+        UsageOut: {
+            /** Active People */
+            active_people: number;
+            /** Coins Earned */
+            coins_earned: number;
+            /** Month */
+            month: string;
+            /** Pending Requests */
+            pending_requests: number;
+            /** Redemptions */
+            redemptions: number;
+            /** Shoutouts */
+            shoutouts: number;
+        };
         /** ValidationError */
         ValidationError: {
             /** Context */
@@ -3222,6 +4416,72 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_forgot_api_v1_auth_owner_forgot_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmailRequestIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_invite_accept_api_v1_auth_owner_invite_accept_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkPasswordIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerAuthOut"];
+                };
             };
             /** @description Validation Error */
             422: {
@@ -3353,6 +4613,268 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OwnerAuthOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    owner_reset_api_v1_auth_owner_reset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkPasswordIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerAuthOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    invite_accept_api_v1_auth_platform_invite_accept_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LinkPasswordIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformAuthOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    login_api_v1_auth_platform_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformLoginIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformAuthOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    logout_api_v1_auth_platform_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mfa_confirm_api_v1_auth_platform_mfa_confirm_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaCodeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformMfaEnabledOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mfa_setup_api_v1_auth_platform_mfa_setup_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaTokenIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaSetupOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mfa_verify_api_v1_auth_platform_mfa_verify_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MfaCodeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformAuthOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refresh_api_v1_auth_platform_refresh_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformTokenOut"];
                 };
             };
             /** @description Validation Error */
@@ -3884,6 +5406,705 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MetaOut"];
+                };
+            };
+        };
+    };
+    audit_api_v1_platform_audit_get: {
+        parameters: {
+            query?: {
+                operator_id?: components["schemas"]["PydanticObjectId"] | null;
+                actor_id?: components["schemas"]["PydanticObjectId"] | null;
+                action?: string | null;
+                before?: components["schemas"]["PydanticObjectId"] | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformAuditPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    system_health_api_v1_platform_health_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformHealthOut"];
+                };
+            };
+        };
+    };
+    me_api_v1_platform_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformMeOut"];
+                };
+            };
+        };
+    };
+    list_operators_api_v1_platform_operators_get: {
+        parameters: {
+            query?: {
+                status?: ("active" | "suspended") | null;
+                q?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperatorListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_operator_api_v1_platform_operators_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OperatorCreateIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperatorCreatedOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_operator_api_v1_platform_operators__operator_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperatorDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_operator_api_v1_platform_operators__operator_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OperatorPatchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperatorDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_owners_api_v1_platform_operators__operator_id__owners_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    invite_owner_api_v1_platform_operators__operator_id__owners_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OwnerAddIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerInvitedOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reactivate_owner_api_v1_platform_operators__operator_id__owners__owner_id__reactivate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+                owner_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformOwnerOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resend_owner_invite_api_v1_platform_operators__operator_id__owners__owner_id__resend_invite_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+                owner_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OwnerInvitedOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reset_owner_mfa_api_v1_platform_operators__operator_id__owners__owner_id__reset_mfa_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+                owner_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformOwnerOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    suspend_owner_api_v1_platform_operators__operator_id__owners__owner_id__suspend_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+                owner_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformOwnerOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reactivate_operator_api_v1_platform_operators__operator_id__reactivate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperatorDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    suspend_operator_api_v1_platform_operators__operator_id__suspend_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operator_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperatorDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    overview_api_v1_platform_overview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformOverviewOut"];
+                };
+            };
+        };
+    };
+    list_staff_api_v1_platform_staff_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffListOut"];
+                };
+            };
+        };
+    };
+    invite_staff_api_v1_platform_staff_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StaffInviteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffInvitedOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reactivate_staff_api_v1_platform_staff__staff_id__reactivate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                staff_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resend_staff_invite_api_v1_platform_staff__staff_id__resend_invite_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                staff_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffInvitedOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reset_staff_mfa_api_v1_platform_staff__staff_id__reset_mfa_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                staff_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    suspend_staff_api_v1_platform_staff__staff_id__suspend_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                staff_id: components["schemas"]["PydanticObjectId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlatformWriteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -4978,6 +7199,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TeamOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    find_company_api_v1_public_find_company_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmailRequestIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */

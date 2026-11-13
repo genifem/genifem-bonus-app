@@ -5,7 +5,7 @@
  * must never send a refresh token it has already spent. Tested against a fake device keychain
  * and a fake server that behaves that way.
  */
-import { api, ApiError, onSessionEnded } from "@/lib/api";
+import { api, ApiError, onCompanyProblem, onSessionEnded } from "@/lib/api";
 
 const mockSession = {
   accessToken: null as string | null,
@@ -30,7 +30,7 @@ jest.mock("expo-constants", () => ({ __esModule: true, default: { expoConfig: nu
 // babel-preset-expo reads EXPO_PUBLIC_ variables through this module, which jest cannot load.
 jest.mock("expo/virtual/env", () => ({ env: process.env }));
 
-type RefreshMode = "rotate" | "refuse" | "fail" | "offline";
+type RefreshMode = "rotate" | "refuse" | "fail" | "offline" | "paused";
 
 /** The server's side: the one live access token and the one live refresh token. */
 const server = {
@@ -43,6 +43,8 @@ const server = {
   refreshMode: "rotate" as RefreshMode,
   /** A request to one of these paths gets its answer only once the promise settles. */
   holds: new Map<string, Promise<void>>(),
+  /** A request to one of these paths gets this error, whoever asks. */
+  refusals: new Map<string, { status: number; code: string }>(),
 };
 
 function reply(status: number, body: unknown): Response {
@@ -58,6 +60,9 @@ async function fakeFetch(url: string, init: RequestInit): Promise<Response> {
     await new Promise((resolve) => setTimeout(resolve, 5));
     if (server.refreshMode === "offline") throw new TypeError("Network request failed");
     if (server.refreshMode === "fail") return reply(503, null);
+    if (server.refreshMode === "paused") {
+      return reply(403, { error: { code: "tenant_suspended", message: "this operator is suspended" } });
+    }
     if (server.refreshMode === "refuse" || presented !== server.refresh) {
       server.access = "revoked";
       server.refresh = "revoked";
@@ -68,6 +73,8 @@ async function fakeFetch(url: string, init: RequestInit): Promise<Response> {
     server.refresh = `refresh-${server.generation}`;
     return reply(200, { access_token: server.access, refresh_token: server.refresh });
   }
+  const refused = server.refusals.get(path);
+  if (refused) return reply(refused.status, { error: { code: refused.code, message: refused.code } });
   // The token is checked as the request arrives, even when the answer comes back later.
   const authorised = (init.headers as Record<string, string>).authorization === `Bearer ${server.access}`;
   const hold = server.holds.get(path);
@@ -96,6 +103,7 @@ beforeEach(() => {
   server.refreshes = [];
   server.refreshMode = "rotate";
   server.holds.clear();
+  server.refusals.clear();
   issuedRefresh = server.refresh;
   mockSession.accessToken = `expired-${server.generation}`;
   mockSession.refreshToken = server.refresh;
@@ -208,5 +216,71 @@ describe("every request", () => {
     expect(signedIn).toMatchObject({ "x-tenant": "demo", "x-client": "app", authorization: `Bearer ${server.access}` });
     expect(anonymous).toMatchObject({ "x-tenant": "demo", "x-client": "app", "content-type": "application/json" });
     expect(anonymous).not.toHaveProperty("authorization");
+  });
+
+  it("names the company being checked instead of the chosen one when asked to", async () => {
+    // Refused by the fake server (no token); only what was sent matters here.
+    await failureOf(api("/meta", { anonymous: true, tenant: "ecc" }));
+    const [[, init]] = (globalThis.fetch as jest.Mock).mock.calls as [string, RequestInit][];
+    expect(init.headers).toMatchObject({ "x-tenant": "ecc" });
+  });
+});
+
+describe("what a call hears about the company (P7)", () => {
+  beforeEach(() => {
+    mockSession.accessToken = server.access;
+  });
+
+  it("passes on a paused company and a gone one, whichever call heard it", async () => {
+    const heard = jest.fn();
+    const stop = onCompanyProblem(heard);
+    server.refusals.set("/me/summary", { status: 403, code: "tenant_suspended" });
+    server.refusals.set("/wall", { status: 404, code: "tenant_not_found" });
+
+    expect((await failureOf(api("/me/summary"))).code).toBe("tenant_suspended");
+    expect((await failureOf(api("/wall"))).code).toBe("tenant_not_found");
+    stop();
+
+    expect(heard.mock.calls).toEqual([["paused"], ["gone"]]);
+  });
+
+  it("passes on a paused company heard while renewing, and keeps the session for when it is back", async () => {
+    mockSession.accessToken = `expired-${server.generation}`;
+    server.refreshMode = "paused";
+    const heard = jest.fn();
+    const ended = jest.fn();
+    const stops = [onCompanyProblem(heard), onSessionEnded(ended)];
+
+    expect((await failureOf(api("/me"))).code).toBe("tenant_suspended");
+    for (const stop of stops) stop();
+
+    expect(heard).toHaveBeenCalledWith("paused");
+    expect(ended).not.toHaveBeenCalled();
+    expect(mockSession.refreshToken).toBe(issuedRefresh);
+  });
+
+  it("keeps a code being checked to itself: the company screen says what it heard", async () => {
+    const heard = jest.fn();
+    const stop = onCompanyProblem(heard);
+    server.refusals.set("/meta", { status: 404, code: "tenant_not_found" });
+
+    const failure = await failureOf(api("/meta", { anonymous: true, tenant: "nope" }));
+    stop();
+
+    expect(failure.status).toBe(404);
+    expect(heard).not.toHaveBeenCalled();
+  });
+
+  it("says nothing about the company for any other failure", async () => {
+    const heard = jest.fn();
+    const stop = onCompanyProblem(heard);
+    server.refusals.set("/posts/1", { status: 404, code: "not_found" });
+    server.refusals.set("/approvals", { status: 403, code: "managers_only" });
+
+    await failureOf(api("/posts/1"));
+    await failureOf(api("/approvals"));
+    stop();
+
+    expect(heard).not.toHaveBeenCalled();
   });
 });

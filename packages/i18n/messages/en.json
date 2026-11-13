@@ -26,6 +26,21 @@
     "signIn": "Sign in",
     "operatorLogo": "{name} logo"
   },
+  "company": {
+    "title": "What's your company code?",
+    "lead": "Your manager can tell you. You only need it the first time.",
+    "code": "Company code",
+    "codeHint": "For example, ECC",
+    "confirmTitle": "Is this your company?",
+    "confirmA11y": "Is this your company? {name}",
+    "yes": "Yes, that's my company",
+    "no": "No, enter another code",
+    "change": "Not your company? Change",
+    "signingInTo": "Signing in to {name}",
+    "pausedTitle": "Crew Stars is paused",
+    "pausedLead": "Nothing is lost: your coins and rewards will be here when it's back.",
+    "pausedRetry": "Check again"
+  },
   "signIn": {
     "title": "Welcome back 👋",
     "eid": "Employee ID (EID)",
@@ -294,6 +309,8 @@
   "errors": {
     "generic": "Something went wrong. Try again.",
     "network": "You're offline. Check your connection and try again.",
+    "tenant_not_found": "We couldn't find that company code. Check it, or ask your manager for it.",
+    "tenant_suspended": "This company's Crew Stars is paused. Ask your manager.",
     "credentials_invalid": "That EID and password don't match. Try again.",
     "account_locked": "Too many tries. Try again in {minutes, plural, one {# minute} other {# minutes}}.",
     "account_inactive": "This account is no longer active. Talk to your manager.",

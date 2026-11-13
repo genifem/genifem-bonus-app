@@ -1089,6 +1089,35 @@
         "title": "CsvRow",
         "type": "object"
       },
+      "DatabaseHealthOut": {
+        "properties": {
+          "latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latency Ms"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "down"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "latency_ms"
+        ],
+        "title": "DatabaseHealthOut",
+        "type": "object"
+      },
       "DeciderOut": {
         "properties": {
           "kind": {
@@ -1157,6 +1186,59 @@
           "params"
         ],
         "title": "Eligibility",
+        "type": "object"
+      },
+      "EmailProviderOut": {
+        "properties": {
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "provider": {
+            "enum": [
+              "console",
+              "brevo"
+            ],
+            "title": "Provider",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "configured"
+        ],
+        "title": "EmailProviderOut",
+        "type": "object"
+      },
+      "EmailRequestIn": {
+        "description": "\"Forgot password?\" and \"Find your company\": always answered 202.",
+        "properties": {
+          "email": {
+            "format": "email",
+            "maxLength": 254,
+            "title": "Email",
+            "type": "string"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "enum": [
+                  "en",
+                  "es"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "EmailRequestIn",
         "type": "object"
       },
       "GiveContextOut": {
@@ -1244,6 +1326,91 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "JobRunOut": {
+        "properties": {
+          "counts": {
+            "additionalProperties": true,
+            "title": "Counts",
+            "type": "object"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "every_s": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Every S"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "stale": {
+            "title": "Stale",
+            "type": "boolean"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "status": {
+            "enum": [
+              "running",
+              "ok",
+              "failed",
+              "never"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "status",
+          "started_at",
+          "finished_at",
+          "counts",
+          "error",
+          "stale",
+          "every_s"
+        ],
+        "title": "JobRunOut",
         "type": "object"
       },
       "KudosOut": {
@@ -1418,6 +1585,29 @@
           "resets_on"
         ],
         "title": "LimitsOut",
+        "type": "object"
+      },
+      "LinkPasswordIn": {
+        "description": "The token from an emailed link's fragment (``/invite#token=\u2026``, ``/reset#token=\u2026``)\nand the password chosen with it.",
+        "properties": {
+          "password": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          },
+          "token": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "password"
+        ],
+        "title": "LinkPasswordIn",
         "type": "object"
       },
       "LoginIn": {
@@ -2199,6 +2389,406 @@
         "title": "NotificationPage",
         "type": "object"
       },
+      "OperatorCountsOut": {
+        "properties": {
+          "active": {
+            "title": "Active",
+            "type": "integer"
+          },
+          "suspended": {
+            "title": "Suspended",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "active",
+          "suspended",
+          "total"
+        ],
+        "title": "OperatorCountsOut",
+        "type": "object"
+      },
+      "OperatorCreateIn": {
+        "description": "A new operator: its settings and rewards catalog with the spec's defaults (as the\nseed makes them), and its first owner, invited by email.",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/OwnerInviteIn"
+          },
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Reason",
+            "type": "string"
+          },
+          "slug": {
+            "examples": [
+              "acme"
+            ],
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Slug",
+            "type": "string"
+          },
+          "tz": {
+            "default": "America/New_York",
+            "examples": [
+              "America/Chicago"
+            ],
+            "title": "Tz",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason",
+          "name",
+          "slug",
+          "owner"
+        ],
+        "title": "OperatorCreateIn",
+        "type": "object"
+      },
+      "OperatorCreatedOut": {
+        "properties": {
+          "invite_email": {
+            "enum": [
+              "sent",
+              "failed"
+            ],
+            "title": "Invite Email",
+            "type": "string"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/OperatorDetailOut"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/PlatformOwnerOut"
+          }
+        },
+        "required": [
+          "operator",
+          "owner",
+          "invite_email"
+        ],
+        "title": "OperatorCreatedOut",
+        "type": "object"
+      },
+      "OperatorDetailOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "last_activity_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Activity At"
+          },
+          "logo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logo Url"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "owners": {
+            "title": "Owners",
+            "type": "integer"
+          },
+          "people": {
+            "title": "People",
+            "type": "integer"
+          },
+          "portal_url": {
+            "title": "Portal Url",
+            "type": "string"
+          },
+          "recent_audit": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformAuditEventOut"
+            },
+            "title": "Recent Audit",
+            "type": "array"
+          },
+          "shoutouts_month": {
+            "title": "Shoutouts Month",
+            "type": "integer"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "suspended"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "stores": {
+            "title": "Stores",
+            "type": "integer"
+          },
+          "tz": {
+            "title": "Tz",
+            "type": "string"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/UsageOut"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "status",
+          "tz",
+          "logo_url",
+          "created_at",
+          "portal_url",
+          "stores",
+          "people",
+          "owners",
+          "shoutouts_month",
+          "last_activity_at",
+          "usage",
+          "recent_audit"
+        ],
+        "title": "OperatorDetailOut",
+        "type": "object"
+      },
+      "OperatorListOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OperatorRowOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "month": {
+            "title": "Month",
+            "type": "string"
+          }
+        },
+        "required": [
+          "items",
+          "month"
+        ],
+        "title": "OperatorListOut",
+        "type": "object"
+      },
+      "OperatorPatchIn": {
+        "description": "Only what is sent changes. ``logo_url: null`` removes the logo.",
+        "properties": {
+          "logo_url": {
+            "anyOf": [
+              {
+                "format": "uri",
+                "maxLength": 2083,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logo Url"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Reason",
+            "type": "string"
+          },
+          "tz": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tz"
+          }
+        },
+        "required": [
+          "reason"
+        ],
+        "title": "OperatorPatchIn",
+        "type": "object"
+      },
+      "OperatorRefOut": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slug"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug"
+        ],
+        "title": "OperatorRefOut",
+        "type": "object"
+      },
+      "OperatorRowOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "last_activity_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Activity At"
+          },
+          "logo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logo Url"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "owners": {
+            "title": "Owners",
+            "type": "integer"
+          },
+          "people": {
+            "title": "People",
+            "type": "integer"
+          },
+          "portal_url": {
+            "title": "Portal Url",
+            "type": "string"
+          },
+          "shoutouts_month": {
+            "title": "Shoutouts Month",
+            "type": "integer"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "suspended"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "stores": {
+            "title": "Stores",
+            "type": "integer"
+          },
+          "tz": {
+            "title": "Tz",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "status",
+          "tz",
+          "logo_url",
+          "created_at",
+          "portal_url",
+          "stores",
+          "people",
+          "owners",
+          "shoutouts_month",
+          "last_activity_at"
+        ],
+        "title": "OperatorRowOut",
+        "type": "object"
+      },
       "OverviewOut": {
         "properties": {
           "month": {
@@ -2286,6 +2876,44 @@
           "requests_waiting"
         ],
         "title": "OverviewStats",
+        "type": "object"
+      },
+      "OwnerAddIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "maxLength": 254,
+            "title": "Email",
+            "type": "string"
+          },
+          "language": {
+            "default": "en",
+            "enum": [
+              "en",
+              "es"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason",
+          "name",
+          "email"
+        ],
+        "title": "OwnerAddIn",
         "type": "object"
       },
       "OwnerAuthOut": {
@@ -2411,6 +3039,74 @@
         "title": "OwnerGiveContextOut",
         "type": "object"
       },
+      "OwnerInviteIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "maxLength": 254,
+            "title": "Email",
+            "type": "string"
+          },
+          "language": {
+            "default": "en",
+            "enum": [
+              "en",
+              "es"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "email"
+        ],
+        "title": "OwnerInviteIn",
+        "type": "object"
+      },
+      "OwnerInvitedOut": {
+        "properties": {
+          "invite_email": {
+            "enum": [
+              "sent",
+              "failed"
+            ],
+            "title": "Invite Email",
+            "type": "string"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/PlatformOwnerOut"
+          }
+        },
+        "required": [
+          "owner",
+          "invite_email"
+        ],
+        "title": "OwnerInvitedOut",
+        "type": "object"
+      },
+      "OwnerListOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformOwnerOut"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "OwnerListOut",
+        "type": "object"
+      },
       "OwnerLoginIn": {
         "properties": {
           "email": {
@@ -2512,6 +3208,22 @@
         ],
         "title": "PeoplePage",
         "type": "object"
+      },
+      "Perm": {
+        "enum": [
+          "overview.read",
+          "operators.read",
+          "operators.write",
+          "owners.invite",
+          "owners.mfa_reset",
+          "owners.manage",
+          "health.read",
+          "audit.read",
+          "staff.read",
+          "staff.write"
+        ],
+        "title": "Perm",
+        "type": "string"
       },
       "PersonIn": {
         "properties": {
@@ -2903,6 +3615,671 @@
         "title": "PersonRef",
         "type": "object"
       },
+      "PlatformAuditActorOut": {
+        "properties": {
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name"
+        ],
+        "title": "PlatformAuditActorOut",
+        "type": "object"
+      },
+      "PlatformAuditEventOut": {
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "actor": {
+            "$ref": "#/components/schemas/PlatformAuditActorOut"
+          },
+          "after": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "After"
+          },
+          "at": {
+            "format": "date-time",
+            "title": "At",
+            "type": "string"
+          },
+          "before": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Before"
+          },
+          "details": {
+            "additionalProperties": true,
+            "title": "Details",
+            "type": "object"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "ip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ip"
+          },
+          "operator": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OperatorRefOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlatformAuditTargetOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "at",
+          "action",
+          "actor",
+          "target",
+          "operator",
+          "reason",
+          "before",
+          "after",
+          "details",
+          "ip",
+          "request_id"
+        ],
+        "title": "PlatformAuditEventOut",
+        "type": "object"
+      },
+      "PlatformAuditPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlatformAuditEventOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_before": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_before"
+        ],
+        "title": "PlatformAuditPage",
+        "type": "object"
+      },
+      "PlatformAuditTargetOut": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PydanticObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "PlatformAuditTargetOut",
+        "type": "object"
+      },
+      "PlatformAuthOut": {
+        "description": "A back office sign-in step. ``mfa`` asks for an authenticator code, ``mfa_setup`` for\none to be set up first (always, P7), each with a short-lived ``mfa_token``; ``done``\ncarries the tokens.",
+        "properties": {
+          "mfa_token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mfa Token"
+          },
+          "step": {
+            "enum": [
+              "done",
+              "mfa",
+              "mfa_setup"
+            ],
+            "title": "Step",
+            "type": "string"
+          },
+          "tokens": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlatformTokenOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "step",
+          "tokens",
+          "mfa_token"
+        ],
+        "title": "PlatformAuthOut",
+        "type": "object"
+      },
+      "PlatformHealthOut": {
+        "properties": {
+          "backup": {
+            "$ref": "#/components/schemas/JobRunOut"
+          },
+          "checked_at": {
+            "format": "date-time",
+            "title": "Checked At",
+            "type": "string"
+          },
+          "database": {
+            "$ref": "#/components/schemas/DatabaseHealthOut"
+          },
+          "env": {
+            "title": "Env",
+            "type": "string"
+          },
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/JobRunOut"
+            },
+            "title": "Jobs",
+            "type": "array"
+          },
+          "operators": {
+            "$ref": "#/components/schemas/OperatorCountsOut"
+          },
+          "providers": {
+            "$ref": "#/components/schemas/ProvidersOut"
+          },
+          "restore_drill": {
+            "$ref": "#/components/schemas/JobRunOut"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          }
+        },
+        "required": [
+          "checked_at",
+          "database",
+          "jobs",
+          "backup",
+          "restore_drill",
+          "providers",
+          "version",
+          "env",
+          "operators"
+        ],
+        "title": "PlatformHealthOut",
+        "type": "object"
+      },
+      "PlatformHealthSummaryOut": {
+        "properties": {
+          "database": {
+            "enum": [
+              "ok",
+              "down"
+            ],
+            "title": "Database",
+            "type": "string"
+          },
+          "email_configured": {
+            "title": "Email Configured",
+            "type": "boolean"
+          },
+          "failing_jobs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Failing Jobs",
+            "type": "array"
+          },
+          "last_backup_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Backup At"
+          },
+          "last_backup_status": {
+            "enum": [
+              "running",
+              "ok",
+              "failed",
+              "never"
+            ],
+            "title": "Last Backup Status",
+            "type": "string"
+          },
+          "stale_jobs": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Stale Jobs",
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "watch",
+              "problem"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "database",
+          "failing_jobs",
+          "stale_jobs",
+          "last_backup_at",
+          "last_backup_status",
+          "email_configured"
+        ],
+        "title": "PlatformHealthSummaryOut",
+        "type": "object"
+      },
+      "PlatformLoginIn": {
+        "properties": {
+          "email": {
+            "maxLength": 254,
+            "minLength": 3,
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "PlatformLoginIn",
+        "type": "object"
+      },
+      "PlatformMeOut": {
+        "description": "The signed-in admin, with what their role may do, so the back office can hide what\nit can't use (the server refuses it anyway).",
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "last_login_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Login At"
+          },
+          "mfa_enabled": {
+            "title": "Mfa Enabled",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "permissions": {
+            "items": {
+              "$ref": "#/components/schemas/Perm"
+            },
+            "title": "Permissions",
+            "type": "array"
+          },
+          "role": {
+            "$ref": "#/components/schemas/PlatformRole"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "role",
+          "permissions",
+          "mfa_enabled",
+          "last_login_at"
+        ],
+        "title": "PlatformMeOut",
+        "type": "object"
+      },
+      "PlatformMfaEnabledOut": {
+        "properties": {
+          "auth": {
+            "$ref": "#/components/schemas/PlatformAuthOut"
+          },
+          "recovery_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Recovery Codes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "recovery_codes",
+          "auth"
+        ],
+        "title": "PlatformMfaEnabledOut",
+        "type": "object"
+      },
+      "PlatformOverviewOut": {
+        "properties": {
+          "active_people": {
+            "title": "Active People",
+            "type": "integer"
+          },
+          "health": {
+            "$ref": "#/components/schemas/PlatformHealthSummaryOut"
+          },
+          "month": {
+            "title": "Month",
+            "type": "string"
+          },
+          "operators": {
+            "$ref": "#/components/schemas/OperatorCountsOut"
+          },
+          "redemptions_month": {
+            "title": "Redemptions Month",
+            "type": "integer"
+          },
+          "shoutouts_month": {
+            "title": "Shoutouts Month",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "month",
+          "operators",
+          "active_people",
+          "shoutouts_month",
+          "redemptions_month",
+          "health"
+        ],
+        "title": "PlatformOverviewOut",
+        "type": "object"
+      },
+      "PlatformOwnerOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "invite_expired": {
+            "title": "Invite Expired",
+            "type": "boolean"
+          },
+          "invited": {
+            "title": "Invited",
+            "type": "boolean"
+          },
+          "invited_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invited At"
+          },
+          "language": {
+            "enum": [
+              "en",
+              "es"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "last_login_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Login At"
+          },
+          "locked": {
+            "title": "Locked",
+            "type": "boolean"
+          },
+          "mfa_enabled": {
+            "title": "Mfa Enabled",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "disabled"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "status",
+          "language",
+          "invited",
+          "invited_at",
+          "invite_expired",
+          "mfa_enabled",
+          "locked",
+          "last_login_at",
+          "created_at"
+        ],
+        "title": "PlatformOwnerOut",
+        "type": "object"
+      },
+      "PlatformRole": {
+        "enum": [
+          "super_admin",
+          "support"
+        ],
+        "title": "PlatformRole",
+        "type": "string"
+      },
+      "PlatformTokenOut": {
+        "properties": {
+          "access_token": {
+            "title": "Access Token",
+            "type": "string"
+          },
+          "expires_in": {
+            "title": "Expires In",
+            "type": "integer"
+          },
+          "refresh_token": {
+            "title": "Refresh Token",
+            "type": "string"
+          },
+          "token_type": {
+            "const": "bearer",
+            "default": "bearer",
+            "title": "Token Type",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/PlatformMeOut"
+          }
+        },
+        "required": [
+          "access_token",
+          "token_type",
+          "expires_in",
+          "refresh_token",
+          "user"
+        ],
+        "title": "PlatformTokenOut",
+        "type": "object"
+      },
+      "PlatformWriteIn": {
+        "description": "Every back office write says why (Geniverse ADR 0004 section 2). The reason is kept\nwith the audit event, written in the same transaction as the change.",
+        "properties": {
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason"
+        ],
+        "title": "PlatformWriteIn",
+        "type": "object"
+      },
       "PostOut": {
         "properties": {
           "award_month": {
@@ -3180,6 +4557,39 @@
           "amount"
         ],
         "title": "PrizeOut",
+        "type": "object"
+      },
+      "ProvidersOut": {
+        "properties": {
+          "email": {
+            "$ref": "#/components/schemas/EmailProviderOut"
+          },
+          "push": {
+            "$ref": "#/components/schemas/PushProviderOut"
+          },
+          "sms": {
+            "$ref": "#/components/schemas/SmsProviderOut"
+          }
+        },
+        "required": [
+          "email",
+          "sms",
+          "push"
+        ],
+        "title": "ProvidersOut",
+        "type": "object"
+      },
+      "PushProviderOut": {
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "title": "PushProviderOut",
         "type": "object"
       },
       "PushTokenDelete": {
@@ -4342,6 +5752,24 @@
         "title": "ShoutoutResult",
         "type": "object"
       },
+      "SmsProviderOut": {
+        "properties": {
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled",
+          "configured"
+        ],
+        "title": "SmsProviderOut",
+        "type": "object"
+      },
       "Spin": {
         "properties": {
           "enabled": {
@@ -4480,6 +5908,168 @@
           "earned_this_month"
         ],
         "title": "SpotlightOut",
+        "type": "object"
+      },
+      "StaffInviteIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "maxLength": 254,
+            "title": "Email",
+            "type": "string"
+          },
+          "language": {
+            "default": "en",
+            "enum": [
+              "en",
+              "es"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Reason",
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/PlatformRole",
+            "default": "support"
+          }
+        },
+        "required": [
+          "reason",
+          "email",
+          "name"
+        ],
+        "title": "StaffInviteIn",
+        "type": "object"
+      },
+      "StaffInvitedOut": {
+        "properties": {
+          "invite_email": {
+            "enum": [
+              "sent",
+              "failed"
+            ],
+            "title": "Invite Email",
+            "type": "string"
+          },
+          "staff": {
+            "$ref": "#/components/schemas/StaffOut"
+          }
+        },
+        "required": [
+          "staff",
+          "invite_email"
+        ],
+        "title": "StaffInvitedOut",
+        "type": "object"
+      },
+      "StaffListOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/StaffOut"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "StaffListOut",
+        "type": "object"
+      },
+      "StaffOut": {
+        "properties": {
+          "active": {
+            "title": "Active",
+            "type": "boolean"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "id": {
+            "$ref": "#/components/schemas/PydanticObjectId"
+          },
+          "invite_expired": {
+            "title": "Invite Expired",
+            "type": "boolean"
+          },
+          "invited": {
+            "title": "Invited",
+            "type": "boolean"
+          },
+          "invited_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invited At"
+          },
+          "last_login_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Login At"
+          },
+          "locked": {
+            "title": "Locked",
+            "type": "boolean"
+          },
+          "mfa_enabled": {
+            "title": "Mfa Enabled",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/PlatformRole"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "role",
+          "active",
+          "invited",
+          "invited_at",
+          "invite_expired",
+          "mfa_enabled",
+          "locked",
+          "last_login_at",
+          "created_at"
+        ],
+        "title": "StaffOut",
         "type": "object"
       },
       "StoreAwardsOut": {
@@ -5303,6 +6893,45 @@
         "title": "UnrecognizedOut",
         "type": "object"
       },
+      "UsageOut": {
+        "description": "This month, in the operator's time zone.",
+        "properties": {
+          "active_people": {
+            "title": "Active People",
+            "type": "integer"
+          },
+          "coins_earned": {
+            "title": "Coins Earned",
+            "type": "integer"
+          },
+          "month": {
+            "title": "Month",
+            "type": "string"
+          },
+          "pending_requests": {
+            "title": "Pending Requests",
+            "type": "integer"
+          },
+          "redemptions": {
+            "title": "Redemptions",
+            "type": "integer"
+          },
+          "shoutouts": {
+            "title": "Shoutouts",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "month",
+          "active_people",
+          "shoutouts",
+          "coins_earned",
+          "redemptions",
+          "pending_requests"
+        ],
+        "title": "UsageOut",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "ctx": {
@@ -5500,6 +7129,88 @@
         ]
       }
     },
+    "/api/v1/auth/owner/forgot": {
+      "post": {
+        "description": "Email a reset link (``/reset#token=\u2026``, 1 hour) if this operator has an active owner\nwith that email. Always 202, whoever it is; 429 ``rate_limited`` per IP.",
+        "operationId": "owner_forgot_api_v1_auth_owner_forgot_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequestIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Forgot",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/owner/invite/accept": {
+      "post": {
+        "description": "An invited owner chooses a password (the token from ``/invite#token=\u2026``) and is signed\nin, or asked for the authenticator step. 401 ``token_expired`` (7 days), ``token_used``\n(accepted already, or a newer invite was sent), ``token_invalid``; 422 ``password_weak``.",
+        "operationId": "owner_invite_accept_api_v1_auth_owner_invite_accept_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkPasswordIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerAuthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Invite Accept",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
     "/api/v1/auth/owner/login": {
       "post": {
         "operationId": "owner_login_api_v1_auth_owner_login_post",
@@ -5661,6 +7372,335 @@
         "summary": "Owner Mfa Verify",
         "tags": [
           "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/owner/reset": {
+      "post": {
+        "description": "A new password from the emailed link; the owner's other sessions end. Answers like\nsign-in. 401 ``token_expired`` (1 hour), ``token_used``, ``token_invalid``; 422\n``password_weak``.",
+        "operationId": "owner_reset_api_v1_auth_owner_reset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkPasswordIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerAuthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Owner Reset",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/platform/invite/accept": {
+      "post": {
+        "description": "An invited admin chooses a password (the token from ``/invite#token=\u2026``; at least 12\ncharacters and a number). Answers ``mfa_setup``, as a first sign-in does. 401\n``token_expired`` (7 days), ``token_used``, ``token_invalid``; 422 ``password_weak``.",
+        "operationId": "invite_accept_api_v1_auth_platform_invite_accept_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkPasswordIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformAuthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Invite Accept",
+        "tags": [
+          "platform auth"
+        ]
+      }
+    },
+    "/api/v1/auth/platform/login": {
+      "post": {
+        "description": "Email and password. Answers ``mfa`` (a code from the authenticator comes next) or\n``mfa_setup`` (set one up first), each with an ``mfa_token`` (15 minutes). 401\n``credentials_invalid``; the fifth wrong password or code in a row answers 403\n``account_locked`` with ``details.until`` (15 minutes).",
+        "operationId": "login_api_v1_auth_platform_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformLoginIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformAuthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Login",
+        "tags": [
+          "platform auth"
+        ]
+      }
+    },
+    "/api/v1/auth/platform/logout": {
+      "post": {
+        "description": "Ends the session: its refresh tokens and its access token stop working.",
+        "operationId": "logout_api_v1_auth_platform_logout_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Logout",
+        "tags": [
+          "platform auth"
+        ]
+      }
+    },
+    "/api/v1/auth/platform/mfa/confirm": {
+      "post": {
+        "description": "A first code from the new authenticator turns it on and signs in; the recovery codes\nare shown this once. 401 ``mfa_invalid``.",
+        "operationId": "mfa_confirm_api_v1_auth_platform_mfa_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaCodeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformMfaEnabledOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mfa Confirm",
+        "tags": [
+          "platform auth"
+        ]
+      }
+    },
+    "/api/v1/auth/platform/mfa/setup": {
+      "post": {
+        "description": "A secret and an ``otpauth://`` URI for the authenticator app (show it as a QR code).\n409 ``mfa_already_enabled``.",
+        "operationId": "mfa_setup_api_v1_auth_platform_mfa_setup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaTokenIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaSetupOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mfa Setup",
+        "tags": [
+          "platform auth"
+        ]
+      }
+    },
+    "/api/v1/auth/platform/mfa/verify": {
+      "post": {
+        "description": "A code from the authenticator, or a recovery code (each works once). 401\n``mfa_invalid``; wrong codes count towards the lockout.",
+        "operationId": "mfa_verify_api_v1_auth_platform_mfa_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaCodeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformAuthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mfa Verify",
+        "tags": [
+          "platform auth"
+        ]
+      }
+    },
+    "/api/v1/auth/platform/refresh": {
+      "post": {
+        "description": "The next tokens of the session. 401 ``session_idle`` (20 minutes without a request),\n``refresh_expired`` (12 hours after sign-in), ``refresh_reused`` (the session is ended:\nan old token came back), ``refresh_revoked``, ``refresh_invalid``.",
+        "operationId": "refresh_api_v1_auth_platform_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformTokenOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Refresh",
+        "tags": [
+          "platform auth"
         ]
       }
     },
@@ -6333,6 +8373,1088 @@
         "summary": "Get Meta",
         "tags": [
           "meta"
+        ]
+      }
+    },
+    "/api/v1/platform/audit": {
+      "get": {
+        "description": "The back office's own log, newest first. ``action`` is a prefix (``operator.``,\n``owner.mfa_reset``); ``before`` = the last page's ``next_before``.",
+        "operationId": "audit_api_v1_platform_audit_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "operator_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Operator Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "actor_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Actor Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "action",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Action"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PydanticObjectId"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformAuditPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Audit",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/health": {
+      "get": {
+        "operationId": "system_health_api_v1_platform_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformHealthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "System Health",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/me": {
+      "get": {
+        "description": "The signed-in admin, their role and its permissions.",
+        "operationId": "me_api_v1_platform_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformMeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Me",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/operators": {
+      "get": {
+        "description": "Every operator, by name, with its counts. ``q`` matches the name or the slug.",
+        "operationId": "list_operators_api_v1_platform_operators_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "active",
+                    "suspended"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Operators",
+        "tags": [
+          "platform operators"
+        ]
+      },
+      "post": {
+        "description": "A new operator with the default settings and rewards, and its first owner, invited\nby email (``invite_email``: \"failed\" means resend it). 409 ``slug_taken``; 422\n``slug_reserved``, ``validation_failed`` (a bad slug or time zone).",
+        "operationId": "create_operator_api_v1_platform_operators_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperatorCreateIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorCreatedOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Operator",
+        "tags": [
+          "platform operators"
+        ]
+      }
+    },
+    "/api/v1/platform/operators/{operator_id}": {
+      "get": {
+        "description": "One operator: its counts, this month's usage and its latest back office events.\n404 ``operator_not_found``.",
+        "operationId": "get_operator_api_v1_platform_operators__operator_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorDetailOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Operator",
+        "tags": [
+          "platform operators"
+        ]
+      },
+      "patch": {
+        "description": "Name, time zone, logo (https). 422 ``nothing_to_change``.",
+        "operationId": "patch_operator_api_v1_platform_operators__operator_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperatorPatchIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorDetailOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Patch Operator",
+        "tags": [
+          "platform operators"
+        ]
+      }
+    },
+    "/api/v1/platform/operators/{operator_id}/owners": {
+      "get": {
+        "operationId": "list_owners_api_v1_platform_operators__operator_id__owners_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Owners",
+        "tags": [
+          "platform operators"
+        ]
+      },
+      "post": {
+        "description": "Another owner, invited by email. 409 ``owner_exists``.",
+        "operationId": "invite_owner_api_v1_platform_operators__operator_id__owners_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerAddIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerInvitedOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Invite Owner",
+        "tags": [
+          "platform operators"
+        ]
+      }
+    },
+    "/api/v1/platform/operators/{operator_id}/owners/{owner_id}/reactivate": {
+      "post": {
+        "description": "409 ``owner_not_suspended``.",
+        "operationId": "reactivate_owner_api_v1_platform_operators__operator_id__owners__owner_id__reactivate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "owner_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformOwnerOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reactivate Owner",
+        "tags": [
+          "platform operators"
+        ]
+      }
+    },
+    "/api/v1/platform/operators/{operator_id}/owners/{owner_id}/resend-invite": {
+      "post": {
+        "description": "A fresh link, 7 days from now; the older ones stop working. 409\n``owner_already_joined``, ``owner_suspended``.",
+        "operationId": "resend_owner_invite_api_v1_platform_operators__operator_id__owners__owner_id__resend_invite_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "owner_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerInvitedOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Resend Owner Invite",
+        "tags": [
+          "platform operators"
+        ]
+      }
+    },
+    "/api/v1/platform/operators/{operator_id}/owners/{owner_id}/reset-mfa": {
+      "post": {
+        "description": "Turns the owner's authenticator off (a lost phone) and ends their sessions.",
+        "operationId": "reset_owner_mfa_api_v1_platform_operators__operator_id__owners__owner_id__reset_mfa_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "owner_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformOwnerOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reset Owner Mfa",
+        "tags": [
+          "platform operators"
+        ]
+      }
+    },
+    "/api/v1/platform/operators/{operator_id}/owners/{owner_id}/suspend": {
+      "post": {
+        "description": "The owner can't sign in, and their sessions end. 409 ``owner_already_suspended``.",
+        "operationId": "suspend_owner_api_v1_platform_operators__operator_id__owners__owner_id__suspend_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          },
+          {
+            "in": "path",
+            "name": "owner_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformOwnerOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Suspend Owner",
+        "tags": [
+          "platform operators"
+        ]
+      }
+    },
+    "/api/v1/platform/operators/{operator_id}/reactivate": {
+      "post": {
+        "description": "409 ``operator_not_suspended``.",
+        "operationId": "reactivate_operator_api_v1_platform_operators__operator_id__reactivate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorDetailOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reactivate Operator",
+        "tags": [
+          "platform operators"
+        ]
+      }
+    },
+    "/api/v1/platform/operators/{operator_id}/suspend": {
+      "post": {
+        "description": "Every request for it answers 403 ``tenant_suspended``, app and portal, until it is\nreactivated. 409 ``operator_already_suspended``.",
+        "operationId": "suspend_operator_api_v1_platform_operators__operator_id__suspend_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operator_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorDetailOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Suspend Operator",
+        "tags": [
+          "platform operators"
+        ]
+      }
+    },
+    "/api/v1/platform/overview": {
+      "get": {
+        "operationId": "overview_api_v1_platform_overview_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlatformOverviewOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Overview",
+        "tags": [
+          "platform"
+        ]
+      }
+    },
+    "/api/v1/platform/staff": {
+      "get": {
+        "operationId": "list_staff_api_v1_platform_staff_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffListOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Staff",
+        "tags": [
+          "platform staff"
+        ]
+      },
+      "post": {
+        "description": "An account with no password, and an email with a link to choose one (7 days). 409\n``staff_exists``.",
+        "operationId": "invite_staff_api_v1_platform_staff_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StaffInviteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffInvitedOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Invite Staff",
+        "tags": [
+          "platform staff"
+        ]
+      }
+    },
+    "/api/v1/platform/staff/{staff_id}/reactivate": {
+      "post": {
+        "description": "403 ``staff_self``; 409 ``staff_not_suspended``.",
+        "operationId": "reactivate_staff_api_v1_platform_staff__staff_id__reactivate_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "staff_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reactivate Staff",
+        "tags": [
+          "platform staff"
+        ]
+      }
+    },
+    "/api/v1/platform/staff/{staff_id}/resend-invite": {
+      "post": {
+        "description": "409 ``staff_already_joined``, ``staff_suspended``.",
+        "operationId": "resend_staff_invite_api_v1_platform_staff__staff_id__resend_invite_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "staff_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffInvitedOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Resend Staff Invite",
+        "tags": [
+          "platform staff"
+        ]
+      }
+    },
+    "/api/v1/platform/staff/{staff_id}/reset-mfa": {
+      "post": {
+        "description": "Removes their authenticator and ends their sessions; they set up a new one at the\nnext sign-in. 403 ``staff_self``.",
+        "operationId": "reset_staff_mfa_api_v1_platform_staff__staff_id__reset_mfa_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "staff_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reset Staff Mfa",
+        "tags": [
+          "platform staff"
+        ]
+      }
+    },
+    "/api/v1/platform/staff/{staff_id}/suspend": {
+      "post": {
+        "description": "Refused from the next request on; every session ends. 403 ``staff_self``; 409\n``staff_already_suspended``.",
+        "operationId": "suspend_staff_api_v1_platform_staff__staff_id__suspend_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "staff_id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PydanticObjectId"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlatformWriteIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Suspend Staff",
+        "tags": [
+          "platform staff"
         ]
       }
     },
@@ -8085,6 +11207,46 @@
         "summary": "Portal Team",
         "tags": [
           "dashboards"
+        ]
+      }
+    },
+    "/api/v1/public/find-company": {
+      "post": {
+        "description": "\"Find your company\" on the bare domain (no ``X-Tenant``): emails the sign-in address\n(``https://{slug}.<base>/login``) of every active operator where this email is an active\nowner. Always 202; 429 ``rate_limited`` per IP.",
+        "operationId": "find_company_api_v1_public_find_company_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequestIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Find Company",
+        "tags": [
+          "auth"
         ]
       }
     },

@@ -6,6 +6,7 @@ import { createTranslator } from "@crewstars/i18n";
 
 import { ApiError } from "@/lib/apiError";
 import {
+  companyProblem,
   explain,
   isOffline,
   keepsSession,
@@ -14,6 +15,7 @@ import {
   sendProblem,
   setupProblem,
   signInProblem,
+  tenantProblemOf,
   waitSeconds,
 } from "@/lib/errors";
 
@@ -189,6 +191,8 @@ describe("every error code the auth API sends", () => {
     "password_weak",
     "token_used",
     "token_expired",
+    "tenant_not_found",
+    "tenant_suspended",
   ];
 
   it.each(codes)("%s has its own words in English and Spanish", (code) => {
@@ -277,5 +281,70 @@ describe("no connection (P5: opening the app offline)", () => {
     // The refresh token was refused, or the person may not use the app: signed out.
     expect(keepsSession(fail(401, "refresh_invalid"))).toBe(false);
     expect(keepsSession(fail(403, "owner_use_portal"))).toBe(false);
+  });
+
+  it("keeps the session of someone whose company is paused: it is not about them", () => {
+    expect(keepsSession(fail(403, "tenant_suspended"))).toBe(true);
+  });
+});
+
+describe("what the API says about the company (P7)", () => {
+  it("is paused for a suspended operator and gone for one that does not exist", () => {
+    expect(tenantProblemOf(fail(403, "tenant_suspended"))).toBe("paused");
+    expect(tenantProblemOf(fail(404, "tenant_not_found"))).toBe("gone");
+  });
+
+  it("is nothing for every other answer, including look-alikes", () => {
+    expect(tenantProblemOf(fail(404, "not_found"))).toBeNull();
+    expect(tenantProblemOf(fail(403, "owner_use_portal"))).toBeNull();
+    expect(tenantProblemOf(fail(400, "tenant_not_resolved"))).toBeNull();
+    // The code alone is not enough: it must come with its status.
+    expect(tenantProblemOf(fail(500, "tenant_suspended"))).toBeNull();
+    expect(tenantProblemOf(new ApiError(0, "network", "no connection"))).toBeNull();
+    expect(tenantProblemOf(new Error("tenant_suspended"))).toBeNull();
+  });
+});
+
+describe("a company code GET /meta would not take (P7)", () => {
+  it("says a code no operator has can't be found, and to ask the manager", () => {
+    const problem = companyProblem(fail(404, "tenant_not_found"));
+    expect(problem.code).toBe("tenant_not_found");
+    expect(first(problem)).toBe("We couldn't find that company code. Check it, or ask your manager for it.");
+    expect(first(problem, es)).toBe("No encontramos ese código de empresa. Revísalo o pídeselo a tu gerente.");
+  });
+
+  it("says the same for a code the API cannot even read", () => {
+    expect(companyProblem(fail(400, "tenant_not_resolved")).code).toBe("tenant_not_found");
+  });
+
+  it("says a paused operator is paused, and to ask the manager", () => {
+    const problem = companyProblem(fail(403, "tenant_suspended"));
+    expect(first(problem)).toBe("This company's Crew Stars is paused. Ask your manager.");
+    expect(first(problem, es)).toBe("Crew Stars está en pausa en esta empresa. Pregúntale a tu gerente.");
+  });
+
+  it("keeps no connection apart, for the calm offline message with a retry", () => {
+    const problem = companyProblem(new ApiError(0, "network", "no connection"));
+    expect(problem.code).toBe("network");
+    expect(isOffline(new ApiError(0, "network", "no connection"))).toBe(true);
+  });
+
+  it("says too many tries as itself, and anything else generically", () => {
+    expect(companyProblem(fail(429, "rate_limited")).code).toBe("rate_limited");
+    expect(first(companyProblem(fail(500, "http_500")))).toBe("Something went wrong. Try again.");
+    expect(first(companyProblem(fail(404, "http_404")))).toBe("Something went wrong. Try again.");
+    expect(first(companyProblem(new Error("boom")))).toBe("Something went wrong. Try again.");
+  });
+});
+
+describe("a sign-in or a setup step at a company that is paused or gone (P7)", () => {
+  it("says so on the form rather than as a wrong password", () => {
+    expect(first(signInProblem(fail(403, "tenant_suspended"), NOW))).toBe(
+      "This company's Crew Stars is paused. Ask your manager.",
+    );
+    expect(signInProblem(fail(404, "tenant_not_found"), NOW).code).toBe("tenant_not_found");
+    expect(first(setupProblem(es, fail(403, "tenant_suspended"), NOW), es)).toBe(
+      "Crew Stars está en pausa en esta empresa. Pregúntale a tu gerente.",
+    );
   });
 });

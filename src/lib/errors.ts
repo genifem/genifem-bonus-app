@@ -18,12 +18,28 @@ export function isOffline(err: unknown): boolean {
 }
 
 /**
+ * What the API said about the company itself (P7), whatever was asked: "paused" when the
+ * operator is suspended (403 `tenant_suspended`) and "gone" when there is no operator with
+ * that code any more (404 `tenant_not_found`). Null for every other answer.
+ */
+export type TenantProblem = "paused" | "gone";
+
+export function tenantProblemOf(err: unknown): TenantProblem | null {
+  if (!(err instanceof ApiError)) return null;
+  if (err.status === 403 && err.code === "tenant_suspended") return "paused";
+  if (err.status === 404 && err.code === "tenant_not_found") return "gone";
+  return null;
+}
+
+/**
  * Whether a launch that could not reach `/me` still finds the person signed in. Only the
  * server saying who this isn't ends the session: a 401 (the refresh token was refused) or a
  * 403. No connection, a server fault or too many requests keep it, and the app opens on the
- * person's own tabs with what it last knew of them.
+ * person's own tabs with what it last knew of them. A paused company is not about the person
+ * either: the session is kept behind the paused screen until the operator is back.
  */
 export function keepsSession(err: unknown): boolean {
+  if (tenantProblemOf(err) === "paused") return true;
   return !(err instanceof ApiError && (err.status === 401 || err.status === 403));
 }
 
@@ -109,11 +125,33 @@ export function signInProblem(err: unknown, now: number): Problem {
     case "account_inactive":
     case "rate_limited":
     case "owner_use_portal":
+    case "tenant_suspended":
+    case "tenant_not_found":
       return plain(err.code);
   }
   // 422 is an EID or password the API would not even look up (too long, say): still a
   // combination that does not match.
   if (err.status === 401 || err.status === 422) return plain("credentials_invalid");
+  return GENERIC;
+}
+
+/**
+ * A company code that `GET /meta` would not take (P7): no operator has that code, the
+ * operator is paused, or there was no answer at all (the screen says that one calmly, with a
+ * retry, rather than on the field). A slug the API cannot even read (400
+ * `tenant_not_resolved`) is a code it cannot find either.
+ */
+export function companyProblem(err: unknown): Problem {
+  if (!(err instanceof ApiError)) return GENERIC;
+  switch (err.code) {
+    case "tenant_not_found":
+    case "tenant_not_resolved":
+      return plain("tenant_not_found");
+    case "tenant_suspended":
+    case "network":
+    case "rate_limited":
+      return plain(err.code);
+  }
   return GENERIC;
 }
 

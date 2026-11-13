@@ -48,14 +48,17 @@ const PushContext = createContext<PushValue | null>(null);
  *   the bell's dot is right.
  * - Tapping a push, with the app open or from cold, opens the screen for its type through the
  *   route helper (routes.ts), in the person's own tab group and only once the session has
- *   been read: never for someone signed out, never into the other group's gate.
+ *   been read: never for someone signed out, never into the other group's gate, and not
+ *   while the company is paused (the tap waits until it is back).
+ * - While the company is paused this phone acts as if nobody were signed in: no offer, no
+ *   banners, no registration, so nothing shows over the paused screen.
  *
  * None of it holds a screen up: every step runs on its own and fails quietly.
  */
 export function PushProvider({ children }: { children: ReactNode }) {
-  const { ready, me, offline, t } = useAuth();
+  const { ready, me, offline, paused, t } = useAuth();
   const { refresh } = useMe();
-  const personId = me?.id ?? null;
+  const personId = me && !paused ? me.id : null;
   const wanted = !!me?.notifications_on;
   const group: Group | null = me ? homeGroupFor(me) : null;
   const channel = t("push.channel");
@@ -176,8 +179,8 @@ export function PushProvider({ children }: { children: ReactNode }) {
   }, [personId, refresh]);
 
   // A tap waits here until the saved session has been read (and, offline on a phone that
-  // never kept the profile, until it can be), then opens the screen for its type in the
-  // person's own group.
+  // never kept the profile, until it can be; paused, until the company is back), then opens
+  // the screen for its type in the person's own group.
   const place = useRef<{ ready: boolean; group: Group | null; waiting: boolean }>({
     ready: false,
     group: null,
@@ -205,7 +208,7 @@ export function PushProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const waiting = !me && offline;
+  const waiting = (!me && offline) || paused;
   useEffect(() => {
     place.current = { ready, group, waiting };
     follow();

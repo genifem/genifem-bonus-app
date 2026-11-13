@@ -4,25 +4,27 @@ import { Image, StyleSheet, View } from "react-native";
 
 import { SignedOutOnly } from "@/components/Gate";
 import { Floaty, Mascot } from "@/components/Mascot";
-import { Body, Button, colors, Page, radius, Spacer, T } from "@/components/ui";
+import { Body, Button, colors, Page, radius, Spacer, T, TextLink } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
 import { useApi } from "@/lib/useApi";
 
 /**
  * Whose app this is (`GET /meta`): the operator's logo, or its name until it has one. The
- * row keeps its height while it loads, so nothing below it jumps, and it stays empty if
- * `/meta` cannot be reached: the screen works without it.
+ * row keeps its height while it loads, so nothing below it jumps. Without an answer it shows
+ * what the company screen kept (P7), or stays empty: the screen works without it.
  */
 function Operator() {
-  const { t } = useAuth();
+  const { t, company } = useAuth();
   const { data } = useApi<Schemas["MetaOut"]>("/meta");
-  if (data?.logo_url) {
+  const name = data?.name ?? company?.name ?? null;
+  const logo = data ? data.logo_url : (company?.logoUrl ?? null);
+  if (logo && name) {
     return (
       <Image
-        source={{ uri: data.logo_url }}
+        source={{ uri: logo }}
         accessible
         accessibilityRole="image"
-        accessibilityLabel={t("welcome.operatorLogo", { name: data.name })}
+        accessibilityLabel={t("welcome.operatorLogo", { name })}
         resizeMode="contain"
         style={styles.logoImage}
       />
@@ -30,10 +32,10 @@ function Operator() {
   }
   return (
     <View style={styles.logoRow}>
-      {data?.name ? (
+      {name ? (
         <View style={styles.logo}>
           <T size={12} weight={800} color={colors.muted} numberOfLines={1}>
-            {data.name}
+            {name}
           </T>
         </View>
       ) : null}
@@ -41,9 +43,10 @@ function Operator() {
   );
 }
 
-/** CR-01: the first screen, with the operator's logo, then the two ways in. */
+/** CR-01: the first screen, with the operator's logo, then the two ways in, and the way to
+ *  another company (P7) for a phone set up for the wrong one. */
 function WelcomeScreen() {
-  const { t } = useAuth();
+  const { t, changeCompany } = useAuth();
   const router = useRouter();
   return (
     <Page bottomInset>
@@ -68,6 +71,7 @@ function WelcomeScreen() {
             onPress={() => router.push({ pathname: "/setup/[step]", params: { step: "1" } })}
           />
           <Button title={t("welcome.signIn")} variant="soft" full onPress={() => router.push("/sign-in")} />
+          <TextLink title={t("company.change")} onPress={() => void changeCompany()} />
         </View>
       </Body>
     </Page>

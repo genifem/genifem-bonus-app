@@ -49,10 +49,12 @@ function asApiError(err: unknown): ApiError {
  * answer is kept, and nothing from before a sign-out lands after it.
  *
  * With no connection the summary's error is the network one, and screens show their calm
- * offline state with a retry (ErrorState); the session itself is untouched (auth.tsx).
+ * offline state with a retry (ErrorState); the session itself is untouched (auth.tsx). While
+ * the company is paused nothing is asked (the paused screen covers everything), and the
+ * summary is fetched afresh once it is back.
  */
 export function MeProvider({ children }: { children: ReactNode }) {
-  const { me, offline, reload } = useAuth();
+  const { me, offline, paused, reload } = useAuth();
   const personId = me?.id ?? null;
   const [summary, setSummary] = useState<Summary | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
@@ -67,7 +69,7 @@ export function MeProvider({ children }: { children: ReactNode }) {
   }
 
   const refresh = useCallback(async () => {
-    if (!personId) return;
+    if (!personId || paused) return;
     const request = ++asked.current;
     try {
       const next = await api<Summary>("/me/summary");
@@ -77,14 +79,14 @@ export function MeProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       if (request === asked.current) setError(asApiError(err));
     }
-  }, [personId]);
+  }, [personId, paused]);
 
   useEffect(() => {
-    // Every sign-in, sign-out and switch of person starts a new generation, so an answer
-    // still on its way for the last one is dropped. The first fetch is inlined so nothing
-    // sets state while the effect body runs.
+    // Every sign-in, sign-out, switch of person and pause starts a new generation, so an
+    // answer still on its way for the last one is dropped. The first fetch is inlined so
+    // nothing sets state while the effect body runs.
     const request = ++asked.current;
-    if (!personId) return;
+    if (!personId || paused) return;
     void (async () => {
       try {
         const next = await api<Summary>("/me/summary");
@@ -95,7 +97,7 @@ export function MeProvider({ children }: { children: ReactNode }) {
         if (request === asked.current) setError(asApiError(err));
       }
     })();
-  }, [personId]);
+  }, [personId, paused]);
 
   // The app opened offline on the profile it last saw (auth.tsx). The first summary to arrive
   // means the server can be reached again, so the profile is read again too.
