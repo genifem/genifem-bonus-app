@@ -53,18 +53,14 @@ describe("plurals and selects", () => {
 });
 
 describe("bold", () => {
-  const phone = "(•••) •••-4821";
-
   it("drops the tags from plain text", () => {
-    expect(createTranslator("en")("setup.codeSent", { phone })).toBe(
-      `We sent a 6-digit code to ${phone}`,
-    );
+    expect(createTranslator("en")("rewards.coinsUsed", { used: 120, max: 500 })).toBe("120 of 500 coins used");
   });
 
   it("splits a message into runs", () => {
-    expect(createTranslator("es").rich("setup.codeSent", { phone })).toEqual([
-      { text: "Enviamos un código de 6 dígitos al ", bold: false },
-      { text: phone, bold: true },
+    expect(createTranslator("es").rich("rewards.coinsUsed", { used: 120, max: 500 })).toEqual([
+      { text: "120", bold: true },
+      { text: " de 500 monedas usadas", bold: false },
     ]);
   });
 });

@@ -375,8 +375,12 @@ export interface paths {
         /**
          * Setup Start
          * @description Step 1 of setup or reset: text a code to the number on file (CR-03, CR-06).
-         *     404 ``eid_unknown``, 409 ``no_phone_on_file``, 429 ``resend_too_soon``, 403
-         *     ``code_locked``.
+         *
+         *     The same 200 whatever the EID is (P6 security review): on the roster or not,
+         *     terminated, without a phone, set up or not. Only a real, active person with a phone
+         *     gets a text: a setup code if they have never set up, a reset code if they have. 429
+         *     ``resend_too_soon`` (30 seconds) or ``rate_limited``, 403 ``code_locked``, each for any
+         *     EID alike.
          */
         post: operations["setup_start_api_v1_auth_setup_start_post"];
         delete?: never;
@@ -397,7 +401,8 @@ export interface paths {
         /**
          * Setup Verify
          * @description Step 2: the code. 401 ``code_invalid`` (with ``details.attempts_left``) or
-         *     ``code_expired``; the fifth wrong code answers 403 ``code_locked`` (CR-04).
+         *     ``code_expired``; the fifth wrong code answers 403 ``code_locked`` (CR-04). An EID with
+         *     no account answers exactly as one with a wrong code (P6 security review).
          */
         post: operations["setup_verify_api_v1_auth_setup_verify_post"];
         delete?: never;
@@ -688,7 +693,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Meta */
+        /**
+         * Get Meta
+         * @description Whose app this is (the company code in ``X-Tenant``). 404 ``tenant_not_found``, 403
+         *     ``tenant_suspended``; 429 ``rate_limited`` past 120 a minute from one address, or after
+         *     30 unknown codes in 15 minutes.
+         */
         get: operations["get_meta_api_v1_meta_get"];
         put?: never;
         post?: never;
@@ -819,7 +829,7 @@ export interface paths {
         put?: never;
         /**
          * Invite Owner
-         * @description Another owner, invited by email. 409 ``owner_exists``.
+         * @description Another owner, invited by email (super admins only). 409 ``owner_exists``.
          */
         post: operations["invite_owner_api_v1_platform_operators__operator_id__owners_post"];
         delete?: never;
@@ -3065,7 +3075,7 @@ export interface components {
          * Perm
          * @enum {string}
          */
-        Perm: "overview.read" | "operators.read" | "operators.write" | "owners.invite" | "owners.mfa_reset" | "owners.manage" | "health.read" | "audit.read" | "staff.read" | "staff.write";
+        Perm: "overview.read" | "operators.read" | "operators.write" | "owners.invite" | "owners.resend" | "owners.mfa_reset" | "owners.manage" | "health.read" | "audit.read" | "staff.read" | "staff.write";
         /** PersonIn */
         PersonIn: {
             area_id?: components["schemas"]["PydanticObjectId"] | null;
@@ -3860,12 +3870,16 @@ export interface components {
              */
             purpose: "setup" | "reset";
         };
-        /** SetupStartOut */
+        /**
+         * SetupStartOut
+         * @description The same answer whatever the EID is: on the roster or not, terminated, without a
+         *     phone, set up or not (P6 security review: step 1 used to say which EIDs exist, and
+         *     showed the phone's last four digits to anyone who typed one). A code only goes out to a
+         *     real, active person with a phone on file.
+         */
         SetupStartOut: {
             /** Expires In S */
             expires_in_s: number;
-            /** Masked Phone */
-            masked_phone: string;
             /** Resend After S */
             resend_after_s: number;
         };

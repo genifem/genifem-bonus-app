@@ -92,7 +92,7 @@ export function T({
   );
 }
 
-/** A message with bold runs (`t.rich`), e.g. the masked phone number a code went to. */
+/** A message with bold runs (`t.rich`), e.g. the coins used this month on Rewards. */
 export function Rich({
   parts,
   boldColor = colors.foreground,

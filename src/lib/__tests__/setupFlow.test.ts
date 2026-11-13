@@ -20,7 +20,6 @@ function sent(over: Partial<Extract<FlowAction, { type: "sent" }>> = {}): FlowAc
     type: "sent",
     eid: "2741001",
     purpose: "setup",
-    maskedPhone: "(•••) •••-4821",
     expiresInS: 600,
     resendAfterS: 30,
     now: NOW,
@@ -40,12 +39,12 @@ const lock: Problem = {
 };
 
 describe("a code going out", () => {
-  it("keeps the masked phone and works out the deadlines on this phone's clock", () => {
+  it("marks a code as asked for and works out the deadlines on this phone's clock", () => {
     const flow = run(sent());
     expect(flow).toEqual({
       purpose: "setup",
       eid: "2741001",
-      maskedPhone: "(•••) •••-4821",
+      codeRequested: true,
       codeExpiresAt: NOW + 600_000,
       resendAt: NOW + 30_000,
       lock: null,
@@ -74,13 +73,13 @@ describe("checking the code", () => {
     const flow = run(sent(), { type: "verified", setupToken: "receipt" });
     expect(flow.setupToken).toBe("receipt");
     expect(flow.codeExpiresAt).toBeNull();
-    expect(flow.maskedPhone).toBe("(•••) •••-4821");
+    expect(flow.codeRequested).toBe(true);
   });
 
   it("forgets the code when the API says it has run out", () => {
     const flow = run(sent(), { type: "expired" });
     expect(flow.codeExpiresAt).toBeNull();
-    expect(flow.maskedPhone).not.toBeNull();
+    expect(flow.codeRequested).toBe(true);
   });
 
   it("locks after the fifth wrong code, and the code is gone with it (CR-04)", () => {

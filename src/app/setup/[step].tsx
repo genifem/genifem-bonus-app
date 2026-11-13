@@ -14,7 +14,6 @@ import {
   IconButton,
   Page,
   radius,
-  Rich,
   ScreenHeader,
   ScreenTitle,
   Spacer,
@@ -103,11 +102,12 @@ function EidStep({ purpose, onSent }: { purpose: Purpose; onSent: () => void }) 
         body: { eid, purpose },
         anonymous: true,
       });
+      // The same answer for every EID (P6 security review): whether a text went out is only
+      // known to the phone it went to.
       dispatch({
         type: "sent",
         eid,
         purpose,
-        maskedPhone: sent.masked_phone,
         expiresInS: sent.expires_in_s,
         resendAfterS: sent.resend_after_s,
         now: Date.now(),
@@ -198,10 +198,6 @@ function CodeStep({ onVerified }: { onVerified: () => void }) {
         ? { text: t("errors.code_expired"), kind: "warning" }
         : null;
 
-  // "(•••) •••-4821" is read out bullet by bullet; say the last four digits instead.
-  const phone = flow.maskedPhone ?? "";
-  const lastDigits = phone.replace(/\D/g, "");
-
   const fail = (err: unknown): Problem => {
     const found = setupProblem(t, err, Date.now());
     const action = flowActionFor(found);
@@ -251,7 +247,6 @@ function CodeStep({ onVerified }: { onVerified: () => void }) {
         type: "sent",
         eid: flow.eid,
         purpose: flow.purpose,
-        maskedPhone: sent.masked_phone,
         expiresInS: sent.expires_in_s,
         resendAfterS: sent.resend_after_s,
         now: Date.now(),
@@ -269,12 +264,11 @@ function CodeStep({ onVerified }: { onVerified: () => void }) {
     <>
       <View style={{ gap: 4 }}>
         <ScreenTitle title={t("setup.codeTitle")} />
-        <Rich
-          size={13}
-          color={colors.muted}
-          parts={t.rich("setup.codeSent", { phone })}
-          accessibilityLabel={lastDigits ? t("setup.codeSentA11y", { digits: lastDigits }) : undefined}
-        />
+        {/* "If": the API answers every EID alike and never shows the phone's digits (P6
+            security review), so this screen can't know whether a text went out. */}
+        <T size={13} color={colors.muted}>
+          {t("setup.codeSent")}
+        </T>
       </View>
       <OtpInput
         value={code}

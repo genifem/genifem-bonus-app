@@ -100,18 +100,15 @@ describe("a failed sign-in (CR-02, CR-07, CR-09)", () => {
 });
 
 describe("a failed setup step (CR-03 to CR-05)", () => {
-  it("says which EID problem it is: not on the roster, no phone, no longer active", () => {
-    expect(first(setupProblem(en, fail(404, "eid_unknown"), NOW))).toBe(
-      "We can't find that EID. Check it, or ask your manager.",
-    );
-    expect(first(setupProblem(en, fail(409, "no_phone_on_file"), NOW))).toBe(
-      "We don't have a phone number for you. Ask your manager to add one.",
-    );
-    expect(first(setupProblem(es, fail(409, "no_phone_on_file"), NOW), es)).toBe(
-      "No tenemos un número de teléfono tuyo. Pídele a tu gerente que lo agregue.",
-    );
-    expect(first(setupProblem(en, fail(403, "account_inactive"), NOW))).toBe(
-      "This account is no longer active. Talk to your manager.",
+  it("never says which EIDs exist: step 1 answers every EID alike (P6 security review)", () => {
+    // The API stopped sending these, so the catalog has no words for them either.
+    for (const code of ["eid_unknown", "no_phone_on_file", "already_set_up"]) {
+      expect(en.has(`errors.${code}`)).toBe(false);
+      expect(es.has(`errors.${code}`)).toBe(false);
+    }
+    // Too many tries from this phone is about the phone, not the EID.
+    expect(first(setupProblem(en, fail(429, "rate_limited"), NOW))).toBe(
+      "Too many tries. Wait a few minutes and try again.",
     );
   });
 
@@ -180,8 +177,6 @@ describe("every error code the auth API sends", () => {
     "account_locked",
     "account_inactive",
     "owner_use_portal",
-    "eid_unknown",
-    "no_phone_on_file",
     "code_locked",
     "resend_too_soon",
     "rate_limited",
@@ -247,6 +242,15 @@ describe("a refused shout-out (CR-19 to CR-23)", () => {
       expect(spanish).not.toBe(english);
     },
   );
+
+  it("asks for the same tap again when too many changes hit the same coins at once (503)", () => {
+    expect(first(sendProblem(en, fail(503, "busy_try_again")))).toBe(
+      "Lots of people are doing the same thing right now. Try again in a moment.",
+    );
+    expect(first(sendProblem(es, fail(503, "busy_try_again")), es)).toBe(
+      "Mucha gente está haciendo lo mismo ahora mismo. Inténtalo de nuevo en un momento.",
+    );
+  });
 
   it("says offline for no connection, and the generic words for anything unknown", () => {
     expect(first(sendProblem(en, new ApiError(0, "network", "")))).toBe(

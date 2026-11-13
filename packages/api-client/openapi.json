@@ -3215,6 +3215,7 @@
           "operators.read",
           "operators.write",
           "owners.invite",
+          "owners.resend",
           "owners.mfa_reset",
           "owners.manage",
           "health.read",
@@ -5625,14 +5626,11 @@
         "type": "object"
       },
       "SetupStartOut": {
+        "description": "The same answer whatever the EID is: on the roster or not, terminated, without a\nphone, set up or not (P6 security review: step 1 used to say which EIDs exist, and\nshowed the phone's last four digits to anyone who typed one). A code only goes out to a\nreal, active person with a phone on file.",
         "properties": {
           "expires_in_s": {
             "title": "Expires In S",
             "type": "integer"
-          },
-          "masked_phone": {
-            "title": "Masked Phone",
-            "type": "string"
           },
           "resend_after_s": {
             "title": "Resend After S",
@@ -5640,7 +5638,6 @@
           }
         },
         "required": [
-          "masked_phone",
           "expires_in_s",
           "resend_after_s"
         ],
@@ -7789,7 +7786,7 @@
     },
     "/api/v1/auth/setup/start": {
       "post": {
-        "description": "Step 1 of setup or reset: text a code to the number on file (CR-03, CR-06).\n404 ``eid_unknown``, 409 ``no_phone_on_file``, 429 ``resend_too_soon``, 403\n``code_locked``.",
+        "description": "Step 1 of setup or reset: text a code to the number on file (CR-03, CR-06).\n\nThe same 200 whatever the EID is (P6 security review): on the roster or not,\nterminated, without a phone, set up or not. Only a real, active person with a phone\ngets a text: a setup code if they have never set up, a reset code if they have. 429\n``resend_too_soon`` (30 seconds) or ``rate_limited``, 403 ``code_locked``, each for any\nEID alike.",
         "operationId": "setup_start_api_v1_auth_setup_start_post",
         "requestBody": {
           "content": {
@@ -7831,7 +7828,7 @@
     },
     "/api/v1/auth/setup/verify": {
       "post": {
-        "description": "Step 2: the code. 401 ``code_invalid`` (with ``details.attempts_left``) or\n``code_expired``; the fifth wrong code answers 403 ``code_locked`` (CR-04).",
+        "description": "Step 2: the code. 401 ``code_invalid`` (with ``details.attempts_left``) or\n``code_expired``; the fifth wrong code answers 403 ``code_locked`` (CR-04). An EID with\nno account answers exactly as one with a wrong code (P6 security review).",
         "operationId": "setup_verify_api_v1_auth_setup_verify_post",
         "requestBody": {
           "content": {
@@ -8357,6 +8354,7 @@
     },
     "/api/v1/meta": {
       "get": {
+        "description": "Whose app this is (the company code in ``X-Tenant``). 404 ``tenant_not_found``, 403\n``tenant_suspended``; 429 ``rate_limited`` past 120 a minute from one address, or after\n30 unknown codes in 15 minutes.",
         "operationId": "get_meta_api_v1_meta_get",
         "responses": {
           "200": {
@@ -8774,7 +8772,7 @@
         ]
       },
       "post": {
-        "description": "Another owner, invited by email. 409 ``owner_exists``.",
+        "description": "Another owner, invited by email (super admins only). 409 ``owner_exists``.",
         "operationId": "invite_owner_api_v1_platform_operators__operator_id__owners_post",
         "parameters": [
           {

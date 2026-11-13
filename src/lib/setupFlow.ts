@@ -19,8 +19,12 @@ export interface SetupFlow {
   purpose: Purpose;
   /** The EID the code went to, normalised. */
   eid: string;
-  /** "(•••) •••-4821", from `/auth/setup/start`. Set once a code has gone out. */
-  maskedPhone: string | null;
+  /**
+   * Step 1 has been answered, so a code is on its way if the EID is a real, active person
+   * with a phone. The API answers every EID the same way and no longer shows the phone's
+   * last digits (P6 security review), so this is all step 2 knows.
+   */
+  codeRequested: boolean;
   /** When the texted code stops working (CR-04: 10 minutes). Null once it is spent. */
   codeExpiresAt: number | null;
   /** When "Resend code" unlocks (CR-04: 30 seconds), or when the API said to wait until. */
@@ -32,12 +36,11 @@ export interface SetupFlow {
 }
 
 export type FlowAction =
-  /** A code went out (step 1, or "Resend code"). Anything from an earlier code is void. */
+  /** Step 1 or "Resend code" was answered. Anything from an earlier code is void. */
   | {
       type: "sent";
       eid: string;
       purpose: Purpose;
-      maskedPhone: string;
       expiresInS: number;
       resendAfterS: number;
       now: number;
@@ -57,7 +60,7 @@ export function initialFlow(purpose: Purpose = "setup"): SetupFlow {
   return {
     purpose,
     eid: "",
-    maskedPhone: null,
+    codeRequested: false,
     codeExpiresAt: null,
     resendAt: null,
     lock: null,
@@ -71,7 +74,7 @@ export function flowReducer(state: SetupFlow, action: FlowAction): SetupFlow {
       return {
         purpose: action.purpose,
         eid: action.eid,
-        maskedPhone: action.maskedPhone,
+        codeRequested: true,
         codeExpiresAt: action.now + action.expiresInS * 1000,
         resendAt: action.now + action.resendAfterS * 1000,
         lock: null,
@@ -92,12 +95,12 @@ export function flowReducer(state: SetupFlow, action: FlowAction): SetupFlow {
 }
 
 /**
- * Whether a step has what it needs. Step 2 needs a code to have gone out, step 3 the receipt
- * for it; a step reached any other way (a deep link, a reload on the web) starts over.
+ * Whether a step has what it needs. Step 2 needs step 1 to have asked for a code, step 3 the
+ * receipt for it; a step reached any other way (a deep link, a reload on the web) starts over.
  */
 export function canEnter(flow: SetupFlow, step: 1 | 2 | 3): boolean {
   if (step === 1) return true;
-  if (step === 2) return flow.maskedPhone !== null || flow.setupToken !== null;
+  if (step === 2) return flow.codeRequested || flow.setupToken !== null;
   return flow.setupToken !== null;
 }
 
