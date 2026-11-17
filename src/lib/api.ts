@@ -39,20 +39,30 @@ interface CallOptions {
   tenant?: string;
 }
 
+/** How long a call may go unanswered before it counts as no connection. A network that drops
+ *  requests without refusing them would otherwise leave a screen spinning for good; this way
+ *  it ends in the screen's own "no connection, try again". */
+export const REQUEST_TIMEOUT_MS = 20_000;
+
 async function send(path: string, options: CallOptions, token: string | null) {
   const headers: Record<string, string> = { ...options.headers, "x-client": "app" };
   const tenant = options.tenant ?? tenantSlug();
   if (tenant) headers["x-tenant"] = tenant;
   if (options.body !== undefined) headers["content-type"] = "application/json";
   if (token && !options.anonymous) headers.authorization = `Bearer ${token}`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
     return await fetch(`${API_URL}/api/v1${path}`, {
       method: options.method ?? (options.body === undefined ? "GET" : "POST"),
       headers,
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      signal: controller.signal,
     });
   } catch {
     throw new ApiError(0, "network", "no connection");
+  } finally {
+    clearTimeout(timer);
   }
 }
 

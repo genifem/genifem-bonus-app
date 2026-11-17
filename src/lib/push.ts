@@ -1,10 +1,11 @@
 import Constants from "expo-constants";
 import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
+import type { NotificationPermissionsStatus } from "expo-notifications";
 import { Platform } from "react-native";
 
 import { crewStars } from "@/components/ui/theme";
 import { api } from "@/lib/api";
+import { type NotificationsModule, notificationsModule } from "@/lib/expoNotifications";
 import { loadPushToken, savePushToken } from "@/lib/session";
 import storage from "@/lib/storage";
 
@@ -90,9 +91,10 @@ function note(what: string, err?: unknown): void {
   console.info(`[push] ${what}`, err instanceof Error ? err.message : (err ?? ""));
 }
 
-/** Pushes need a real phone: not the web build, not a simulator. */
+/** Pushes need a real phone (not the web build, not a simulator) and a build that has them
+ *  (not Expo Go, expoNotifications.ts). */
 export function pushSupported(): boolean {
-  return pushPlatform(Platform.OS) !== null && Device.isDevice;
+  return pushPlatform(Platform.OS) !== null && Device.isDevice && notificationsModule() !== null;
 }
 
 const CHANNEL = "default";
@@ -103,11 +105,12 @@ const CHANNEL = "default";
  * the language on screen.
  */
 export async function nameChannel(name: string): Promise<void> {
-  if (Platform.OS !== "android") return;
+  const notifications = notificationsModule();
+  if (Platform.OS !== "android" || !notifications) return;
   try {
-    await Notifications.setNotificationChannelAsync(CHANNEL, {
+    await notifications.setNotificationChannelAsync(CHANNEL, {
       name,
-      importance: Notifications.AndroidImportance.DEFAULT,
+      importance: notifications.AndroidImportance.DEFAULT,
       lightColor: crewStars.red,
     });
   } catch (err) {
@@ -115,19 +118,20 @@ export async function nameChannel(name: string): Promise<void> {
   }
 }
 
-function answerOf(status: Notifications.NotificationPermissionsStatus) {
+function answerOf(notifications: NotificationsModule, status: NotificationPermissionsStatus) {
   return {
     granted: status.granted,
     canAskAgain: status.canAskAgain,
-    provisional: status.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL,
+    provisional: status.ios?.status === notifications.IosAuthorizationStatus.PROVISIONAL,
   };
 }
 
 /** What the phone allows now, without asking. */
 export async function readPermission(): Promise<PushPermission> {
-  if (!pushSupported()) return "unsupported";
+  const notifications = notificationsModule();
+  if (!notifications || !pushSupported()) return "unsupported";
   try {
-    return permissionOf(answerOf(await Notifications.getPermissionsAsync()));
+    return permissionOf(answerOf(notifications, await notifications.getPermissionsAsync()));
   } catch (err) {
     note("could not read the permission", err);
     return "unsupported";
@@ -136,10 +140,11 @@ export async function readPermission(): Promise<PushPermission> {
 
 /** The OS's own question. Only after PushPrompt has said why (plan §8 "Push"). */
 export async function askPermission(channelName: string): Promise<PushPermission> {
-  if (!pushSupported()) return "unsupported";
+  const notifications = notificationsModule();
+  if (!notifications || !pushSupported()) return "unsupported";
   try {
     await nameChannel(channelName);
-    return permissionOf(answerOf(await Notifications.requestPermissionsAsync()));
+    return permissionOf(answerOf(notifications, await notifications.requestPermissionsAsync()));
   } catch (err) {
     note("could not ask for the permission", err);
     return "unsupported";
@@ -154,7 +159,8 @@ export async function askPermission(channelName: string): Promise<PushPermission
  */
 export async function registerThisPhone(channelName: string): Promise<string | null> {
   const platform = pushPlatform(Platform.OS);
-  if (!platform || !Device.isDevice) return null;
+  const notifications = notificationsModule();
+  if (!platform || !Device.isDevice || !notifications) return null;
   const projectId = projectIdOf(Constants);
   if (!projectId) {
     note("no EAS projectId in this build, so no push token: skipped");
@@ -162,7 +168,7 @@ export async function registerThisPhone(channelName: string): Promise<string | n
   }
   try {
     await nameChannel(channelName);
-    const { data: token } = await Notifications.getExpoPushTokenAsync({ projectId });
+    const { data: token } = await notifications.getExpoPushTokenAsync({ projectId });
     if (!isExpoPushToken(token)) {
       note("Expo returned a token the API would not accept: skipped");
       return null;
@@ -192,8 +198,9 @@ export async function forgetThisPhone(): Promise<void> {
 /** A push that lands while the app is open shows as a banner too, and the bell's count is
  *  refreshed by whoever listens (usePush). Nobody signed in: nothing shows. */
 export function showWhileOpen(signedIn: boolean): void {
-  if (!pushSupported()) return;
-  Notifications.setNotificationHandler(
+  const notifications = notificationsModule();
+  if (!notifications || !pushSupported()) return;
+  notifications.setNotificationHandler(
     signedIn
       ? {
           handleNotification: async () => ({

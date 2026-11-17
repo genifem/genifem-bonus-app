@@ -1,4 +1,4 @@
-import * as Notifications from "expo-notifications";
+import type { NotificationResponse } from "expo-notifications";
 import { router } from "expo-router";
 import { createContext, type ReactNode, use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppState } from "react-native";
@@ -6,6 +6,7 @@ import { AppState } from "react-native";
 import { PushPrompt } from "@/components/PushPrompt";
 import { homeGroupFor, useAuth } from "@/lib/auth";
 import { useMe } from "@/lib/me";
+import { notificationsModule } from "@/lib/expoNotifications";
 import {
   askPermission,
   forgetThisPhone,
@@ -162,8 +163,9 @@ export function PushProvider({ children }: { children: ReactNode }) {
 
   // The OS gave the phone a new token: hand that one over instead.
   useEffect(() => {
-    if (!personId || !wanted || permission !== "granted") return;
-    const subscription = Notifications.addPushTokenListener(() => {
+    const notifications = notificationsModule();
+    if (!notifications || !personId || !wanted || permission !== "granted") return;
+    const subscription = notifications.addPushTokenListener(() => {
       registered.current = null;
       void register();
     });
@@ -173,8 +175,9 @@ export function PushProvider({ children }: { children: ReactNode }) {
   // A push while the app is open: a banner, and the unread count on the bell.
   useEffect(() => {
     showWhileOpen(!!personId);
-    if (!personId || !pushSupported()) return;
-    const subscription = Notifications.addNotificationReceivedListener(() => void refresh());
+    const notifications = notificationsModule();
+    if (!notifications || !personId || !pushSupported()) return;
+    const subscription = notifications.addNotificationReceivedListener(() => void refresh());
     return () => subscription.remove();
   }, [personId, refresh]);
 
@@ -215,20 +218,21 @@ export function PushProvider({ children }: { children: ReactNode }) {
   }, [ready, group, waiting, follow]);
 
   useEffect(() => {
-    if (!pushSupported()) return;
-    const take = (response: Notifications.NotificationResponse | null) => {
-      if (!response || response.actionIdentifier !== Notifications.DEFAULT_ACTION_IDENTIFIER) return;
+    const notifications = notificationsModule();
+    if (!notifications || !pushSupported()) return;
+    const take = (response: NotificationResponse | null) => {
+      if (!response || response.actionIdentifier !== notifications.DEFAULT_ACTION_IDENTIFIER) return;
       // The same tap can come from the listener and from the last response at a cold start.
       const key = response.notification.request.identifier;
       if (handled.current.has(key)) return;
       handled.current.add(key);
       tapped.current = pushTapOf(response.notification.request.content.data);
-      void Notifications.clearLastNotificationResponseAsync().catch(() => undefined);
+      void notifications.clearLastNotificationResponseAsync().catch(() => undefined);
       follow();
     };
-    const subscription = Notifications.addNotificationResponseReceivedListener(take);
+    const subscription = notifications.addNotificationResponseReceivedListener(take);
     // The tap that opened the app from cold.
-    void Notifications.getLastNotificationResponseAsync().then(take, () => undefined);
+    void notifications.getLastNotificationResponseAsync().then(take, () => undefined);
     return () => subscription.remove();
   }, [follow]);
 

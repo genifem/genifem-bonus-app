@@ -5,7 +5,7 @@
  * must never send a refresh token it has already spent. Tested against a fake device keychain
  * and a fake server that behaves that way.
  */
-import { api, ApiError, onCompanyProblem, onSessionEnded } from "@/lib/api";
+import { api, ApiError, onCompanyProblem, onSessionEnded, REQUEST_TIMEOUT_MS } from "@/lib/api";
 
 const mockSession = {
   accessToken: null as string | null,
@@ -282,5 +282,34 @@ describe("what a call hears about the company (P7)", () => {
     stop();
 
     expect(heard).not.toHaveBeenCalled();
+  });
+});
+
+describe("a request that is never answered", () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it("gives up after the time limit as no connection, so the screen can offer a retry", async () => {
+    jest.useFakeTimers();
+    // A network that swallows the request: no answer, no refusal, until the app stops waiting.
+    globalThis.fetch = jest.fn(
+      (_url: string, init: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          init.signal?.addEventListener("abort", () => reject(new Error("Aborted")));
+        }),
+    ) as unknown as typeof fetch;
+
+    const failure = failureOf(api("/meta", { anonymous: true, tenant: "demo" }));
+    await jest.advanceTimersByTimeAsync(REQUEST_TIMEOUT_MS);
+
+    const err = await failure;
+    expect(err.status).toBe(0);
+    expect(err.code).toBe("network");
+  });
+
+  it("is not cut short when the answer comes in time", async () => {
+    mockSession.accessToken = server.access;
+    await expect(api("/me/summary")).resolves.toEqual({ path: "/me/summary" });
   });
 });

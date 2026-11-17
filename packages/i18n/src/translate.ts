@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, type Locale, MESSAGES, type Messages } from "./index";
+import { DEFAULT_LOCALE, type Locale, MESSAGES, type Messages } from "./locales";
 
 /**
  * A message lookup for clients without next-intl (the mobile app).

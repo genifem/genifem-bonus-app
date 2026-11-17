@@ -19,20 +19,26 @@ import {
 const mockStore = new Map<string, string>();
 const mockKeychain = { push: null as string | null };
 const mockApi = jest.fn();
+// Whether the app runs in Expo Go, and how often expo-notifications has been loaded.
+const mockExpo = { go: false, notificationLoads: 0 };
 
+jest.mock("expo", () => ({ isRunningInExpoGo: () => mockExpo.go }));
 jest.mock("react-native", () => ({ Platform: { OS: "ios" } }));
 // An ES module, so `import * as Device` sees the flag as each test sets it.
 jest.mock("expo-device", () => ({ __esModule: true, isDevice: true }));
 jest.mock("expo-constants", () => ({ __esModule: true, default: { expoConfig: null, easConfig: null } }));
-jest.mock("expo-notifications", () => ({
-  AndroidImportance: { DEFAULT: 3 },
-  IosAuthorizationStatus: { PROVISIONAL: 3 },
-  getExpoPushTokenAsync: jest.fn(),
-  setNotificationChannelAsync: jest.fn(async () => null),
-  getPermissionsAsync: jest.fn(),
-  requestPermissionsAsync: jest.fn(),
-  setNotificationHandler: jest.fn(),
-}));
+jest.mock("expo-notifications", () => {
+  mockExpo.notificationLoads += 1;
+  return {
+    AndroidImportance: { DEFAULT: 3 },
+    IosAuthorizationStatus: { PROVISIONAL: 3 },
+    getExpoPushTokenAsync: jest.fn(),
+    setNotificationChannelAsync: jest.fn(async () => null),
+    getPermissionsAsync: jest.fn(),
+    requestPermissionsAsync: jest.fn(),
+    setNotificationHandler: jest.fn(),
+  };
+});
 jest.mock("@/lib/api", () => ({ api: (...args: unknown[]) => mockApi(...args) }));
 jest.mock("@/lib/session", () => ({
   loadPushToken: async () => mockKeychain.push,
@@ -198,6 +204,31 @@ describe("registering this phone", () => {
 
     notifications.getExpoPushTokenAsync!.mockRejectedValue(new Error("offline"));
     await expect(registerThisPhone("x")).resolves.toBeNull();
+  });
+});
+
+describe("in Expo Go", () => {
+  it("never loads expo-notifications, which throws there on Android: no pushes, nothing breaks", async () => {
+    mockExpo.go = true;
+    platform.OS = "android";
+    const loadsBefore = mockExpo.notificationLoads;
+    try {
+      // A fresh copy of the modules, so the one-time load check runs again in "Expo Go".
+      let push!: typeof import("@/lib/push");
+      jest.isolateModules(() => {
+        push = jest.requireActual<typeof import("@/lib/push")>("@/lib/push");
+      });
+      expect(push.pushSupported()).toBe(false);
+      await expect(push.readPermission()).resolves.toBe("unsupported");
+      await expect(push.askPermission("x")).resolves.toBe("unsupported");
+      await expect(push.registerThisPhone("x")).resolves.toBeNull();
+      await push.nameChannel("x");
+      push.showWhileOpen(true);
+      expect(mockExpo.notificationLoads).toBe(loadsBefore);
+      expect(mockApi).not.toHaveBeenCalled();
+    } finally {
+      mockExpo.go = false;
+    }
   });
 });
 
